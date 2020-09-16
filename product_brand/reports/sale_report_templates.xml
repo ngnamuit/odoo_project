@@ -41,12 +41,6 @@
                      <span>Website: <a t-attf-href="{{doc.company_id.website}}"><span t-field="doc.company_id.website" style="padding-right: 130px"/></a></span><br/>
         </div>
 
-         <xpath expr="//div[hasclass('o_report_layout_background')]" position="replace">
-             <div class="report_header">
-
-             </div>
-         </xpath>
-
          <div class="page">
              <h3 style="text-align:center">BẢNG CHÀO GIÁ</h3>
              <div class="info" style="width:100%">
@@ -137,9 +131,9 @@
              </div>
              <div class="notes">
                  <br/>
-                 <span><b><u>ĐIỀU KHOẢN THƯƠNG MẠI:</u></b></span>
-                 <p>
-                     <span style="color:blue">
+                 <span><b><u>ĐIỀU KHOẢN THƯƠNG MẠI:</u></b></span><br/>
+                 <span>
+                     <span style="color:blue; margin-top:5px">
                         <span>* Giá trên đã bao gồm 10% VAT (Thuế GTGT).</span> <br/>
                         <span>* Thời gian giao hàng: 01 tuần </span><br/>
                         <span>* Thời gian bảo hành 01 năm theo tiêu chuẩn của Hãng.</span><br/>
@@ -154,7 +148,7 @@
                     <span>* Để biết thêm chi tiết, xin Quý Khách vui lòng liên hệ với: Mr. Hiếu – 0935.801.687 </span><br/>
                     <span>* Lưu ý : Hiệu lực báo giá trong vòng 15 ngày. </span><br/>
                     <span>Rất mong nhận được sự ủng hộ và hợp tác của Quý khách. </span><br/>
-                 </p>
+                 </span><br/>
                  <span style="padding-right:100px;padding-left:20px"><b>ĐẠI DIỆN KINH DOANH</b></span>
                  <span><b>XÁC NHẬN ĐẶT HÀNG</b></span>
              </div>
@@ -209,12 +203,6 @@
                      <span>Email: <a t-attf-href="tel:{{doc.company_id.email}}"><span t-field="doc.company_id.email" style="padding-right: 130px"/></a></span><br/>
                      <span>Website: <a t-attf-href="{{doc.company_id.website}}"><span t-field="doc.company_id.website" style="padding-right: 130px"/></a></span><br/>
         </div>
-
-         <xpath expr="//div[hasclass('o_report_layout_background')]" position="replace">
-             <div class="report_header">
-
-             </div>
-         </xpath>
 
          <div class="page">
              <h3 style="text-align:center">BẢNG CHÀO GIÁ</h3>
@@ -306,9 +294,9 @@
              </div>
              <div class="notes">
                  <br/>
-                 <span><b><u>ĐIỀU KHOẢN THƯƠNG MẠI:</u></b></span>
-                 <p>
-                     <span style="color:blue">
+                 <span><b><u>ĐIỀU KHOẢN THƯƠNG MẠI:</u></b></span><br/>
+                 <span>
+                     <span style="color:blue; margin-top:5px">
                         <span>* Giá trên đã bao gồm 10% VAT (Thuế GTGT).</span> <br/>
                         <span>* Thời gian giao hàng: 01 tuần </span><br/>
                         <span>* Thời gian bảo hành 01 năm theo tiêu chuẩn của Hãng.</span><br/>
@@ -323,7 +311,7 @@
                     <span>* Để biết thêm chi tiết, xin Quý Khách vui lòng liên hệ với: Mr. Hiếu – 0935.801.687 </span><br/>
                     <span>* Lưu ý : Hiệu lực báo giá trong vòng 15 ngày. </span><br/>
                     <span>Rất mong nhận được sự ủng hộ và hợp tác của Quý khách. </span><br/>
-                 </p>
+                 </span><br/>
                  <span style="padding-right:100px;padding-left:20px"><b>ĐẠI DIỆN KINH DOANH</b></span>
                  <span><b>XÁC NHẬN ĐẶT HÀNG</b></span>
              </div>
