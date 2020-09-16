@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+            id="action_report_saleorder_summary"
+            string="Sale Order Summary"
+            model="sale.order"
+            report_type="qweb-pdf"
+            file="product_brand.report_saleorder_summary"
+            name="product_brand.report_saleorder_summary"
+            print_report_name="(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or 'Order - %s - Summary' % (object.name)"
+        />
+
+        <report
+            id="action_report_saleorder_details"
+            string="Sale Order Details"
+            model="sale.order"
+            report_type="qweb-pdf"
+            file="product_brand.report_saleorder_details"
+            name="product_brand.report_saleorder_details"
+            print_report_name="(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or 'Order - %s - Details' % (object.name)"
+        />
+    </data>
+</odoo>

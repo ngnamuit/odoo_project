@@ -3,15 +3,14 @@
 # Copyright 2014 prisnet.ch Seraphine Lantible <s.lantible@gmail.com>
 # Copyright 2016 Serpent Consulting Services Pvt. Ltd.
 # Copyright 2018 Daniel Campos <danielcampos@avanzosc.es>
-# Copyright 2019 Kaushal Prajapati <kbprajapati@live.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
-class ProductTemplate(models.Model):
-    _inherit = "product.template"
+class SaleOrderLines(models.Model):
+    _inherit = "sale.order.line"
 
-    product_brand_id = fields.Many2one(
-        "product.brand", string="Brand", help="Select a brand for this product"
-    )
+    product_status = fields.Text("Product Status", translate=True)
+    warranty_period = fields.Text("Warranty Period", translate=True)
+

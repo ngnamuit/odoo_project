@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!--    SALE ORDER SUMMARY REPORT   -->
+<template id="report_saleorder_summary_document">
+     <div class="brand_external_layout">
+         <xpath expr="//head" position="inside">
+            <style>
+
+                 table.order_details , .order_details th, .order_details td{
+                     border: 1px solid black !important;
+                     border-collapse: collapse !important;
+                 }
+                 td.border-left {
+                     border-left: 1px solid black !important;
+                     padding-top: 0px;
+                     padding-bottom: 0px;
+                 }
+                 .order_details th, .order_details td {
+                     padding: 5px !important;
+                     text-align: left !important;
+                 }
+                 table.total_price {
+                     float: right !important;
+                     margin-right: 120px !important;
+                 }
+                .total_price span {
+                    line-height: 20px !important;
+                }
+            </style>
+        </xpath>
+         <div class="header">
+            <span><b><span t-field="doc.company_id.name"/></b></span><br/>
+                     <span>
+                     <span>
+                     Địa chỉ:
+                     <span t-field="doc.company_id.street"/> <span t-field="doc.company_id.street2"/> <span t-field="doc.company_id.city"/> <span t-field="doc.company_id.state_id.name"/>
+                     </span>
+                     </span><br/>
+                     <span>Điện thoại: <span t-field="doc.company_id.partner_id.mobile" style="padding-right: 130px"/> Hotline: <span t-field="doc.company_id.partner_id.phone"/></span><br/>
+                     <span>Email: <a t-attf-href="tel:{{doc.company_id.email}}"><span t-field="doc.company_id.email" style="padding-right: 130px"/></a></span><br/>
+                     <span>Website: <a t-attf-href="{{doc.company_id.website}}"><span t-field="doc.company_id.website" style="padding-right: 130px"/></a></span><br/>
+        </div>
+
+         <xpath expr="//div[hasclass('o_report_layout_background')]" position="replace">
+             <div class="report_header">
+
+             </div>
+         </xpath>
+
+         <div class="page">
+             <h3 style="text-align:center">BẢNG CHÀO GIÁ</h3>
+             <div class="info" style="width:100%">
+                <table class="info"  cellspacing="0"  style="width:100%; border:1px solid black">
+                   <tr>
+                      <td>Kính gửi</td>
+                      <td>CÔNG TY TNHH HỆ THỐNG THÔNG TIN FPT </td>
+                      <td class="border-left">Người gửi</td>
+                      <td>Công Ty TNHH TM-DV Thiên Phát Tiến</td>
+                   </tr>
+                   <tr>
+                      <td>Người nhận</td>
+                      <td>Mr. Phương</td>
+                      <td class="border-left">Email</td>
+                      <td>hieudv@thienphattien.com</td>
+                   </tr>
+                   <tr>
+                      <td>Điện thoại</td>
+                      <td>09374067047</td>
+                      <td class="border-left">Mobile</td>
+                      <td>0935.801.687</td>
+                   </tr>
+                   <tr>
+                       <td>Email</td>
+                       <td></td>
+                       <td class="border-left">Ngày gửi</td>
+                       <td>09/15/2020</td>
+                   </tr>
+                   <tr>
+                      <td>Địa chỉ</td>
+                      <td></td>
+                      <td class="border-left">Số tham chiếu</td>
+                      <td>BG050820 - Delta -RT15K3P- Go Ben Tre- FPT</td>
+                   </tr>
+                </table>
+                <p>Cảm ơn Quý khách đã liên hệ với Cty TNHH Thiên Phát Tiến, công ty chúng tôi xin trân trọng gửi đến quý khách hàng bảng chào giá thiết bị như sau:</p>
+                <table style="width:100%; border:1px solid black" class="order_details">
+                   <tr>
+                      <th>STT</th>
+                      <th>Mã hàng</th>
+                      <th>Thông tin hàng hóa</th>
+                      <th>Thương hiệu/ Xuất xứ</th>
+                      <th>Đơn vị tính</th>
+                      <th>Số lượng</th>
+                      <th>Đơn giá (VNĐ)</th>
+                      <th>Thành tiền (VNĐ)</th>
+                      <th> Thời gian bảo hành </th>
+                      <th>Tình trạng hàng hóa</th>
+                   </tr>
+
+                    <t t-set="index" t-value="1"/>
+                    <t t-foreach="doc.order_line" t-as="line">
+                       <tr>
+                          <td><span t-esc="index"/></td>
+                          <td><span t-field="line.product_id.default_code"/></td>
+                          <td><span t-field="line.name"/></td>
+                          <td><span t-field="line.product_id.product_brand_id.name"/></td>
+                          <td><span t-field="line.product_id.uom_id.name"/></td>
+                          <td><span t-field="line.product_uom_qty"/></td>
+                          <td></td>
+                          <td></td>
+                          <td><span t-field="line.warranty_period"/></td>
+                          <td><span t-field="line.product_status"/></td>
+                       </tr>
+                        <t t-set="index" t-value="index+1"/>
+                    </t>
+
+                    <tr>
+                        <td colspan="7" style="float:right !important; text-align:right !important">Tổng cộng (chưa VAT)</td>
+                        <td colspan="1" style="text-align:left"><span  name="td_amount_untaxed" t-field="doc.amount_untaxed" t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/></td>
+                        <td colspan="1"></td>
+                        <td colspan="1"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="7" style="float:right !important; text-align:right !important">Thuế GTGT (10%)</td>
+                        <td colspan="1"><span  name="td_amount_untaxed" t-field="doc.amount_tax" t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/></td>
+                        <td colspan="1"></td>
+                        <td colspan="1"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="7" style="float:right !important; text-align:right !important; color:red">TỔNG CỘNG (Bao gồm thuế GTGT)</td>
+                        <td colspan="1" style="color:red;"><span  name="td_amount_untaxed" t-field="doc.amount_total" t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/></td>
+                        <td colspan="1"></td>
+                        <td colspan="1"></td>
+                    </tr>
+                </table>
+                <div style="clear:both"></div>
+             </div>
+             <div class="notes">
+                 <br/>
+                 <span><b><u>ĐIỀU KHOẢN THƯƠNG MẠI:</u></b></span>
+                 <p>
+                     <span style="color:blue">
+                        <span>* Giá trên đã bao gồm 10% VAT (Thuế GTGT).</span> <br/>
+                        <span>* Thời gian giao hàng: 01 tuần </span><br/>
+                        <span>* Thời gian bảo hành 01 năm theo tiêu chuẩn của Hãng.</span><br/>
+                        <span>* Quy cách: Thiết bị mới 100%, nguyên đai nguyên kiện, chứng nhận CO- CQ đầy đủ.</span><br/>
+                        <span>* Địa điểm giao hàng: Thiết bị được giao miễn phí tại nội thành Tp.Hồ Chí Minh, hoặc đến chành xe tại Tỉnh.</span><br/>
+                     </span>
+                    <span>* Thanh toán: Thanh toán bằng tiền mặt hoặc chuyển khoản.</span><br/>
+                    <span>* Thông tin chuyển khoản :</span><br/>
+                    <span style="padding-left:10px"><b><span t-field="doc.company_id.name"/></b> </span><br/>
+                    <span style="padding-left:15px">- Số tài khoản: 147703659  mở tại Ngân Hàng ACB - Phòng Giao Dịch Nguyễn Sơn </span> <br/>
+                    <span style="padding-left:15px">- Số tài khoản: 0421000465858 mở tại Ngân Hàng VCB, Chi Nhánh Phú Thọ, Tp HCM </span><br/>
+                    <span>* Để biết thêm chi tiết, xin Quý Khách vui lòng liên hệ với: Mr. Hiếu – 0935.801.687 </span><br/>
+                    <span>* Lưu ý : Hiệu lực báo giá trong vòng 15 ngày. </span><br/>
+                    <span>Rất mong nhận được sự ủng hộ và hợp tác của Quý khách. </span><br/>
+                 </p>
+                 <span style="padding-right:100px;padding-left:20px"><b>ĐẠI DIỆN KINH DOANH</b></span>
+                 <span><b>XÁC NHẬN ĐẶT HÀNG</b></span>
+             </div>
+        </div>
+    </div>
+</template>
+<template id="report_saleorder_summary">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="doc">
+            <t t-call="product_brand.report_saleorder_summary_document"/>
+        </t>
+    </t>
+</template>
+
+<!--    SALE ORDER DETAILS REPORT   -->
+<template id="report_saleorder_details_document">
+     <div class="no-class">
+         <xpath expr="//head" position="inside">
+            <style>
+
+                 table.order_details , .order_details th, .order_details td{
+                     border: 1px solid black !important;
+                     border-collapse: collapse !important;
+                 }
+                 td.border-left {
+                     border-left: 1px solid black !important;
+                     padding-top: 0px;
+                     padding-bottom: 0px;
+                 }
+                 .order_details th, .order_details td {
+                     padding: 5px !important;
+                     text-align: left !important;
+                 }
+                 table.total_price {
+                     float: right !important;
+                     margin-right: 120px !important;
+                 }
+                .total_price span {
+                    line-height: 20px !important;
+                }
+            </style>
+        </xpath>
+         <div class="header header-details">
+            <span><b><span t-field="doc.company_id.name"/></b></span><br/>
+                     <span>
+                     <span>
+                     Địa chỉ:
+                     <span t-field="doc.company_id.street"/> <span t-field="doc.company_id.street2"/> <span t-field="doc.company_id.city"/> <span t-field="doc.company_id.state_id.name"/>
+                     </span>
+                     </span><br/>
+                     <span>Điện thoại: <span t-field="doc.company_id.partner_id.mobile" style="padding-right: 130px"/> Hotline: <span t-field="doc.company_id.partner_id.phone"/></span><br/>
+                     <span>Email: <a t-attf-href="tel:{{doc.company_id.email}}"><span t-field="doc.company_id.email" style="padding-right: 130px"/></a></span><br/>
+                     <span>Website: <a t-attf-href="{{doc.company_id.website}}"><span t-field="doc.company_id.website" style="padding-right: 130px"/></a></span><br/>
+        </div>
+
+         <xpath expr="//div[hasclass('o_report_layout_background')]" position="replace">
+             <div class="report_header">
+
+             </div>
+         </xpath>
+
+         <div class="page">
+             <h3 style="text-align:center">BẢNG CHÀO GIÁ</h3>
+             <div class="info" style="width:100%">
+                <table class="info"  cellspacing="0" style="width:100%; border:1px solid black">
+                   <tr>
+                      <td>Kính gửi</td>
+                      <td>CÔNG TY TNHH HỆ THỐNG THÔNG TIN FPT </td>
+                      <td class="border-left">Người gửi</td>
+                      <td>Công Ty TNHH TM-DV Thiên Phát Tiến</td>
+                   </tr>
+                   <tr>
+                      <td>Người nhận</td>
+                      <td>Mr. Phương</td>
+                      <td class="border-left">Email</td>
+                      <td>hieudv@thienphattien.com</td>
+                   </tr>
+                   <tr>
+                      <td>Điện thoại</td>
+                      <td>09374067047</td>
+                      <td class="border-left">Mobile</td>
+                      <td>0935.801.687</td>
+                   </tr>
+                   <tr>
+                       <td>Email</td>
+                       <td></td>
+                       <td class="border-left">Ngày gửi</td>
+                       <td>09/15/2020</td>
+                   </tr>
+                   <tr>
+                      <td>Địa chỉ</td>
+                      <td></td>
+                      <td class="border-left">Số tham chiếu</td>
+                      <td>BG050820 - Delta -RT15K3P- Go Ben Tre- FPT</td>
+                   </tr>
+                </table>
+                <p>Cảm ơn Quý khách đã liên hệ với Cty TNHH Thiên Phát Tiến, công ty chúng tôi xin trân trọng gửi đến quý khách hàng bảng chào giá thiết bị như sau:</p>
+                <table style="width:100%; border:1px solid black" class="order_details">
+                   <tr>
+                      <th>STT</th>
+                      <th>Mã hàng</th>
+                      <th>Thông tin hàng hóa</th>
+                      <th>Thương hiệu/ Xuất xứ</th>
+                      <th>Đơn vị tính</th>
+                      <th>Số lượng</th>
+                      <th>Đơn giá (VNĐ)</th>
+                      <th>Thành tiền (VNĐ)</th>
+                      <th> Thời gian bảo hành </th>
+                      <th>Tình trạng hàng hóa</th>
+                   </tr>
+
+                    <t t-set="index" t-value="1"/>
+                    <t t-foreach="doc.order_line" t-as="line">
+                       <tr>
+                          <td><span t-esc="index"/></td>
+                          <td><span t-field="line.product_id.default_code"/></td>
+                          <td><span t-field="line.name"/></td>
+                          <td><span t-field="line.product_id.product_brand_id.name"/></td>
+                          <td><span t-field="line.product_id.uom_id.name"/></td>
+                          <td><span t-field="line.product_uom_qty"/></td>
+                          <td><span t-field="line.price_unit" t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/></td>
+                          <td><span t-field="line.price_subtotal" t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/></td>
+                          <td><span t-field="line.warranty_period"/></td>
+                          <td><span t-field="line.product_status"/></td>
+                       </tr>
+                        <t t-set="index" t-value="index+1"/>
+                    </t>
+
+                    <tr>
+                        <td colspan="7" style="float:right !important; text-align:right !important">Tổng cộng (chưa VAT)</td>
+                        <td colspan="1" style="text-align:left"><span  name="td_amount_untaxed" t-field="doc.amount_untaxed" t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/></td>
+                        <td colspan="1"></td>
+                        <td colspan="1"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="7" style="float:right !important; text-align:right !important">Thuế GTGT (10%)</td>
+                        <td colspan="1"><span  name="td_amount_untaxed" t-field="doc.amount_tax" t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/></td>
+                        <td colspan="1"></td>
+                        <td colspan="1"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="7" style="float:right !important; text-align:right !important; color:red">TỔNG CỘNG (Bao gồm thuế GTGT)</td>
+                        <td colspan="1" style="color:red;"><span  name="td_amount_untaxed" t-field="doc.amount_total" t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/></td>
+                        <td colspan="1"></td>
+                        <td colspan="1"></td>
+                    </tr>
+                </table>
+                <div style="clear:both"></div>
+             </div>
+             <div class="notes">
+                 <br/>
+                 <span><b><u>ĐIỀU KHOẢN THƯƠNG MẠI:</u></b></span>
+                 <p>
+                     <span style="color:blue">
+                        <span>* Giá trên đã bao gồm 10% VAT (Thuế GTGT).</span> <br/>
+                        <span>* Thời gian giao hàng: 01 tuần </span><br/>
+                        <span>* Thời gian bảo hành 01 năm theo tiêu chuẩn của Hãng.</span><br/>
+                        <span>* Quy cách: Thiết bị mới 100%, nguyên đai nguyên kiện, chứng nhận CO- CQ đầy đủ.</span><br/>
+                        <span>* Địa điểm giao hàng: Thiết bị được giao miễn phí tại nội thành Tp.Hồ Chí Minh, hoặc đến chành xe tại Tỉnh.</span><br/>
+                     </span>
+                    <span>* Thanh toán: Thanh toán bằng tiền mặt hoặc chuyển khoản.</span><br/>
+                    <span>* Thông tin chuyển khoản :</span><br/>
+                    <span style="padding-left:10px"><b><span t-field="doc.company_id.name"/></b> </span><br/>
+                    <span style="padding-left:15px">- Số tài khoản: 147703659  mở tại Ngân Hàng ACB - Phòng Giao Dịch Nguyễn Sơn </span> <br/>
+                    <span style="padding-left:15px">- Số tài khoản: 0421000465858 mở tại Ngân Hàng VCB, Chi Nhánh Phú Thọ, Tp HCM </span><br/>
+                    <span>* Để biết thêm chi tiết, xin Quý Khách vui lòng liên hệ với: Mr. Hiếu – 0935.801.687 </span><br/>
+                    <span>* Lưu ý : Hiệu lực báo giá trong vòng 15 ngày. </span><br/>
+                    <span>Rất mong nhận được sự ủng hộ và hợp tác của Quý khách. </span><br/>
+                 </p>
+                 <span style="padding-right:100px;padding-left:20px"><b>ĐẠI DIỆN KINH DOANH</b></span>
+                 <span><b>XÁC NHẬN ĐẶT HÀNG</b></span>
+             </div>
+        </div>
+    </div>
+</template>
+<template id="report_saleorder_details">
+    <t t-call="web.report_layout">
+        <t t-foreach="docs" t-as="doc">
+            <t t-call="product_brand.report_saleorder_details_document"/>
+        </t>
+    </t>
+</template>
+</odoo>
