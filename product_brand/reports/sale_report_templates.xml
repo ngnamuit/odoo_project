@@ -44,36 +44,36 @@
          <div class="page">
              <h3 style="text-align:center">BẢNG CHÀO GIÁ</h3>
              <div class="info" style="width:100%">
-                <table class="info"  cellspacing="0"  style="width:100%; border:1px solid black">
+                <table class="info"  cellspacing="0"  style="width:100%; border:1px solid black; padding 5px;">
                    <tr>
-                      <td>Kính gửi</td>
-                      <td>CÔNG TY TNHH HỆ THỐNG THÔNG TIN FPT </td>
-                      <td class="border-left">Người gửi</td>
-                      <td>Công Ty TNHH TM-DV Thiên Phát Tiến</td>
+                        <td>Kính gửi</td>
+                        <td><t t-esc="doc.partner_id.name"/></td>
+                        <td class="border-left">Người gửi</td>
+                        <td><t t-esc="doc.company_id.name"/></td>
                    </tr>
                    <tr>
-                      <td>Người nhận</td>
-                      <td>Mr. Phương</td>
-                      <td class="border-left">Email</td>
-                      <td>hieudv@thienphattien.com</td>
+                        <td>Người nhận</td>
+                        <td><t t-esc="doc.partner_id.name"/></td>
+                        <td class="border-left">Email</td>
+                        <td><t t-esc="doc.company_id.email"/></td>
                    </tr>
                    <tr>
-                      <td>Điện thoại</td>
-                      <td>09374067047</td>
-                      <td class="border-left">Mobile</td>
-                      <td>0935.801.687</td>
+                        <td>Điện thoại</td>
+                        <td><t t-esc="doc.partner_id.phone"/></td>
+                        <td class="border-left">Mobile</td>
+                        <td><t t-esc="doc.company_id.partner_id.mobile"/></td>
                    </tr>
                    <tr>
-                       <td>Email</td>
-                       <td></td>
-                       <td class="border-left">Ngày gửi</td>
-                       <td>09/15/2020</td>
+                        <td>Email</td>
+                        <td><t t-esc="doc.partner_id.email" /></td>
+                        <td class="border-left">Ngày gửi</td>
+                        <td><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y')"/> </td>
                    </tr>
                    <tr>
-                      <td>Địa chỉ</td>
-                      <td></td>
-                      <td class="border-left">Số tham chiếu</td>
-                      <td>BG050820 - Delta -RT15K3P- Go Ben Tre- FPT</td>
+                        <td>Địa chỉ</td>
+                        <td></td>
+                        <td class="border-left">Số tham chiếu</td>
+                        <td><t t-esc="doc.name"/></td>
                    </tr>
                 </table>
                 <p>Cảm ơn Quý khách đã liên hệ với Cty TNHH Thiên Phát Tiến, công ty chúng tôi xin trân trọng gửi đến quý khách hàng bảng chào giá thiết bị như sau:</p>
@@ -207,36 +207,36 @@
          <div class="page">
              <h3 style="text-align:center">BẢNG CHÀO GIÁ</h3>
              <div class="info" style="width:100%">
-                <table class="info"  cellspacing="0" style="width:100%; border:1px solid black">
+                <table class="info"  cellspacing="0"  style="width:100%; border:1px solid black; padding 5px;">
                    <tr>
-                      <td>Kính gửi</td>
-                      <td>CÔNG TY TNHH HỆ THỐNG THÔNG TIN FPT </td>
-                      <td class="border-left">Người gửi</td>
-                      <td>Công Ty TNHH TM-DV Thiên Phát Tiến</td>
+                        <td>Kính gửi</td>
+                        <td><t t-esc="doc.partner_id.name"/></td>
+                        <td class="border-left">Người gửi</td>
+                        <td><t t-esc="doc.company_id.name"/></td>
                    </tr>
                    <tr>
-                      <td>Người nhận</td>
-                      <td>Mr. Phương</td>
-                      <td class="border-left">Email</td>
-                      <td>hieudv@thienphattien.com</td>
+                        <td>Người nhận</td>
+                        <td><t t-esc="doc.partner_id.name"/></td>
+                        <td class="border-left">Email</td>
+                        <td><t t-esc="doc.company_id.email"/></td>
                    </tr>
                    <tr>
-                      <td>Điện thoại</td>
-                      <td>09374067047</td>
-                      <td class="border-left">Mobile</td>
-                      <td>0935.801.687</td>
+                        <td>Điện thoại</td>
+                        <td><t t-esc="doc.partner_id.phone"/></td>
+                        <td class="border-left">Mobile</td>
+                        <td><t t-esc="doc.company_id.partner_id.mobile"/></td>
                    </tr>
                    <tr>
-                       <td>Email</td>
-                       <td></td>
-                       <td class="border-left">Ngày gửi</td>
-                       <td>09/15/2020</td>
+                        <td>Email</td>
+                        <td><t t-esc="doc.partner_id.email" /></td>
+                        <td class="border-left">Ngày gửi</td>
+                        <td><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y')"/> </td>
                    </tr>
                    <tr>
-                      <td>Địa chỉ</td>
-                      <td></td>
-                      <td class="border-left">Số tham chiếu</td>
-                      <td>BG050820 - Delta -RT15K3P- Go Ben Tre- FPT</td>
+                        <td>Địa chỉ</td>
+                        <td></td>
+                        <td class="border-left">Số tham chiếu</td>
+                        <td><t t-esc="doc.name"/></td>
                    </tr>
                 </table>
                 <p>Cảm ơn Quý khách đã liên hệ với Cty TNHH Thiên Phát Tiến, công ty chúng tôi xin trân trọng gửi đến quý khách hàng bảng chào giá thiết bị như sau:</p>

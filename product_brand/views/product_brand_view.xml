@@ -228,6 +228,14 @@
                    <field name="product_status"/>
                    <field name="warranty_period"/>
                 </xpath>
+
+                <!-- Hidden Print/SO Quotation  and Send By Email -->
+                <xpath expr="//button[@name='action_quotation_send' and @states='draft']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_quotation_send']" position="attributes" >
+                    <attribute name="attrs">{'invisible': True}</attribute>
+                </xpath>
             </field>
     </record>
 
