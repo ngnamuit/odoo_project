@@ -6,7 +6,7 @@
     'category': 'Sales/CRM',
     'summary': 'Track leads and close opportunities',
     'description': "",
-    'depends': ['base', 'crm'],
+    'depends': ['base', 'crm', 'social_crm'],
     'data': [
         'security/ir.model.access.csv',
         'views/crm_lead_inherit_views.xml',
