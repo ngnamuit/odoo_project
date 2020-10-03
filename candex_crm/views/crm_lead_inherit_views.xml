@@ -8,7 +8,10 @@
             <field name="inherit_id" ref="crm.crm_lead_view_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//form" position="replace">
-                    <form string="Partners">
+                    <form>
+                        <header>
+                           <field name="lifecycle_stage" widget="statusbar" options="{'clickable': '1'}" />
+                        </header>
                         <sheet>
                             <group>
                                 <group>
@@ -17,13 +20,11 @@
                                     <field name="last_name"  placeholder="Last and Middle Name" required="1" />
                                     <field name="email" widget="email" />
                                     <field name="phone" widget="phone" />
-                                    <field name="function" placeholder="e.g. Sales Director" />
                                 </group>
                                 <group>
                                     <field name="function" placeholder="e.g. Sales Director" />
                                     <field name="title" placeholder="e.g. Sales Director" />
                                     <field name="company_name"/>
-                                    <field name="lifecycle_stage"/>
                                     <field name="last_contacted"/>
                                 </group>
                             </group>

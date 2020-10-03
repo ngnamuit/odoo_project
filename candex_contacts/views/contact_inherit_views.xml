@@ -26,13 +26,11 @@
 							<field name="last_name"  placeholder="Last and Middle Name" required="1" />
 							<field name="email" widget="email" />
 							<field name="phone" widget="phone" />
-							<field name="function" placeholder="e.g. Sales Director" />
 						</group>
 						<group>
 							<field name="function" placeholder="e.g. Sales Director" />
 							<field name="title" placeholder="e.g. Sales Director" />
 							<field name="company_name"/>
-							<field name="lifecycle_stage"/>
 							<field name="last_contacted"/>
 						</group>
 					</group>
@@ -66,7 +64,6 @@
 					<field name="function" />
 					<field name="title" />
 					<field name="company_id" />
-					<field name="lifecycle_stage" />
 					<field name="last_contacted" />
 				</tree>
 			</xpath>
