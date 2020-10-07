@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--  SALE ORDER VIEW   -->
+    <record id="view_res_company_product_brand" model="ir.ui.view">
+        <field name="name">res.company.form.product.brand</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <!-- Add new fields after website (website lable) -->
+            <xpath expr="//field[@name='website']" position="after">
+                <field name="header" widget="image"/>
+                <field name="footer" widget="image"/>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

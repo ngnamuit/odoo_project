@@ -29,7 +29,11 @@
             </style>
         </xpath>
          <div class="header">
-            <span><b><span t-field="doc.company_id.name"/></b></span><br/>
+             <div>
+                <img t-if="doc.company_id.header" t-att-src="image_data_uri(doc.company_id.header)" style="max-height:80px;width:100%"/>
+             </div>
+             <div >
+                 <span><b><span t-field="doc.company_id.name"/></b></span><br/>
                      <span>
                      <span>
                      Địa chỉ:
@@ -39,29 +43,30 @@
                      <span>Điện thoại: <span t-field="doc.company_id.partner_id.mobile" style="padding-right: 130px"/> Hotline: <span t-field="doc.company_id.partner_id.phone"/></span><br/>
                      <span>Email: <a t-attf-href="tel:{{doc.company_id.email}}"><span t-field="doc.company_id.email" style="padding-right: 130px"/></a></span><br/>
                      <span>Website: <a t-attf-href="{{doc.company_id.website}}"><span t-field="doc.company_id.website" style="padding-right: 130px"/></a></span><br/>
-        </div>
+             </div>
+         </div>
 
-         <div class="page">
+         <div class="page" style="padding-top:50px">
              <h3 style="text-align:center">BẢNG CHÀO GIÁ</h3>
              <div class="info" style="width:100%">
                 <table class="info"  cellspacing="0"  style="width:100%; border:1px solid black; padding 5px;">
                    <tr>
                         <td>Kính gửi</td>
                         <td><t t-esc="doc.partner_id.name"/></td>
-                        <td class="border-left">Người gửi</td>
+                        <td class="border-left">Đơn vị gửi</td>
                         <td><t t-esc="doc.company_id.name"/></td>
                    </tr>
                    <tr>
                         <td>Người nhận</td>
-                        <td><t t-esc="doc.partner_id.name"/></td>
+                        <td><t t-esc="doc.customer_contact_name"/></td>
                         <td class="border-left">Email</td>
-                        <td><t t-esc="doc.company_id.email"/></td>
+                        <td><t t-esc="doc.user_id.email"/></td>
                    </tr>
                    <tr>
                         <td>Điện thoại</td>
-                        <td><t t-esc="doc.partner_id.phone"/></td>
+                        <td><t t-esc="doc.partner_id.mobile"/></td>
                         <td class="border-left">Mobile</td>
-                        <td><t t-esc="doc.company_id.partner_id.mobile"/></td>
+                        <td><t t-esc="doc.user_id.mobile"/></td>
                    </tr>
                    <tr>
                         <td>Email</td>
@@ -71,12 +76,12 @@
                    </tr>
                    <tr>
                         <td>Địa chỉ</td>
-                        <td></td>
+                        <td><span t-field="doc.partner_id.street"/> <span t-field="doc.partner_id.street2"/> <span t-field="doc.partner_id.city"/> <span t-field="doc.partner_id.state_id.name"/></td>
                         <td class="border-left">Số tham chiếu</td>
                         <td><t t-esc="doc.name"/></td>
                    </tr>
                 </table>
-                <p>Cảm ơn Quý khách đã liên hệ với Cty TNHH Thiên Phát Tiến, công ty chúng tôi xin trân trọng gửi đến quý khách hàng bảng chào giá thiết bị như sau:</p>
+                <p>Cảm ơn Quý khách đã liên hệ với <span t-field="doc.company_id.name"/>, công ty chúng tôi xin trân trọng gửi đến quý khách hàng bảng chào giá thiết bị như sau:</p>
                 <table style="width:100%; border:1px solid black" class="order_details">
                    <tr>
                       <th>STT</th>
@@ -96,7 +101,7 @@
                        <tr>
                           <td><span t-esc="index"/></td>
                           <td><span t-field="line.product_id.default_code"/></td>
-                          <td><span t-field="line.name"/></td>
+                          <td><span t-field="line.product_id.product_tmpl_id.name"/></td>
                           <td><span t-field="line.product_id.product_brand_id.name"/></td>
                           <td><span t-field="line.product_id.uom_id.name"/></td>
                           <td><span t-field="line.product_uom_qty"/></td>
@@ -153,6 +158,10 @@
                  <span><b>XÁC NHẬN ĐẶT HÀNG</b></span>
              </div>
         </div>
+
+         <div class="footer o_background_footer">
+             <img t-if="doc.company_id.footer" t-att-src="image_data_uri(doc.company_id.footer)" style="max-height:40px;width:100%"/>
+         </div>
     </div>
 </template>
 <template id="report_saleorder_summary">
@@ -191,8 +200,13 @@
                 }
             </style>
         </xpath>
-         <div class="header header-details">
-            <span><b><span t-field="doc.company_id.name"/></b></span><br/>
+
+         <div class="header">
+             <div>
+                <img t-if="doc.company_id.header" t-att-src="image_data_uri(doc.company_id.header)" style="max-height:80px;width:100%"/>
+             </div>
+             <div>
+                 <span><b><span t-field="doc.company_id.name"/></b></span><br/>
                      <span>
                      <span>
                      Địa chỉ:
@@ -202,29 +216,30 @@
                      <span>Điện thoại: <span t-field="doc.company_id.partner_id.mobile" style="padding-right: 130px"/> Hotline: <span t-field="doc.company_id.partner_id.phone"/></span><br/>
                      <span>Email: <a t-attf-href="tel:{{doc.company_id.email}}"><span t-field="doc.company_id.email" style="padding-right: 130px"/></a></span><br/>
                      <span>Website: <a t-attf-href="{{doc.company_id.website}}"><span t-field="doc.company_id.website" style="padding-right: 130px"/></a></span><br/>
-        </div>
+             </div>
+         </div>
 
-         <div class="page">
+         <div class="page" style="padding-top:50px">
              <h3 style="text-align:center">BẢNG CHÀO GIÁ</h3>
              <div class="info" style="width:100%">
                 <table class="info"  cellspacing="0"  style="width:100%; border:1px solid black; padding 5px;">
                    <tr>
                         <td>Kính gửi</td>
                         <td><t t-esc="doc.partner_id.name"/></td>
-                        <td class="border-left">Người gửi</td>
+                        <td class="border-left">Đơn  gửi</td>
                         <td><t t-esc="doc.company_id.name"/></td>
                    </tr>
                    <tr>
                         <td>Người nhận</td>
-                        <td><t t-esc="doc.partner_id.name"/></td>
+                        <td><t t-esc="doc.customer_contact_name"/></td>
                         <td class="border-left">Email</td>
-                        <td><t t-esc="doc.company_id.email"/></td>
+                        <td><t t-esc="doc.user_id.email"/></td>
                    </tr>
                    <tr>
                         <td>Điện thoại</td>
-                        <td><t t-esc="doc.partner_id.phone"/></td>
+                        <td><t t-esc="doc.partner_id.mobile"/></td>
                         <td class="border-left">Mobile</td>
-                        <td><t t-esc="doc.company_id.partner_id.mobile"/></td>
+                        <td><t t-esc="doc.user_id.mobile"/></td>
                    </tr>
                    <tr>
                         <td>Email</td>
@@ -234,12 +249,12 @@
                    </tr>
                    <tr>
                         <td>Địa chỉ</td>
-                        <td></td>
+                        <td><span t-field="doc.partner_id.street"/> <span t-field="doc.partner_id.street2"/> <span t-field="doc.partner_id.city"/> <span t-field="doc.partner_id.state_id.name"/></td>
                         <td class="border-left">Số tham chiếu</td>
                         <td><t t-esc="doc.name"/></td>
                    </tr>
                 </table>
-                <p>Cảm ơn Quý khách đã liên hệ với Cty TNHH Thiên Phát Tiến, công ty chúng tôi xin trân trọng gửi đến quý khách hàng bảng chào giá thiết bị như sau:</p>
+                <p>Cảm ơn Quý khách đã liên hệ với <span t-field="doc.company_id.name"/>, công ty chúng tôi xin trân trọng gửi đến quý khách hàng bảng chào giá thiết bị như sau:</p>
                 <table style="width:100%; border:1px solid black" class="order_details">
                    <tr>
                       <th>STT</th>
@@ -259,7 +274,7 @@
                        <tr>
                           <td><span t-esc="index"/></td>
                           <td><span t-field="line.product_id.default_code"/></td>
-                          <td><span t-field="line.name"/></td>
+                          <td><span t-field="line.product_id.product_tmpl_id.name"/></td>
                           <td><span t-field="line.product_id.product_brand_id.name"/></td>
                           <td><span t-field="line.product_id.uom_id.name"/></td>
                           <td><span t-field="line.product_uom_qty"/></td>
@@ -316,6 +331,10 @@
                  <span><b>XÁC NHẬN ĐẶT HÀNG</b></span>
              </div>
         </div>
+
+         <div class="footer o_background_footer">
+             <img t-if="doc.company_id.footer" t-att-src="image_data_uri(doc.company_id.footer)" style="max-height:40px;width:100%"/>
+         </div>
     </div>
 </template>
 <template id="report_saleorder_details">

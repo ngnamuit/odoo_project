@@ -212,32 +212,4 @@
         action="action_product_brand"
         parent="sale.prod_config_main"
     />
-
-
-    <!--  SALE ORDER VIEW   -->
-    <record id="view_sales_order_product_brand" model="ir.ui.view">
-            <field name="name">sale.order.form</field>
-            <field name="model">sale.order</field>
-            <field name="inherit_id" ref="sale.view_order_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//button[@name='%(sale.action_view_sale_advance_payment_inv)d']" position="after">
-                   <button name="action_send_so_summary" string="Email Summary" type="object"  class="btn-primary"/>
-                   <button name="action_send_so_details" string="Email Details" type="object"  class="btn-primary"/>
-                </xpath>
-                <xpath expr="//tree/field[@name='product_id']" position="after">
-                   <field name="product_status"/>
-                   <field name="warranty_period"/>
-                </xpath>
-
-                <!-- Hidden Print/SO Quotation  and Send By Email -->
-                <xpath expr="//button[@name='action_quotation_send' and @states='draft']" position="attributes">
-                    <attribute name="invisible">1</attribute>
-                </xpath>
-                <xpath expr="//button[@name='action_quotation_send']" position="attributes" >
-                    <attribute name="attrs">{'invisible': True}</attribute>
-                </xpath>
-            </field>
-    </record>
-
-
 </odoo>
