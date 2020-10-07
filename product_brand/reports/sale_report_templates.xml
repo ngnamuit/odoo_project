@@ -32,7 +32,11 @@
              <div>
                 <img t-if="doc.company_id.header" t-att-src="image_data_uri(doc.company_id.header)" style="max-height:80px;width:100%"/>
              </div>
-             <div >
+
+         </div>
+
+         <div class="page">
+              <div >
                  <span><b><span t-field="doc.company_id.name"/></b></span><br/>
                      <span>
                      <span>
@@ -44,41 +48,38 @@
                      <span>Email: <a t-attf-href="tel:{{doc.company_id.email}}"><span t-field="doc.company_id.email" style="padding-right: 130px"/></a></span><br/>
                      <span>Website: <a t-attf-href="{{doc.company_id.website}}"><span t-field="doc.company_id.website" style="padding-right: 130px"/></a></span><br/>
              </div>
-         </div>
-
-         <div class="page" style="padding-top:50px">
-             <h3 style="text-align:center">BẢNG CHÀO GIÁ</h3>
+             <h3 style="text-align:center;padding-top:30px">BẢNG CHÀO GIÁ</h3>
              <div class="info" style="width:100%">
                 <table class="info"  cellspacing="0"  style="width:100%; border:1px solid black; padding 5px;">
                    <tr>
-                        <td>Kính gửi</td>
-                        <td><t t-esc="doc.partner_id.name"/></td>
-                        <td class="border-left">Đơn vị gửi</td>
-                        <td><t t-esc="doc.company_id.name"/></td>
+                        <td width="15%">Kính gửi</td>
+                        <td width="35%"><t t-esc="doc.partner_id.name"/></td>
+                        <td width="15%" class="border-left">Đơn  gửi</td>
+                        <td width="35%"><t t-esc="doc.company_id.name"/></td>
                    </tr>
                    <tr>
-                        <td>Người nhận</td>
-                        <td><t t-esc="doc.customer_contact_name"/></td>
-                        <td class="border-left">Email</td>
-                        <td><t t-esc="doc.user_id.email"/></td>
+                        <td width="15%">Người nhận</td>
+                        <td width="35%"><t t-esc="doc.customer_contact_name"/></td>
+                        <td width="15%" class="border-left">Email</td>
+                        <td width="35%"><t t-esc="doc.user_id.email"/></td>
                    </tr>
                    <tr>
-                        <td>Điện thoại</td>
-                        <td><t t-esc="doc.partner_id.mobile"/></td>
-                        <td class="border-left">Mobile</td>
-                        <td><t t-esc="doc.user_id.mobile"/></td>
+                        <td width="15%">Điện thoại</td>
+                        <td width="35%"><t t-esc="doc.partner_id.mobile"/></td>
+                        <td width="15%" class="border-left">Mobile</td>
+                        <td width="35%"><t t-esc="doc.user_id.mobile"/></td>
                    </tr>
                    <tr>
-                        <td>Email</td>
-                        <td><t t-esc="doc.partner_id.email" /></td>
-                        <td class="border-left">Ngày gửi</td>
-                        <td><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y')"/> </td>
+                        <td width="15%">Email</td>
+                        <td width="35%"><t t-esc="doc.partner_id.email" /></td>
+                        <td width="15%" class="border-left">Ngày gửi</td>
+                        <td width="35%"><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y')"/> </td>
                    </tr>
                    <tr>
-                        <td>Địa chỉ</td>
-                        <td><span t-field="doc.partner_id.street"/> <span t-field="doc.partner_id.street2"/> <span t-field="doc.partner_id.city"/> <span t-field="doc.partner_id.state_id.name"/></td>
-                        <td class="border-left">Số tham chiếu</td>
-                        <td><t t-esc="doc.name"/></td>
+                        <td width="15%">Địa chỉ</td>
+                        <td width="35%"><span t-field="doc.partner_id.street"/> <span t-field="doc.partner_id.street2"/> <span t-field="doc.partner_id.city"/> <span t-field="doc.partner_id.state_id.name"/></td>
+                        <td width="15%" class="border-left">Số tham chiếu</td>
+                        <td width="35%"><t t-esc="doc.name"/></td>
                    </tr>
                 </table>
                 <p>Cảm ơn Quý khách đã liên hệ với <span t-field="doc.company_id.name"/>, công ty chúng tôi xin trân trọng gửi đến quý khách hàng bảng chào giá thiết bị như sau:</p>
@@ -205,7 +206,10 @@
              <div>
                 <img t-if="doc.company_id.header" t-att-src="image_data_uri(doc.company_id.header)" style="max-height:80px;width:100%"/>
              </div>
-             <div>
+         </div>
+
+         <div class="page">
+              <div>
                  <span><b><span t-field="doc.company_id.name"/></b></span><br/>
                      <span>
                      <span>
@@ -217,41 +221,39 @@
                      <span>Email: <a t-attf-href="tel:{{doc.company_id.email}}"><span t-field="doc.company_id.email" style="padding-right: 130px"/></a></span><br/>
                      <span>Website: <a t-attf-href="{{doc.company_id.website}}"><span t-field="doc.company_id.website" style="padding-right: 130px"/></a></span><br/>
              </div>
-         </div>
-
-         <div class="page" style="padding-top:50px">
-             <h3 style="text-align:center">BẢNG CHÀO GIÁ</h3>
+             <div style="clear:both"></div>
+             <h3 style="text-align:center;padding-top:30px">BẢNG CHÀO GIÁ</h3>
              <div class="info" style="width:100%">
                 <table class="info"  cellspacing="0"  style="width:100%; border:1px solid black; padding 5px;">
                    <tr>
-                        <td>Kính gửi</td>
-                        <td><t t-esc="doc.partner_id.name"/></td>
-                        <td class="border-left">Đơn  gửi</td>
-                        <td><t t-esc="doc.company_id.name"/></td>
+                        <td width="15%">Kính gửi</td>
+                        <td width="35%"><t t-esc="doc.partner_id.name"/></td>
+                        <td width="15%" class="border-left">Đơn  gửi</td>
+                        <td width="35%"><t t-esc="doc.company_id.name"/></td>
                    </tr>
                    <tr>
-                        <td>Người nhận</td>
-                        <td><t t-esc="doc.customer_contact_name"/></td>
-                        <td class="border-left">Email</td>
-                        <td><t t-esc="doc.user_id.email"/></td>
+                        <td width="15%">Người nhận</td>
+                        <td width="35%"><t t-esc="doc.customer_contact_name"/></td>
+                        <td width="15%" class="border-left">Email</td>
+                        <td width="35%"><t t-esc="doc.user_id.email"/></td>
                    </tr>
                    <tr>
-                        <td>Điện thoại</td>
-                        <td><t t-esc="doc.partner_id.mobile"/></td>
-                        <td class="border-left">Mobile</td>
-                        <td><t t-esc="doc.user_id.mobile"/></td>
+                        <td width="15%">Điện thoại</td>
+                        <td width="35%"><t t-esc="doc.partner_id.mobile"/></td>
+                        <td width="15%" class="border-left">Mobile</td>
+                        <td width="35%"><t t-esc="doc.user_id.mobile"/></td>
                    </tr>
                    <tr>
-                        <td>Email</td>
-                        <td><t t-esc="doc.partner_id.email" /></td>
-                        <td class="border-left">Ngày gửi</td>
-                        <td><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y')"/> </td>
+                        <td width="15%">Email</td>
+                        <td width="35%"><t t-esc="doc.partner_id.email" /></td>
+                        <td width="15%" class="border-left">Ngày gửi</td>
+                        <td width="35%"><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y')"/> </td>
                    </tr>
                    <tr>
-                        <td>Địa chỉ</td>
-                        <td><span t-field="doc.partner_id.street"/> <span t-field="doc.partner_id.street2"/> <span t-field="doc.partner_id.city"/> <span t-field="doc.partner_id.state_id.name"/></td>
-                        <td class="border-left">Số tham chiếu</td>
-                        <td><t t-esc="doc.name"/></td>
+                        <td width="15%">Địa chỉ</td>
+                        <td width="35%"><span t-field="doc.partner_id.street"/> <span t-field="doc.partner_id.street2"/> <span t-field="doc.partner_id.city"/> <span t-field="doc.partner_id.state_id.name"/></td>
+                        <td width="15%" class="border-left">Số tham chiếu</td>
+                        <td width="35%"><t t-esc="doc.name"/></td>
                    </tr>
                 </table>
                 <p>Cảm ơn Quý khách đã liên hệ với <span t-field="doc.company_id.name"/>, công ty chúng tôi xin trân trọng gửi đến quý khách hàng bảng chào giá thiết bị như sau:</p>
