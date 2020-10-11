@@ -1,0 +1,1 @@
+#### 1. Reading log by `journalctl -u mysql.service -f`
