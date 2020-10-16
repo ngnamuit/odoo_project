@@ -13,6 +13,13 @@ LIFECYCLE_STAGE = [
     ('alumni', 'Alumni')
 ]
 
+ACT_TYPES = [
+    ('haha', 'HAHA'),
+    ('like', 'LIKE'),
+    ('love', 'LOVE'),
+    ('comment', 'COMMENT'),
+]
+
 
 def get_lifecycle_stage(self):
     icp = self.env['ir.config_parameter'].sudo()
@@ -30,10 +37,11 @@ class CrmLead(models.Model):
     platform     = fields.Char(string='Platform')
     source       = fields.Char(string='Source')
     content      = fields.Text(string='Content')
-    type         = fields.Selection(LIFECYCLE_STAGE, string='Activity Type')
+    type         = fields.Selection(ACT_TYPES, string='Activity Type')
     contact_id   = fields.Many2one('res.partner', string="Contact ID")
     lead_id      = fields.Many2one('crm.lead', string="Lead ID")
-
+    post_id      = fields.Char(string='Post ID')
+    fid          = fields.Char(string='Facebook User ID')
 
 
 class CrmLead(models.Model):
@@ -62,6 +70,13 @@ class CrmLead(models.Model):
         'mail.message', 'res_id', string='Messages',
         domain=lambda self: [('message_type', '!=', 'user_notification')], auto_join=True)
 
-    def _compute_name(self):
-        for crm in self:
-            crm.name = '{} {}'.format(crm.first_name or '', crm.last_name or '')
+    fid = fields.Char(string='Facebook User ID')
+    link_ref = fields.Char(string='Reference')
+    post_id  = fields.Char(string='Post ID')
+
+    @api.model
+    def create(self, vals):
+        if 'first_name' in vals or 'last_name' in vals:
+            vals.update({'name': f"{vals['first_name']} {vals['last_name']}"})
+        res = super(CrmLead, self).create(vals)
+        return res
