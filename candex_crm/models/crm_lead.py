@@ -21,6 +21,15 @@ ACT_TYPES = [
 ]
 
 
+def get_activity_types(self):
+    icp = self.env['ir.config_parameter'].sudo()
+    lst = icp.get_param("activity_types", default=[])
+    if lst:
+        lst = ast.literal_eval(lst)
+        return lst
+    else:
+        return ACT_TYPES
+
 def get_lifecycle_stage(self):
     icp = self.env['ir.config_parameter'].sudo()
     lst = icp.get_param("LIFECYCLE_STAGE", default=[])
@@ -37,7 +46,7 @@ class CrmLead(models.Model):
     platform     = fields.Char(string='Platform')
     source       = fields.Char(string='Source')
     content      = fields.Text(string='Content')
-    type         = fields.Selection(ACT_TYPES, string='Activity Type')
+    type         = fields.Selection(get_activity_types, string='Activity Type')
     contact_id   = fields.Many2one('res.partner', string="Contact ID")
     lead_id      = fields.Many2one('crm.lead', string="Lead ID")
     post_id      = fields.Char(string='Post ID')

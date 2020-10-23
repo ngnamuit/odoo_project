@@ -3,18 +3,18 @@ import requests
 import ast
 from odoo import api, fields, models, registry, _
 _logger = logging.getLogger(__name__)
-FB_CONF = {
-    'app_name': 'app.smartstore',
-    'app_id': '1471296016504912',
-    'app_token': 'EAAFZCeNVXZBLgBAGjJVm4ZC1LX8jtWDvWX79ZCZCPwFs4gb3IiJzh3JSu5EJl4N7vZAGNxhYLIONVe4EFjn7BrUszY3lsZAjFcYZAzVAZBcZCyfGkQMyT52wb1byd0nz0QiL9OcSUIjSTCXZBIYrfOlrnGMsUq64TL1GYZAE0xZAb3EmWb9q9rPv3XXD5',
-}
+# FB_CONF = {
+#     'app_name': 'app.smartstore',
+#     'app_id': '1471296016504912',
+#     'app_token': 'EAAFZCeNVXZBLgBAGjJVm4ZC1LX8jtWDvWX79ZCZCPwFs4gb3IiJzh3JSu5EJl4N7vZAGNxhYLIONVe4EFjn7BrUszY3lsZAjFcYZAzVAZBcZCyfGkQMyT52wb1byd0nz0QiL9OcSUIjSTCXZBIYrfOlrnGMsUq64TL1GYZAE0xZAb3EmWb9q9rPv3XXD5',
+# }
 
 FB_API_URL = 'https://graph.facebook.com'
 
 def get_facebook_config(self):
     icp    = self.env['ir.config_parameter'].sudo()
-    config = icp.get_param("facebook_config".upper(), default={})
-    return FB_CONF
+    config = str(icp.get_param("facebook_config", default={}))
+    return ast.literal_eval(str(config))
 
 class SocialIntegrate(models.Model):
     _name = 'social.integrate'
@@ -38,10 +38,7 @@ class SocialIntegrate(models.Model):
         #endregion
 
         #region for lead
-        lead = self.env['crm.lead'].search([
-            ('post_id', '=', str(vals['post_id'])),
-            ('fid', '=', vals['fid'])
-        ])
+        lead = self.env['crm.lead'].search([('fid', '=', vals['fid'])])
         if not lead:
             lead_vals = {
                 'first_name' : vals.get('first_name'),
@@ -74,6 +71,7 @@ class SocialIntegrate(models.Model):
         return True
 
     def get_api_url(self, post_id, type):
+        FB_CONF = get_facebook_config(self)
         if type=='like':
             short_link = 'reactions'
         elif type == 'comment':
@@ -88,6 +86,7 @@ class SocialIntegrate(models.Model):
     @api.model
     def get_actions(self, post_ids, type='like'):
         logging.info(f"[START] get_actions function with post_ids: {post_ids}")
+        FB_CONF = get_facebook_config(self)
         for post_id in post_ids:
             logging.info(f"[GET_ACTIONS]- Processing post_id={post_id} ")
             api_url = self.get_api_url(post_id, type)
@@ -107,8 +106,8 @@ class SocialIntegrate(models.Model):
                         user      = row.get('from', {})  # this field will have when type is comment
                         fid       = user.get('id') or row.get('id')
                         full_name = user.get('name') or row.get('name')
-                        first_name= full_name.split(' ')[0]
-                        last_name = full_name[len(first_name) + 1:]
+                        first_name= full_name and full_name.split(' ') and full_name.split(' ')[0] or ''
+                        last_name = full_name and full_name.split(' ') and full_name[len(first_name) + 1:] or ''
                         message   = row.get('message')
 
                         # check record if it is existing, do nothing else store it as a activity
