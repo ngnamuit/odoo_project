@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+    <!-- Applicants -->
+    <record model="ir.ui.view" id="candex_hr_applicant_view_form">
+        <field name="name">Applicants</field>
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_applicant_view_form"/>
+        <field name="arch" type="xml">
+            <!-- Hide some fields -->
+            <xpath expr="//div[hasclass('oe_title')]" position="replace" />
+
+
+            <!--  Replace some fields by candidate's information  -->
+            <xpath expr="//form/sheet/group/group" position="replace">
+                <group>
+                    <field name="title_name" placeholder="Name Title" default_focus="1"/>
+                    <field name="first_name"  placeholder="First Name" required="1" />
+                    <field name="last_name"  placeholder="Last and Middle Name" required="1" />
+                    <field name="gender"  />
+                    <field name="birthday"  />
+                    <field name="status" />
+                    <field name="email_from"  widget="email" />
+                    <field name="work_email"  widget="email" />
+                    <field name="partner_phone" widget="phone" />
+                    <field name="lang" />
+                </group>
+            </xpath>
+        </field>
+    </record>
+    </data>
+</odoo>
