@@ -8,8 +8,16 @@
         <field name="inherit_id" ref="hr_recruitment.hr_applicant_view_form"/>
         <field name="arch" type="xml">
             <!-- Hide some fields -->
-            <xpath expr="//div[hasclass('oe_title')]" position="replace" />
-
+            <xpath expr="//div[hasclass('oe_chatter')]" position="replace" />
+            <xpath expr="//field[@name='kanban_state']" position="replace" />
+            <xpath expr="//div[hasclass('oe_title')]" position="replace" >
+                <h2 class="o_row">
+                    <div>
+                        <label for="partner_name" class="oe_edit_only"/>
+                        <field name="partner_name"/>
+                    </div>
+                </h2>
+            </xpath>
 
             <!--  Replace some fields by candidate's information  -->
             <xpath expr="//form/sheet/group/group" position="replace">
@@ -25,6 +33,30 @@
                     <field name="partner_phone" widget="phone" />
                     <field name="lang" />
                 </group>
+            </xpath>
+
+            <!--  Add some fields -->
+            <xpath expr="//field[@name='categ_ids']" position="before">
+                <field name="job_title" />
+                <field name="function" />
+                <field name="industry" />
+                <field name="seniority" />
+            </xpath>
+            <xpath expr="//sheet" position="inside">
+                <notebook colspan="4">
+                    <page string="Tab History" style="margin-top:50px">
+                        <field name="history_ids">
+                            <tree>
+                                <field name="author_id" string="By User"/>
+                                <field name="create_date" />
+                                <field name="body" string="Content"/>
+                                <field name="message_type" />
+                                <field name="res_id" string="Ref ID"/>
+                                <field name="attachment_ids" widget="many2many_binary" readonly="1"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
             </xpath>
         </field>
     </record>
