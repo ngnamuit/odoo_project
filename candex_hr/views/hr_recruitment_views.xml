@@ -60,5 +60,108 @@
             </xpath>
         </field>
     </record>
+
+
+    <!--  Hr Reject Reasons   -->
+    <record id="view_reject_reason" model="ir.ui.view">
+        <field name="name">Hr Recruitment Reject Reasons Form View</field>
+        <field name="model">reject.reason</field>
+        <field name="arch" type="xml">
+            <form string="Reject Reasons">
+                <sheet>
+                    <group>
+                        <field name="name" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+     <record id="view_reject_reason_tree" model="ir.ui.view">
+        <field name="name">Hr Recruitment Reject Reasons Tree View</field>
+        <field name="model">reject.reason</field>
+        <field name="arch" type="xml">
+            <tree string="Reject Reasons">
+                <field name="name" />
+            </tree>
+        </field>
+    </record>
+
+     <record id="action_reject_reason" model="ir.actions.act_window">
+            <field name="name">Hr Recruitment Reject Reasons</field>
+            <field name="res_model">reject.reason</field>
+            <field name="view_mode">form, tree</field>
+            <field name="view_id" ref="view_reject_reason"/>
+     </record>
+
+<!--    <menuitem name="Reject Reasons" parent="hr_recruitment.menu_hr_recruitment_configuration" id="menu_hr_reject_reason" action="action_reject_reason" sequence="10"/>-->
+
+    <!--  Hr State Action      -->
+    <record id="view_hr_state_action" model="ir.ui.view">
+        <field name="name">Hr State Action Form</field>
+        <field name="model">hr.state.action</field>
+        <field name="arch" type="xml">
+            <form string="Hr State Action Form">
+                <sheet>
+                    <group>
+                        <field name="hr_recruitment_stage_id" string="State"/>
+                        <field name="user_ids" string="Hiring Managers" widget="many2many_tags" domain="[('share', '=', False)]"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hr_state_action_tree" model="ir.ui.view">
+        <field name="name">Hr State Action Tree View</field>
+        <field name="model">hr.state.action</field>
+        <field name="arch" type="xml">
+            <tree string="Hr State Action Form">
+                <field name="hr_recruitment_stage_id" string="State"/>
+                <field name="user_ids" string="Hiring Managers" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_hr_state_action" model="ir.actions.act_window">
+            <field name="name">Hr State Action Form</field>
+            <field name="res_model">hr.state.action</field>
+            <field name="view_mode">form,tree</field>
+            <field name="view_id" ref="view_hr_state_action"/>
+     </record>
+
+<!--    <menuitem name="Hr State Action" parent="hr_recruitment.menu_hr_recruitment_configuration" id="menu_hr_state_action" action="action_hr_state_action" sequence="20"/>-->
+
+    <!-- Job Position Form View-->
+    <record model="ir.ui.view" id="candex_hr_job_survey_form_view">
+        <field name="name">Job Positions</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_job_survey"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet" position="inside">
+                <group>
+                    <field name="survey_id" string="Survey"/>
+                    <field name="reject_reason_ids" widget="section_and_note_one2many">
+                        <form>
+                            <field name="name" />
+                        </form>
+                        <tree editable="bottom">
+                            <field name="name" />
+                        </tree>
+                    </field>
+                    <field name="hr_stage_action_ids" widget="section_and_note_one2many">
+                        <form>
+                            <field name="hr_recruitment_stage_id" string="State"/>
+                            <field name="user_ids" string="Hiring Managers" widget="many2many_tags" domain="[('share', '=', False)]"/>
+                        </form>
+                        <tree editable="bottom">
+                            <field name="hr_recruitment_stage_id" />
+                            <field name="user_ids" string="Hiring Managers"/>
+                        </tree>
+                    </field>
+                </group>
+            </xpath>
+        </field>
+    </record>
     </data>
 </odoo>
