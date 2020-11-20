@@ -7,6 +7,10 @@
         <field name="model">hr.applicant</field>
         <field name="inherit_id" ref="hr_recruitment.hr_applicant_view_form"/>
         <field name="arch" type="xml">
+            <!-- Add more new buttons into form header -->
+            <xpath expr="//header" position="inside" >
+                 <button name="action_move_new_stage" string="Next Step" type="object" class="btn-primary"/>
+            </xpath>
             <!-- Hide some fields -->
             <xpath expr="//div[hasclass('oe_chatter')]" position="replace" />
             <xpath expr="//field[@name='kanban_state']" position="replace" />
@@ -58,6 +62,13 @@
                     </page>
                 </notebook>
             </xpath>
+
+            <!-- Add fields into Job Tab-->
+            <xpath expr="//field[@name='job_id']" position="after">
+                <field name="user_ids" widget="many2many_tags" domain="[('share', '=', False)]" />
+                <field name="next_meeting_date" />
+                <field name="is_sent_email" readonly="1"/>
+            </xpath>
         </field>
     </record>
 
@@ -94,8 +105,6 @@
             <field name="view_id" ref="view_reject_reason"/>
      </record>
 
-<!--    <menuitem name="Reject Reasons" parent="hr_recruitment.menu_hr_recruitment_configuration" id="menu_hr_reject_reason" action="action_reject_reason" sequence="10"/>-->
-
     <!--  Hr State Action      -->
     <record id="view_hr_state_action" model="ir.ui.view">
         <field name="name">Hr State Action Form</field>
@@ -117,6 +126,7 @@
         <field name="model">hr.state.action</field>
         <field name="arch" type="xml">
             <tree string="Hr State Action Form">
+                <field name="sequence" widget="handle"/>
                 <field name="hr_recruitment_stage_id" string="State"/>
                 <field name="user_ids" string="Hiring Managers" />
             </tree>
@@ -129,8 +139,6 @@
             <field name="view_mode">form,tree</field>
             <field name="view_id" ref="view_hr_state_action"/>
      </record>
-
-<!--    <menuitem name="Hr State Action" parent="hr_recruitment.menu_hr_recruitment_configuration" id="menu_hr_state_action" action="action_hr_state_action" sequence="20"/>-->
 
     <!-- Job Position Form View-->
     <record model="ir.ui.view" id="candex_hr_job_survey_form_view">
@@ -151,15 +159,32 @@
                     </field>
                     <field name="hr_stage_action_ids" widget="section_and_note_one2many">
                         <form>
-                            <field name="hr_recruitment_stage_id" string="State"/>
-                            <field name="user_ids" string="Hiring Managers" widget="many2many_tags" domain="[('share', '=', False)]"/>
+                            <group>
+                                <field name="sequence" widget="handle"/>
+                                <field name="hr_recruitment_stage_id" string="State"/>
+                                <field name="user_ids" string="Hiring Managers" widget="many2many_tags" domain="[('share', '=', False)]"/>
+                            </group>
                         </form>
                         <tree editable="bottom">
+                            <field name="sequence" widget="handle"/>
                             <field name="hr_recruitment_stage_id" />
-                            <field name="user_ids" string="Hiring Managers"/>
+                            <field name="user_ids" string="Hiring Managers" widget="many2many_tags"/>
                         </tree>
                     </field>
                 </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Job Position Form View-->
+    <record model="ir.ui.view" id="candex_hr_recruitment_stage_form_view">
+        <field name="name">Stages</field>
+        <field name="model">hr.recruitment.stage</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_recruitment_stage_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='job_ids']" position="after">
+                <field name="reminder_days" />
+                <field name="need_to_do_survey" />
             </xpath>
         </field>
     </record>

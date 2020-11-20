@@ -1,3 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_reject_reason,reject.reason,model_reject_reason,base.group_user,1,1,1,0
 access_hr_state_action,hr.state.action,model_hr_state_action,base.group_user,1,1,1,0
+access_hr_popup_action,hr.popup,model_hr_popup,base.group_user,1,1,1,0

@@ -1,7 +1,10 @@
 import logging
 import ast
+from datetime import datetime, date
+from dateutil import relativedelta
 from odoo import api, fields, models, registry, _
 from odoo_project.candex_crm.models import utils as BaseUtils
+from odoo.addons.base.models.ir_ui_view import keep_query
 
 _logger = logging.getLogger(__name__)
 
@@ -118,6 +121,11 @@ class HrApplicant(models.Model):
     history_ids = fields.One2many(
         'mail.message', 'res_id', string='Messages',
         domain=lambda self: [('message_type', '!=', 'user_notification')], auto_join=True)
+    user_ids = fields.Many2many('res.users', string='Hiring Managers')
+    next_meeting_date = fields.Date('Next Meeting Date')
+    is_sent_email = fields.Boolean('Is Sent Email?')
+    survey_id = fields.Many2one('survey.survey')
+
 
     @api.model
     def create(self, vals):
@@ -125,3 +133,46 @@ class HrApplicant(models.Model):
             vals.update({'name': f"{vals['first_name']} {vals['last_name']}"})
         res = super(HrApplicant, self).create(vals)
         return res
+
+
+    def action_move_new_stage(self):
+        """
+        Opens a wizard to compose an email, with relevant mail template loaded by default
+        """
+        self.ensure_one()
+        popup_action = self.env.ref('candex_hr.hr_popup_move_state_view_action')
+        dict_act_window = popup_action.read([])[0]
+        tomorrow = datetime.today().date() + relativedelta.relativedelta(days=1)
+        survey_link = self.get_survey_link()
+        dict_act_window['context'] = {
+            'default_survey_link': survey_link,
+            'default_next_meeting_date': tomorrow
+        }
+        return dict_act_window
+
+
+    def _fetch_from_access_token(self, survey_token, answer_token):
+        """ Check that given token matches an answer from the given survey_id.
+        Returns a sudo-ed browse record of survey in order to avoid access rights
+        issues now that access is granted through token. """
+        survey_sudo = self.env['survey.survey'].with_context(active_test=False).sudo().search([('access_token', '=', survey_token)])
+        if not answer_token:
+            answer_sudo = self.env['survey.user_input'].sudo()
+        else:
+            answer_sudo = self.env['survey.user_input'].sudo().search([
+                ('survey_id', '=', survey_sudo.id),
+                ('token', '=', answer_token)
+            ], limit=1)
+        return survey_sudo, answer_sudo
+
+
+    def get_survey_link(self):
+        survey = self.job_id.survey_id
+        if survey:
+            survey_sudo, dummy = self._fetch_from_access_token(survey.access_token, False)
+            answer_sudo = survey_sudo._create_answer(user=self.env.user, test_entry=True)
+            base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+            url = f'{base_url}/survey/start/%s?%s' % (survey_sudo.access_token, keep_query('*', answer_token=answer_sudo.token))
+            return url
+        else:
+            raise IOError("Can not send email!")
