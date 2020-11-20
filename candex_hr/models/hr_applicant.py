@@ -144,10 +144,20 @@ class HrApplicant(models.Model):
         dict_act_window = popup_action.read([])[0]
         tomorrow = datetime.today().date() + relativedelta.relativedelta(days=1)
         survey_link = self.get_survey_link()
-        dict_act_window['context'] = {
-            'default_survey_link': survey_link,
-            'default_next_meeting_date': tomorrow
-        }
+        user_ids = []
+        for hr in self.job_id.hr_stage_action_ids:
+            if hr.hr_recruitment_stage_id == self.stage_id:
+                user_ids=hr.user_ids.ids
+        if self.stage_id and self.stage_id.need_to_do_survey:
+            dict_act_window['context'] = {
+                'default_survey_link': survey_link,
+                'default_next_meeting_date': tomorrow,
+                'default_user_ids': user_ids,
+            }
+        else:
+            dict_act_window['context'] = {
+                'default_next_meeting_date': tomorrow
+            }
         return dict_act_window
 
 
@@ -164,7 +174,6 @@ class HrApplicant(models.Model):
                 ('token', '=', answer_token)
             ], limit=1)
         return survey_sudo, answer_sudo
-
 
     def get_survey_link(self):
         survey = self.job_id.survey_id
