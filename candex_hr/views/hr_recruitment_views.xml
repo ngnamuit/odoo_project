@@ -7,10 +7,16 @@
         <field name="model">hr.applicant</field>
         <field name="inherit_id" ref="hr_recruitment.hr_applicant_view_form"/>
         <field name="arch" type="xml">
-            <!-- Add more new buttons into form header -->
-            <xpath expr="//header" position="inside" >
-                 <button name="action_move_new_stage" string="Next Step" type="object" class="btn-primary"/>
+            <!-- Replace stage_id -->
+            <xpath expr="//header" position="replace" >
+                <header>
+                    <button name="action_move_new_stage" string="Next Step" type="object" class="btn-primary"/>
+                    <field name="stage_id" widget="statusbar" options="{'fold_field': 'fold'}"
+                            attrs="{'invisible': [('active', '=', False),('emp_id', '=', False)]}"
+                            domain="[('id', 'in', job_stage_ids)]" />
+                </header>
             </xpath>
+
             <!-- Hide some fields -->
             <xpath expr="//div[hasclass('oe_chatter')]" position="replace" />
             <xpath expr="//field[@name='kanban_state']" position="replace" />
@@ -47,8 +53,20 @@
                 <field name="seniority" />
             </xpath>
             <xpath expr="//sheet" position="inside">
-                <notebook colspan="4">
-                    <page string="Tab History" style="margin-top:50px">
+                <notebook colspan="4" style="margin-top:50px">
+                    <page string="Activities">
+                        <field name="applicant_activity_ids" domain="[('type','=', 'survey')]">
+                            <tree>
+                                <field name="survey_id" />
+                                <field name="result_id" />
+                                <field name="create_date" />
+                                <field name="link" />
+                                <field name="note" />
+                                <field name="stage_id" />
+                            </tree>
+                        </field>
+                    </page>
+                    <page string="History" >
                         <field name="history_ids">
                             <tree>
                                 <field name="author_id" string="By User"/>
@@ -67,7 +85,9 @@
             <xpath expr="//field[@name='job_id']" position="after">
                 <field name="user_ids" widget="many2many_tags" domain="[('share', '=', False)]" />
                 <field name="next_meeting_date" />
-                <field name="is_sent_email" readonly="1"/>
+                <field name="is_confirm_meeting" readonly="1"/>
+                <field name="job_stage_ids" widget="many2many_tags" invisible="1"/>
+                <field name="token" readonly="0"/>
             </xpath>
         </field>
     </record>

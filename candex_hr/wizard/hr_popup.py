@@ -12,24 +12,7 @@ class HrPopup(models.TransientModel):
 
     def action_move_state_confirm(self):
         applicant = self.env['hr.applicant'].browse(self.env.context.get('active_ids'))
-
-        # get list stages
-        hr_stage_action_ids = applicant.job_id.hr_stage_action_ids
-        stage_dict = []
-        stage_ids = []
-        for hs in hr_stage_action_ids:
-            stage_dict.append({
-                'id'      : hs.hr_recruitment_stage_id.id,
-                'sequence': hs.hr_recruitment_stage_id.sequence,
-            })
-        if stage_dict:
-            stage_dict = sorted(stage_dict, key=itemgetter('sequence'), reverse=False)
-            for st in stage_dict:
-                stage_ids.append(st.get('id'))
-
-        # get next stage_id
-        current_stage_id = applicant.stage_id.id
-        next_stage_id = stage_ids[stage_ids.index(current_stage_id) + 1]
+        next_stage_id = applicant.get_next_state()
 
         # write applicant
         if self.send_email(applicant):

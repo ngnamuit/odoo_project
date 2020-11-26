@@ -6,7 +6,8 @@
             <field name="arch" type="xml">
                 <form string="Popup">
                     <group>
-                        <field name="survey_link" string="Need to do survey" readonly="1"/>
+                        <field name="survey_link" string="Need to do survey"
+                               widget="url" readonly="1" attrs="{'invisible':[('survey_link', '==', False)]}"/>
                     </group>
                     <group class="oe_title">
                         <field name="next_meeting_date" required="1"/>

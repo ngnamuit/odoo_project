@@ -1,22 +1,104 @@
-import logging
 import ast
-from datetime import datetime, date
+import logging
+import werkzeug
+import json
+import uuid
 from dateutil import relativedelta
-from odoo import api, fields, models, registry, _
-from odoo_project.candex_crm.models import utils as BaseUtils
+from datetime import datetime
+from operator import itemgetter
+from odoo import api, fields, models, registry, _, http
 from odoo.addons.base.models.ir_ui_view import keep_query
+from odoo.http import request, content_disposition
+from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
+# contants
+APPLICANT_ACTIVITY_TYPES = ['survey', 'submit_next_meeting_date']
 
-def get_facebook_config(self):
-    icp    = self.env['ir.config_parameter'].sudo()
-    config = str(icp.get_param("facebook_config", default={}))
-    return ast.literal_eval(str(config))
+
+class HrApplicantController(http.Controller):
+
+    @http.route('/applicant/interview/submit/say_yes/<int:stage_id>/<string:applicant_token>', type='http', auth='user', website=True)
+    def interview_submit_yes(self, stage_id, applicant_token, **kwargs):
+        """
+        This link is sent to customer to confirm that He/She agrees for next interview
+        """
+        applicant_id = request.env['hr.applicant'].sudo().search([
+            ('token', '=', applicant_token),
+            # ('is_confirm_meeting', '=', False)
+        ], limit=1)
+        if not applicant_id or (applicant_id and applicant_id.stage_id.id != stage_id):
+            return json.dumps({'error_message': "The applicant is invalid"})
+        try:
+            act_id = request.env['hr.applicant.activities'].sudo().create({
+                'link': f'/applicant/interview/submit/say_yes/{stage_id}/{applicant_token}',
+                'note': f'Say Yes - From State:{applicant_id.stage_id.name}',
+                'type': 'submit_next_meeting_date',
+                'stage_id': applicant_id.stage_id.id,
+            })
+            applicant_id.write({
+                'applicant_activity_ids': [(6,0, [act_id.id])],
+                'is_confirm_meeting': True
+            })
+            template_id = request.env.ref('candex_hr.email_template_user_confirm_interview')
+            template_id.with_context(
+                subject=f'Applicant of {applicant_id.get_full_name()} - Say Yes',
+                email_from=applicant_id.department_id.company_id.email,
+                email_to=applicant_id.job_id.user_id.email or 'test@gmail.com'
+            ).send_mail(applicant_id.id,
+                         force_send=True,
+                         email_values={
+                             'body': f'<p>User: {applicant_id.get_full_name()} - Confirm yes to go next meeting</p>'
+                         })
+        except Exception as error:
+            return json.dumps({'error_message': str(error)})
+        return json.dumps({'is_success': 200})
+
+    @http.route('/applicant/interview/submit/say_no/<int:stage_id>/<string:applicant_token>', type='http', auth='user', website=True)
+    def interview_submit_no(self, stage_id, applicant_token, **kwargs):
+        """
+        This link is sent to customer to confirm that He/She agrees for next interview
+        """
+        applicant_id = request.env['hr.applicant'].sudo().search([
+            ('token', '=', applicant_token),
+            # ('is_confirm_meeting', '=', False)
+        ], limit=1)
+        if not applicant_id or (applicant_id and applicant_id.stage_id.id != stage_id):
+            return json.dumps({'error_message': "The applicant is invalid"})
+        try:
+            act_id = request.env['hr.applicant.activities'].sudo().create({
+                'link': f'/applicant/interview/submit/say_yes/{stage_id}/{applicant_token}',
+                'note': f'Say No - From State : {applicant_id.stage_id.name}',
+                'type': 'submit_next_meeting_date',
+                'stage_id': applicant_id.stage_id.id,
+            })
+            applicant_id.write({
+                'applicant_activity_ids': [(6, 0, [act_id.id])],
+                'is_confirm_meeting': True,
+                'stage_id': 5 # state reject
+            })
+            template_id = request.env.ref('candex_hr.email_template_user_confirm_interview')
+            template_id.with_context(
+                subject=f'Applicant of {applicant_id.get_full_name()} - Rejected by him/her',
+                email_from=applicant_id.department_id.company_id.email,
+                email_to=applicant_id.job_id.user_id.email or 'test@gmail.com'
+            ).send_mail(applicant_id.id,
+                         force_send=True,
+                         email_values={
+                             'body': f'<p>User: {applicant_id.get_full_name()} - Reject this applicant </p>'
+                         })
+
+        except Exception as error:
+            return json.dumps({'error_message': str(error)})
+        return json.dumps({'is_success': 200})
 
 class HrApplicant(models.Model):
     _inherit    = "hr.applicant"
 
+    is_confirm_meeting = fields.Boolean('Is Confirm Next Meeting Date',)
+    token = fields.Char('Applicant Token')
+    applicant_activity_ids = fields.One2many('hr.applicant.activities', 'applicant_id', string='Activities')
     title_name = fields.Selection([
         ('anh', 'Anh'),
         ('chi', 'Chị'),
@@ -30,7 +112,6 @@ class HrApplicant(models.Model):
         ('female', 'Female'),
         ('others', 'Others')
     ],  default="male", tracking=True)
-
     birthday   = fields.Date('Date of Birth', tracking=True)
     lang       = fields.Selection([
         ('vietnamese', 'Vietnamese'),
@@ -122,18 +203,104 @@ class HrApplicant(models.Model):
         'mail.message', 'res_id', string='Messages',
         domain=lambda self: [('message_type', '!=', 'user_notification')], auto_join=True)
     user_ids = fields.Many2many('res.users', string='Hiring Managers')
-    next_meeting_date = fields.Date('Next Meeting Date')
+    next_meeting_date = fields.Datetime('Next Meeting Date')
     is_sent_email = fields.Boolean('Is Sent Email?')
     survey_id = fields.Many2one('survey.survey')
+    job_stage_ids = fields.Many2many('hr.recruitment.stage', compute='_compute_job_stage_ids', string='Computed Stage')
 
+    @api.depends('job_id')
+    def _compute_job_stage_ids(self):
+        for applicant in self:
+            stage_ids = []
+            if applicant.job_id and applicant.job_id.hr_stage_action_ids:
+                stage_ids = applicant.job_id.hr_stage_action_ids.hr_recruitment_stage_id.ids
+            applicant.job_stage_ids = stage_ids
+
+    @api.model
+    def get_full_name(self):
+        return f'{self.first_name or ""} {self.last_name or ""}'
 
     @api.model
     def create(self, vals):
         if 'first_name' in vals or 'last_name' in vals:
             vals.update({'name': f"{vals['first_name']} {vals['last_name']}"})
+        if 'job_id' in vals and vals['job_id']:
+            first_stage_id = self.get_first_stage_by_job_id(vals['job_id'])
+            user_ids       = self.get_user_ids_by_job_id(vals['job_id'], first_stage_id)
+            vals['stage_id'] = first_stage_id
+            vals['user_ids'] = user_ids
+        vals['token'] = uuid.uuid4()
         res = super(HrApplicant, self).create(vals)
         return res
 
+    def write(self, vals):
+        if 'stage_id' in vals and 'is_confirm_meeting' not in vals:
+            vals['is_confirm_meeting'] = False
+        return super(HrApplicant, self).write(vals)
+
+
+    def get_user_ids_by_job_id(self, job_id, current_state_id):
+        job = self.env['hr.job'].browse(job_id)
+        user_ids = []
+        for hs in job.hr_stage_action_ids:
+            if hs.hr_recruitment_stage_id.id == current_state_id:
+                user_ids =hs.user_ids.ids
+        return user_ids
+
+    def get_first_stage_by_job_id(self, job_id):
+        job = self.env['hr.job'].browse(job_id)
+        if not job or (job and not job.hr_stage_action_ids):
+            return None
+        # get list stages
+        hr_stage_action_ids = job.hr_stage_action_ids
+        stage_dict = []
+        stage_ids = []
+        for hs in hr_stage_action_ids:
+            stage_dict.append({
+                'id': hs.hr_recruitment_stage_id.id,
+                'sequence': hs.hr_recruitment_stage_id.sequence,
+            })
+        if stage_dict:
+            stage_dict = sorted(stage_dict, key=itemgetter('sequence'), reverse=False)
+            for st in stage_dict:
+                stage_ids.append(st.get('id'))
+
+        # get next stage_id
+        try:
+            current_stage_id = stage_ids[0]
+            return current_stage_id
+        except:
+            return None
+
+    def get_next_state(self):
+        """
+        :return:
+        - next state if applicant has job_id that it defined hr_stage_action_ids
+        - None: for case that not job_id or not hr_stage_action_ids or that is last state of job_id
+        """
+        if not self.job_id or (self.job_id and not self.job_id.hr_stage_action_ids):
+            return None
+        # get list stages
+        hr_stage_action_ids = self.job_id.hr_stage_action_ids
+        stage_dict = []
+        stage_ids = []
+        for hs in hr_stage_action_ids:
+            stage_dict.append({
+                'id': hs.hr_recruitment_stage_id.id,
+                'sequence': hs.hr_recruitment_stage_id.sequence,
+            })
+        if stage_dict:
+            stage_dict = sorted(stage_dict, key=itemgetter('sequence'), reverse=False)
+            for st in stage_dict:
+                stage_ids.append(st.get('id'))
+
+        # get next stage_id
+        current_stage_id = self.stage_id.id
+        try:
+            next_stage_id = stage_ids[stage_ids.index(current_stage_id) + 1]
+            return next_stage_id
+        except:
+            return None
 
     def action_move_new_stage(self):
         """
@@ -145,19 +312,20 @@ class HrApplicant(models.Model):
         tomorrow = datetime.today().date() + relativedelta.relativedelta(days=1)
         survey_link = self.get_survey_link()
         user_ids = []
+        next_state_id = self.get_next_state()
         for hr in self.job_id.hr_stage_action_ids:
-            if hr.hr_recruitment_stage_id == self.stage_id:
+            if hr.hr_recruitment_stage_id.id == next_state_id:
                 user_ids=hr.user_ids.ids
-        if self.stage_id and self.stage_id.need_to_do_survey:
-            dict_act_window['context'] = {
-                'default_survey_link': survey_link,
-                'default_next_meeting_date': tomorrow,
+        context = {'default_next_meeting_date': tomorrow}
+        if self.stage_id:
+            context.update({
                 'default_user_ids': user_ids,
-            }
-        else:
-            dict_act_window['context'] = {
-                'default_next_meeting_date': tomorrow
-            }
+            })
+        if self.stage_id.need_to_do_survey:
+            context.update({
+                'default_survey_link': survey_link,
+            })
+        dict_act_window['context'] = context
         return dict_act_window
 
 
@@ -185,3 +353,15 @@ class HrApplicant(models.Model):
             return url
         else:
             raise IOError("Can not send email!")
+
+class HrApplicantActivities(models.Model):
+    _name    = "hr.applicant.activities"
+
+    applicant_id = fields.Many2one('hr.applicant')
+    survey_id    = fields.Many2one('survey.survey', string='Survey')
+    result_id    = fields.Many2one('survey.user_input', string='User Result')
+    type         = fields.Char('Activity Type')
+    user_id      = fields.Many2one('res.users', string='User')
+    note         = fields.Text('Note')
+    link         = fields.Char('Link')
+    stage_id     = fields.Many2one('hr.recruitment.stage', string='State', required=True)
