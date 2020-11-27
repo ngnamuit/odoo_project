@@ -31,8 +31,7 @@ class HrPopup(models.TransientModel):
         self.ensure_one()
         applicant.ensure_one()
         template_id = applicant.stage_id.template_id
-        if template_id:
-            template_id.send_mail(applicant.id)
+        template_id.send_mail(applicant.id)
         return True
 
     def get_interview_submit_link(self, applicant):
