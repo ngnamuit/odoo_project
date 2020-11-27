@@ -344,15 +344,29 @@ class HrApplicant(models.Model):
         return survey_sudo, answer_sudo
 
     def get_survey_link(self):
-        survey = self.job_id.survey_id
-        if survey:
-            survey_sudo, dummy = self._fetch_from_access_token(survey.access_token, False)
-            answer_sudo = survey_sudo._create_answer(user=self.env.user, test_entry=True)
-            base_url = self.env['ir.config_parameter'].get_param('web.base.url')
-            url = f'{base_url}/survey/start/%s?%s' % (survey_sudo.access_token, keep_query('*', answer_token=answer_sudo.token))
-            return url
+        self.ensure_one()
+        # create a response and link it to this applicant
+        if not self.response_id:
+            response = self.survey_id._create_answer(partner=self.partner_id)
+            self.response_id = response.id
         else:
-            raise IOError("Can not send email!")
+            response = self.response_id
+
+        token = response.token
+        trail = "?answer_token=%s" % token if token else ""
+        url  =  str(self.survey_id.public_url + trail)
+        return url
+
+    # def get_survey_link(self):
+    #     survey = self.job_id.survey_id
+    #     if survey:
+    #         survey_sudo, dummy = self._fetch_from_access_token(survey.access_token, False)
+    #         answer_sudo = survey_sudo._create_answer(user=self.env.user, test_entry=True)
+    #         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+    #         url = f'{base_url}/survey/start/%s?%s' % (survey_sudo.access_token, keep_query('*', answer_token=answer_sudo.token))
+    #         return url
+    #     else:
+    #         raise IOError("Can not send email!")
 
 class HrApplicantActivities(models.Model):
     _name    = "hr.applicant.activities"
@@ -365,3 +379,22 @@ class HrApplicantActivities(models.Model):
     note         = fields.Text('Note')
     link         = fields.Char('Link')
     stage_id     = fields.Many2one('hr.recruitment.stage', string='State', required=True)
+
+class SurveyUserInput(models.Model):
+
+    _inherit = "survey.user_input"
+
+    def write(self, vals):
+        for rec in self:
+            applicant_id = self.env['hr.applicant'].sudo().search([('response_id', '=', rec.id)], limit=1)
+            if applicant_id and vals.get('state') == 'done':
+                act_id = request.env['hr.applicant.activities'].sudo().create({
+                    'survey_id': applicant_id.survey_id.id,
+                    'result_id': rec.id,
+                    'type': 'survey',
+                    'stage_id': applicant_id.stage_id.id,
+                })
+                applicant_id.write({
+                    'applicant_activity_ids': [(6, 0, [act_id.id])],
+                })
+        return super(SurveyUserInput, self).write(vals)
