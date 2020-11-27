@@ -19,7 +19,7 @@ APPLICANT_ACTIVITY_TYPES = ['survey', 'submit_next_meeting_date']
 
 class HrApplicantController(http.Controller):
 
-    @http.route('/applicant/interview/submit/say_yes/<int:stage_id>/<string:applicant_token>', type='http', auth='user', website=True)
+    @http.route('/applicant/interview/submit/say_yes/<int:stage_id>/<string:applicant_token>', type='http', auth='public', website=True)
     def interview_submit_yes(self, stage_id, applicant_token, **kwargs):
         """
         This link is sent to customer to confirm that He/She agrees for next interview
@@ -55,7 +55,7 @@ class HrApplicantController(http.Controller):
             return json.dumps({'error_message': str(error)})
         return json.dumps({'is_success': 200})
 
-    @http.route('/applicant/interview/submit/say_no/<int:stage_id>/<string:applicant_token>', type='http', auth='user', website=True)
+    @http.route('/applicant/interview/submit/say_no/<int:stage_id>/<string:applicant_token>', type='http', auth='public', website=True)
     def interview_submit_no(self, stage_id, applicant_token, **kwargs):
         """
         This link is sent to customer to confirm that He/She agrees for next interview
