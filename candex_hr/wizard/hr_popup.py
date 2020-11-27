@@ -15,7 +15,7 @@ class HrPopup(models.TransientModel):
         applicant = self.env['hr.applicant'].browse(self.env.context.get('active_ids'))
 
         # write applicant
-        sent = True
+        sent = self.send_email_to_confirm(applicant)
         if sent:
             write_vals = {
                 'stage_id': applicant.get_next_state(),
@@ -23,7 +23,6 @@ class HrPopup(models.TransientModel):
                 'user_ids': self.user_ids
             }
             applicant.write(write_vals)
-            self.send_email_to_confirm(applicant)
             return True
         else:
             raise IOError("Can not send email!")
