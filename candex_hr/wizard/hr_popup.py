@@ -7,7 +7,7 @@ class HrPopup(models.TransientModel):
     _name = 'hr.popup'
 
     user_ids = fields.Many2many('res.users', string='Next Hiring Managers')
-    next_meeting_date = fields.Date('Next Meeting Date')
+    next_meeting_date = fields.Datetime('Next Meeting Date')
     survey_link = fields.Char('Survey Link')
 
     def action_move_state_confirm(self):
