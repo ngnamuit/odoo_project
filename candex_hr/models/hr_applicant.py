@@ -25,8 +25,8 @@ class HrApplicantController(http.Controller):
         This link is sent to customer to confirm that He/She agrees for next interview
         """
         applicant_id = request.env['hr.applicant'].sudo().search([
-            ('token', '=', applicant_token),
-            # ('is_confirm_meeting', '=', False)
+            ('token', '=', applicant_token.strip()),
+            ('is_confirm_meeting', '=', False)
         ], limit=1)
         if not applicant_id or (applicant_id and applicant_id.stage_id.id != stage_id):
             return json.dumps({'error_message': "The applicant is invalid"})
@@ -62,7 +62,7 @@ class HrApplicantController(http.Controller):
         """
         applicant_id = request.env['hr.applicant'].sudo().search([
             ('token', '=', applicant_token),
-            # ('is_confirm_meeting', '=', False)
+            ('is_confirm_meeting', '=', False)
         ], limit=1)
         if not applicant_id or (applicant_id and applicant_id.stage_id.id != stage_id):
             return json.dumps({'error_message': "The applicant is invalid"})
@@ -207,6 +207,8 @@ class HrApplicant(models.Model):
     is_sent_email = fields.Boolean('Is Sent Email?')
     survey_id = fields.Many2one('survey.survey')
     job_stage_ids = fields.Many2many('hr.recruitment.stage', compute='_compute_job_stage_ids', string='Computed Stage')
+    url_confirm_yes = fields.Char(string='URL to confirm Yes', compute='_compute_url_confirm_yes')
+    url_confirm_no = fields.Char(string='URL to Reject', compute='_compute_url_confirm_no')
 
     @api.depends('job_id')
     def _compute_job_stage_ids(self):
@@ -215,6 +217,20 @@ class HrApplicant(models.Model):
             if applicant.job_id and applicant.job_id.hr_stage_action_ids:
                 stage_ids = applicant.job_id.hr_stage_action_ids.hr_recruitment_stage_id.ids
             applicant.job_stage_ids = stage_ids
+
+    @api.depends('stage_id')
+    def _compute_url_confirm_yes(self):
+        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+        for applicant in self:
+            url = f'{base_url}/applicant/interview/submit/say_yes/{applicant.stage_id.id}/{applicant.token}'
+            applicant.url_confirm_yes = url
+
+    @api.depends('stage_id')
+    def _compute_url_confirm_no(self):
+        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+        for applicant in self:
+            url = f'{base_url}/applicant/interview/submit/say_no/{applicant.stage_id.id}/{applicant.token}'
+            applicant.url_confirm_no = url
 
     @api.model
     def get_full_name(self):
@@ -236,6 +252,8 @@ class HrApplicant(models.Model):
     def write(self, vals):
         if 'stage_id' in vals and 'is_confirm_meeting' not in vals:
             vals['is_confirm_meeting'] = False
+            if not self.token:
+                vals['token'] = uuid.uuid4()
         return super(HrApplicant, self).write(vals)
 
 

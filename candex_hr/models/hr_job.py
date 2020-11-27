@@ -40,3 +40,5 @@ class RecruitmentStage(models.Model):
 
     reminder_days = fields.Integer('Reminder Days (Int)', default=0)
     need_to_do_survey = fields.Boolean('Need to do survey')
+    is_interview = fields.Boolean('Is Interview')
+    is_reject = fields.Boolean('Is Reject')

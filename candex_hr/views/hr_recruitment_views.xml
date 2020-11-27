@@ -2,6 +2,15 @@
 <odoo>
     <data>
     <!-- Applicants -->
+<!--     <record model="ir.ui.view" id="candex_hr_applicant_survey_view_form">-->
+<!--        <field name="name">Applicants</field>-->
+<!--        <field name="model">hr.applicant</field>-->
+<!--        <field name="inherit_id" ref="hr_recruitment_survey.hr_applicant_view_form_inherit"/>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <xpath expr="//button" position="replace"/>-->
+<!--        </field>-->
+<!--     </record>-->
+
     <record model="ir.ui.view" id="candex_hr_applicant_view_form">
         <field name="name">Applicants</field>
         <field name="model">hr.applicant</field>
@@ -88,6 +97,8 @@
                 <field name="is_confirm_meeting" readonly="1"/>
                 <field name="job_stage_ids" widget="many2many_tags" invisible="1"/>
                 <field name="token" readonly="0"/>
+                <field name="url_confirm_yes" invisible="1"/>
+                <field name="url_confirm_no" invisible="1"/>
             </xpath>
         </field>
     </record>
@@ -205,6 +216,8 @@
             <xpath expr="//field[@name='job_ids']" position="after">
                 <field name="reminder_days" />
                 <field name="need_to_do_survey" />
+                <field name="is_interview" />
+                <field name="is_reject" />
             </xpath>
         </field>
     </record>
