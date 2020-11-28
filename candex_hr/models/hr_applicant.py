@@ -450,6 +450,6 @@ class SurveyUserInput(models.Model):
                     'stage_id': applicant_id.stage_id.id,
                 })
                 applicant_id.write({
-                    'applicant_activity_ids': [(6, 0, [act_id.id])],
+                    'applicant_activity_ids': [(4, act_id.id)],
                 })
         return super(SurveyUserInput, self).write(vals)
