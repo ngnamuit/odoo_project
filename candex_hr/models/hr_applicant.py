@@ -19,6 +19,35 @@ APPLICANT_ACTIVITY_TYPES = ['survey', 'submit_next_meeting_date']
 
 class HrApplicantController(http.Controller):
 
+    def find_email_to_cc(self, applicant):
+        cc = []
+        for user in applicant.user_ids:
+            email = user.email
+            if email:
+                cc.append(email)
+        return cc
+
+    def send_email(self, applicant_id, option='yes'):
+        if option == 'yes':
+            subject = f'Applicant of {applicant_id.get_full_name()} - Say Yes'
+            body = f'<p>User: {applicant_id.get_full_name()} - Confirm yes to go next meeting</p>'
+        else:
+            subject = f'Applicant of {applicant_id.get_full_name()} - Rejected'
+            body = f'<p>User: {applicant_id.get_full_name()} - Reject to go next meeting</p>'
+
+        email_cc = self.find_email_to_cc(applicant_id)
+        template_id = request.env.ref('candex_hr.email_template_user_confirm_interview')
+        template_id.sudo().with_context(
+            subject=subject,
+            email_from=applicant_id.department_id.company_id.email,
+            email_to=applicant_id.job_id.user_id.email or 'ngnamuit@gmail.com'
+        ).send_mail(applicant_id.id,
+                    force_send=True,
+                    email_values={
+                        'body': body,
+                        'email_cc': email_cc
+                    })
+
     @http.route('/applicant/interview/submit/say_yes/<int:stage_id>/<string:applicant_token>', type='http', auth='public', website=True)
     def interview_submit_yes(self, stage_id, applicant_token, **kwargs):
         """
@@ -38,19 +67,10 @@ class HrApplicantController(http.Controller):
                 'stage_id': applicant_id.stage_id.id,
             })
             applicant_id.write({
-                'applicant_activity_ids': [(6,0, [act_id.id])],
+                'applicant_activity_ids': [(4, act_id.id)],
                 'is_confirm_meeting': True
             })
-            template_id = request.env.ref('candex_hr.email_template_user_confirm_interview')
-            template_id.with_context(
-                subject=f'Applicant of {applicant_id.get_full_name()} - Say Yes',
-                email_from=applicant_id.department_id.company_id.email,
-                email_to=applicant_id.job_id.user_id.email or 'test@gmail.com'
-            ).send_mail(applicant_id.id,
-                         force_send=True,
-                         email_values={
-                             'body': f'<p>User: {applicant_id.get_full_name()} - Confirm yes to go next meeting</p>'
-                         })
+            self.send_email(applicant_id, option='yes')
         except Exception as error:
             return json.dumps({'error_message': str(error)})
         return json.dumps({'is_success': 200})
@@ -73,22 +93,17 @@ class HrApplicantController(http.Controller):
                 'type': 'submit_next_meeting_date',
                 'stage_id': applicant_id.stage_id.id,
             })
+            reject_stage = request.env['hr.recruitment.stage'].sudo().search([('is_reject', '=', True)], limit=1)
+            if reject_stage:
+                reject_stage_id = reject_stage.id
+            else:
+                reject_stage_id = 10
             applicant_id.write({
-                'applicant_activity_ids': [(6, 0, [act_id.id])],
+                'applicant_activity_ids': [(4, act_id.id)],
                 'is_confirm_meeting': True,
-                'stage_id': 5 # state reject
+                'stage_id': reject_stage_id # state reject
             })
-            template_id = request.env.ref('candex_hr.email_template_user_confirm_interview')
-            template_id.with_context(
-                subject=f'Applicant of {applicant_id.get_full_name()} - Rejected by him/her',
-                email_from=applicant_id.department_id.company_id.email,
-                email_to=applicant_id.job_id.user_id.email or 'test@gmail.com'
-            ).send_mail(applicant_id.id,
-                         force_send=True,
-                         email_values={
-                             'body': f'<p>User: {applicant_id.get_full_name()} - Reject this applicant </p>'
-                         })
-
+            self.send_email(applicant_id, option='no')
         except Exception as error:
             return json.dumps({'error_message': str(error)})
         return json.dumps({'is_success': 200})
@@ -209,6 +224,8 @@ class HrApplicant(models.Model):
     job_stage_ids = fields.Many2many('hr.recruitment.stage', compute='_compute_job_stage_ids', string='Computed Stage')
     url_confirm_yes = fields.Char(string='URL to confirm Yes', compute='_compute_url_confirm_yes')
     url_confirm_no = fields.Char(string='URL to Reject', compute='_compute_url_confirm_no')
+    email = fields.Char(string='Email')
+    email_from = fields.Char(string='Email From')
 
     @api.depends('job_id')
     def _compute_job_stage_ids(self):
@@ -346,6 +363,26 @@ class HrApplicant(models.Model):
         dict_act_window['context'] = context
         return dict_act_window
 
+    def gen_new_token(self):
+        applicants = self.search([])
+        for applicant in applicants:
+            # print(f"token == {applicant.id}")
+            new_partner = None
+            # if applicant.email_from:
+            #     partner = self.env['res.partner'].search([('email', '=', applicant.email_from)], limit=1)
+            #     if not partner:
+            #         print(f"create partner == {applicant.id}")
+            #         new_partner = self.env['res.partner'].create({
+            #             'name': applicant.first_name,
+            #             'email': applicant.email_from,
+            #             'mobile': applicant.partner_phone
+            #         })
+            vals = {
+                'token': uuid.uuid4(),
+            }
+            if new_partner:
+                vals.update({'partner_id': new_partner.id})
+            applicant.write(vals)
 
     def _fetch_from_access_token(self, survey_token, answer_token):
         """ Check that given token matches an answer from the given survey_id.

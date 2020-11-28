@@ -47,6 +47,7 @@
                     <field name="gender"  />
                     <field name="birthday"  />
                     <field name="status" />
+                    <field name="partner_id"  readonly="1" />
                     <field name="email_from"  widget="email" />
                     <field name="work_email"  widget="email" />
                     <field name="partner_phone" widget="phone" />

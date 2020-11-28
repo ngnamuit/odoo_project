@@ -10,7 +10,7 @@
                                widget="url" readonly="1" attrs="{'invisible':[('survey_link', '==', False)]}"/>
                     </group>
                     <group class="oe_title">
-                        <field name="next_meeting_date" required="1"/>
+                        <field name="next_meeting_date" required="1" widget="datetime"/>
                         <field name="user_ids" string="Next Hiring Managers" widget="many2many_tags" required="1"/>
                     </group>
                     <footer>

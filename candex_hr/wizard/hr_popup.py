@@ -15,7 +15,7 @@ class HrPopup(models.TransientModel):
         applicant = self.env['hr.applicant'].browse(self.env.context.get('active_ids'))
 
         # write applicant
-        sent = self.send_email_to_confirm(applicant)
+        sent = True #self.send_email_to_confirm(applicant)
         if sent:
             write_vals = {
                 'stage_id': applicant.get_next_state(),
