@@ -269,6 +269,7 @@ class HrApplicant(models.Model):
     def write(self, vals):
         if 'stage_id' in vals and 'is_confirm_meeting' not in vals:
             vals['is_confirm_meeting'] = False
+            vals['response_id'] = False
             if not self.token:
                 vals['token'] = uuid.uuid4()
         return super(HrApplicant, self).write(vals)
