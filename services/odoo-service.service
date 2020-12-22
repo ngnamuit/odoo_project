@@ -1,0 +1,16 @@
+[Unit]
+Description=Odoo
+Documentation=http://www.odoo.com/
+
+[Service]
+# Ubuntu/Debian convention:
+Type=simple
+User=ubuntu
+Environment="PYTHONPATH=/home/ubuntu/.local/lib/python3.6/site-packages/"
+WorkingDirectory=/home/ubuntu/
+ExecStart=/home/ubuntu/odoo/.venv/bin/python /home/ubuntu/odoo/odoo-bin -c /home/ubuntu/talents_vn/odoo.conf
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=odoo-serivce
+[Install]
+WantedBy=default.target
