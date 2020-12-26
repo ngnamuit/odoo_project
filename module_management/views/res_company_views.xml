@@ -38,10 +38,20 @@
                                     <field name="certification_ids" widget="many2many_tags"/>
                                     <field name="brand"/>
                                     <field name="website" string="Website" widget="url" placeholder="e.g. https://www.odoo.com"/>
-                                    <field name="company_code"/>
-                                    <field name="domain"/>
+                                    <field name="check_field" invisible="1"/>
+                                    <field name="company_code" attrs="{'readonly': [('check_field', '!=', True)]}"/>
+                                    <field name="domain" attrs="{'readonly': [('check_field', '!=', True)]}"/>
                                 </group>
                             </group>
+                        </page>
+                        <page string="Users">
+                            <field name="user_ids" >
+                                <tree string="Recipients">
+                                    <field name="name"/>
+                                    <field name="email"/>
+                                    <field name="mobile"/>
+                                </tree>
+                            </field>
                         </page>
                     </notebook>
                     </sheet>

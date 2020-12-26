@@ -10,6 +10,7 @@
     'summary': 'Organize your module management with memos',
     'sequence': 45,
     'depends': [
+        'web',
         'base',
         'stock',
     ],
@@ -17,6 +18,7 @@
         'security/base_group.xml',
         'security/ir.model.access.csv',
         'views/res_company_views.xml',
+        'views/product_views.xml',
     ],
     'demo': [
         # 'data/note_demo.xml',

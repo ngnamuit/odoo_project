@@ -1,4 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_module_management,module.management,model_module_management,module_management.group_module_management_base, 1,1,1,1
+access_res_company,res.company,model_res_company,module_management.group_module_management_base, 1,1,1,0
+access_product_template_base,product.template,model_product_template,module_management.group_module_management_base, 1,1,1,1
 access_res_certification,res.certification,model_res_certification,module_management.group_module_management_base, 1,1,1,0
-

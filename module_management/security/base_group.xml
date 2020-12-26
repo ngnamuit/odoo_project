@@ -12,5 +12,28 @@
             <field name="category_id" ref="module_management.module_management_hidden"/>
         </record>
 
+        <record model="res.groups" id="group_module_management_manufactory">
+            <field name="name">Manufactory Group</field>
+            <field name="implied_ids" eval="[ (4, ref('stock.group_stock_multi_warehouses')),
+                                               (4, ref('stock.group_stock_manager')),
+                                             ]"/>
+            <field name="category_id" ref="module_management.module_management_hidden"/>
+        </record>
+
+        <record model="res.groups" id="group_module_management_trading">
+            <field name="name">Trading Group</field>
+            <field name="category_id" ref="module_management.module_management_hidden"/>
+            <field name="implied_ids" eval="[(4, ref('uom.group_uom'))]"/>
+        </record>
+
+        <!-- Region for records rule    -->
+        <record id="product.product_comp_rule" model="ir.rule">
+            <field name="domain_force"> [('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[
+            (4, ref('module_management.group_module_management_base')),
+            (4, ref('module_management.group_module_management_manufactory')),
+            (4, ref('module_management.group_module_management_trading')),
+            ]"/>
+        </record>
     </data>
 </odoo>
