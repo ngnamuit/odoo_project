@@ -86,6 +86,8 @@
         id="menu_action_module_management_res_company_form"
         name="Company"
         action="module_management.action_module_management_res_company_form"
+        groups="module_management.group_module_management_company"
         sequence="0"/>
+
     </data>
 </odoo>

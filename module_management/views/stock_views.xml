@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <menuitem name="Inventory Main" id="menu_stock_inventory_root" sequence="20"
+            groups="module_management.group_module_management_inventory" />
+
+        <menuitem id="menu_stock_warehouse_management" name="Warehouse Management"
+                  parent="module_management.menu_stock_inventory_root"
+                  action="stock.action_warehouse_form"
+                  groups="module_management.group_module_management_inventory" sequence="1"/>
+    </data>
+</odoo>

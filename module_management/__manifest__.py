@@ -19,6 +19,7 @@
         'security/ir.model.access.csv',
         'views/res_company_views.xml',
         'views/product_views.xml',
+        'views/stock_views.xml',
     ],
     'demo': [
         # 'data/note_demo.xml',
