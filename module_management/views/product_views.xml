@@ -6,22 +6,5 @@
         <menuitem id="menu_product_variant" name="Product Variants" action="stock.stock_product_normal_action"
             parent="module_management.menu_product" sequence="20"/>
 
-
-        <!-- HIDE MENU -->
-        <record model="ir.ui.menu" id="account.menu_finance">
-            <field eval="[(6,0,[ref('base.group_system')])]"  name="groups_id"/>
-        </record>
-<!--        <menuitem name="Invoicing"-->
-<!--                  id="account.menu_finance"-->
-<!--                  groups="base.group_system"-->
-<!--                  web_icon="account,static/description/icon.png"-->
-<!--                  sequence="40"/>-->
-
-<!--        <menuitem-->
-<!--            id="mail.menu_root_discuss"-->
-<!--            name="Discuss"-->
-<!--            web_icon="mail,static/description/icon.png"-->
-<!--            groups="base.group_system"-->
-<!--            sequence="1"/>-->
     </data>
 </odoo>
