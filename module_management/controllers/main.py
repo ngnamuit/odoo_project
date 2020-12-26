@@ -10,6 +10,8 @@ class ModuleManagementHome(Home):
     def _login_redirect(self, uid, redirect=None):
         base_url = request.env['ir.config_parameter'].sudo().get_param('web.base.url')
         user = request.env['res.users'].sudo().browse(uid)
+        print(f"_login_redirect USER ====== {user}")
+        print(f"_login_redirect PARAMS ====== {base_url}, {user.company_id.domain}")
         if user and user.id not in [odoo.SUPERUSER_ID,2] and user.company_id.domain != base_url:
             request.session.logout()
             werkzeug.utils.redirect('/web/login', 303)
