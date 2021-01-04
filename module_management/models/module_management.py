@@ -57,26 +57,19 @@ class ResCompany(models.Model):
 
     @api.model
     def create(self, values):
+        self.validate_company_code(values)
         if self._uid != SUPERUSER_ID:
             user = self.env['res.users'].sudo().browse(self._uid)[0]
             is_company = user.company_id and user.company_id.id not in [1, 2] and True or False
             if is_company:
                 raise UserError("You can not create more company. Please contact admin for details!")
-            company_code = values.get('company_code')
-            if company_code:
-                ex_company_code = self.env['res.company'].sudo().search([('company_code', '=', company_code)])
-                if ex_company_code:
-                    raise UserError("Your company code has existed already. Please choose another company code!")
         return super(ResCompany, self).create(values)
 
     def write(self, values):
-        if values.get('attachment_ids'):
+        company_code = values.get('company_code')
+        if company_code:
             for rec in self:
-                company_code = values.get('company_code')
-                if company_code:
-                    ex_company_code = rec.env['res.company'].sudo().search([('company_code', '=', company_code)])
-                    if ex_company_code:
-                        raise UserError("Your company code has existed already. Please choose another company code!")
+                rec.validate_company_code(values)
         return super(ResCompany, self).write(values)
 
     def read(self, fields=None, load='_classic_read'):
@@ -85,6 +78,14 @@ class ResCompany(models.Model):
     #endregion
 
     #region for other functions
+    def validate_company_code(self, values):
+        company_code = values.get('company_code')
+        if company_code:
+            ex_company_code = self.env['res.company'].sudo().search([('company_code', '=', company_code)])
+            if ex_company_code:
+                raise UserError("Your company code has existed already. Please choose another company code!")
+        return True
+
     @api.depends('company_code')
     def _compute_domain(self):
         base_url = BASE_ULR
