@@ -5,6 +5,9 @@ from math import copysign
 from odoo.exceptions import UserError
 
 SUPERUSER_ID = 2
+BASE_ULR = 'bnidx.net'
+
+
 class ModuleManagement(models.Model):
     _name = 'module.management'
     _description = 'Module Management'
@@ -84,7 +87,7 @@ class ResCompany(models.Model):
     #region for other functions
     @api.depends('company_code')
     def _compute_domain(self):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url', default='http://localhost:8069').replace("http://", "").replace("https://", "")
+        base_url = BASE_ULR
         for res in self:
             if res.company_code:
                 res.domain = f"{res.company_code}.{base_url}"

@@ -7,15 +7,16 @@ from odoo.http import content_disposition, dispatch_rpc, request, Response
 import werkzeug
 from odoo import http, tools
 
-
+BASE_ULR = 'bnidx.net'
 class ModuleManagementHome(Home):
 
     def _get_host(self, request):
         return request.httprequest.environ.get('HTTP_HOST', '').replace("http://", "").replace("https://", "")
 
     def _get_base_url(self, request):
-        return request.env['ir.config_parameter'].sudo().get_param('web.base.url', default='localhost:8069').\
-            replace("http://", "").replace("https://", "")
+        return BASE_ULR
+        # return request.env['ir.config_parameter'].sudo().get_param('web.base.url', default='localhost:8069').\
+        #     replace("http://", "").replace("https://", "")
 
     def _get_user_sub_domain(self, user):
         return user.company_id.domain.replace("http://", "").replace("https://", "")
@@ -52,7 +53,7 @@ class ModuleManagementHome(Home):
     @http.route('/', type='http', auth="none")
     def index(self, s_action=None, db=None, **kw):
         self._check_domain(request)
-        return super(ModuleManagementHome, self).index(s_action, db, **kw)
+        return http.local_redirect('/web', query=request.params, keep_hash=True)
 
     @http.route('/web', type='http', auth="none")
     def web_client(self, s_action=None, **kw):
