@@ -25,12 +25,23 @@
 
         <!-- Region for records rule    -->
         <record id="product.product_comp_rule" model="ir.rule">
-            <field name="domain_force"> [('company_id', '=', user.company_id.id)]</field>
+            <field name="domain_force"> [('company_id', 'in', user.company_ids.ids)]</field>
             <field name="groups" eval="[
             (4, ref('module_management.group_module_management_company')),
             (4, ref('module_management.group_module_management_inventory')),
             (4, ref('module_management.group_module_management_product')),
             ]"/>
         </record>
+
+<!--        <record id="read_product_base" model="ir.rule">-->
+<!--            <field name="name">read.product.base</field>-->
+<!--            <field name="model_id" ref="product.model_product_product"/>-->
+<!--            <field name="domain_force">[('company_id', 'in', [1,2])]</field>-->
+<!--            <field name="groups" eval="[(4, ref('account.group_account_invoice'))]"/>-->
+<!--            <field name="perm_create" eval="0"/>-->
+<!--            <field name="perm_write" eval="0"/>-->
+<!--            <field name="perm_unlink" eval="0"/>-->
+<!--            <field name="perm_read" eval="1"/>-->
+<!--        </record>-->
     </data>
 </odoo>
