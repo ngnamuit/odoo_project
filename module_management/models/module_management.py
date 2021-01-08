@@ -3,9 +3,10 @@
 from odoo import api, fields, models, _
 from math import copysign
 from odoo.exceptions import UserError
+from odoo_project.module_management.controllers.main import ModuleManagementHome
 
 SUPERUSER_ID = 2
-BASE_ULR = 'bnidx.net'
+
 
 
 class ModuleManagement(models.Model):
@@ -46,6 +47,7 @@ class ResCompany(models.Model):
         string='Business Type',
     )
     check_field = fields.Boolean('Check field', compute='get_user')
+    group_ids = fields.Many2many('res.groups', string='Groups')
 
     #endregion
 
@@ -63,14 +65,22 @@ class ResCompany(models.Model):
             is_company = user.company_id and user.company_id.id not in [1, 2] and True or False
             if is_company:
                 raise UserError("You can not create more company. Please contact admin for details!")
-        return super(ResCompany, self).create(values)
+        res = super(ResCompany, self).create(values)
+        # if 'group_ids' in values and 'user_ids' in values:
+        #     res.group_ids.users = [(6, 0, res.user_ids.ids)]
+        return res
 
     def write(self, values):
         company_code = values.get('company_code')
         if company_code:
             for rec in self:
                 rec.validate_company_code(values)
-        return super(ResCompany, self).write(values)
+        res = super(ResCompany, self).write(values)
+
+        # case 1 add new user
+        # case 2 remove user
+        # case 3
+        return res
 
     def read(self, fields=None, load='_classic_read'):
         # NEED TO CUSTOM HERE
@@ -88,7 +98,7 @@ class ResCompany(models.Model):
 
     @api.depends('company_code')
     def _compute_domain(self):
-        base_url = BASE_ULR
+        base_url = ModuleManagementHome().get_base_url(self)
         for res in self:
             if res.company_code:
                 res.domain = f"{res.company_code}.{base_url}"
@@ -127,9 +137,22 @@ class ProductTemplate(models.Model):
 
     def unlink(self):
         if self._uid != SUPERUSER_ID:
-            raise UserError("You have no permission. Please contact admin for details!")
+            for rec in self:
+                if rec.company_id.id in [1, 2]:
+                    raise UserError("You have no permission. Please contact admin for details!")
         return super(ProductTemplate, self).unlink()
+
+    @api.returns('self', lambda value: value.id)
+    def copy(self, default=None):
+        self.ensure_one()
+        if default is None:
+            default = {}
+        print('Product Template Copy =========== ')
+        self.ensure_one()
+        default.update({'company_id': self.env.user.company_id.id})
+        return super(ProductTemplate, self).copy(default=default)
     #endregion
+
 
 
 class ProductProduct(models.Model):
@@ -145,6 +168,19 @@ class ProductProduct(models.Model):
 
     def unlink(self):
         if self._uid != SUPERUSER_ID:
-            raise UserError("You have no permission. Please contact admin for details!")
+            for rec in self:
+                if rec.company_id.id in [1, 2]:
+                    raise UserError("You have no permission. Please contact admin for details!")
         return super(ProductProduct, self).unlink()
+
+    @api.returns('self', lambda value: value.id)
+    def copy(self, default=None):
+        print('Product Copy =========== ')
+        self.ensure_one()
+        if default is None:
+            default = {}
+        if 'name' not in default:
+            default['name'] = _("%s (copy)") % self.name
+        default.update({'company_id': self.env.user.company_id.id})
+        return super(ProductProduct, self).copy(default=default)
     #endregion

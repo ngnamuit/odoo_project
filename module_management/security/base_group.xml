@@ -33,6 +33,13 @@
             ]"/>
         </record>
 
+        <record id="product.product_comp_rule" model="ir.rule">
+            <field name="name" >Product multi-company</field>
+            <field name="model_id" ref="model_product_template"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force"> ['|', ('company_id', 'in', company_ids), ('company_id', 'in', [1,2])]</field>
+        </record>
+
 <!--        <record id="read_product_base" model="ir.rule">-->
 <!--            <field name="name">read.product.base</field>-->
 <!--            <field name="model_id" ref="product.model_product_product"/>-->

@@ -8,15 +8,17 @@ import werkzeug
 from odoo import http, tools
 
 BASE_ULR = 'bnidx.net'
+
 class ModuleManagementHome(Home):
 
     def _get_host(self, request):
         return request.httprequest.environ.get('HTTP_HOST', '').replace("http://", "").replace("https://", "")
 
-    def _get_base_url(self, request):
-        return BASE_ULR
-        # return request.env['ir.config_parameter'].sudo().get_param('web.base.url', default='localhost:8069').\
-        #     replace("http://", "").replace("https://", "")
+    def get_base_url(self, request):
+        if 'localhost' in request.env['ir.config_parameter'].sudo().get_param('web.base.url', default='localhost:8069'):
+            return 'localhost:8069'
+        else:
+            return BASE_ULR
 
     def _get_user_sub_domain(self, user):
         return user.company_id.domain.replace("http://", "").replace("https://", "")
@@ -35,7 +37,7 @@ class ModuleManagementHome(Home):
 
     def _check_domain(self, request):
         host = self._get_host(request)
-        base_url = self._get_base_url(request)
+        base_url = self.get_base_url(request)
         print(f"[CHECK_DOMAIN] host={host} \n base_url={base_url}")
         if host != base_url:
             sub_domain = host.split('.')[0]
