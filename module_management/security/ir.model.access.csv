@@ -1,8 +1,12 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_module_management,module.management,model_module_management,module_management.group_module_management_company, 1,1,1,1
 access_res_company,res.company,model_res_company,module_management.group_module_management_company, 1,1,1,0
+access_res_company_type,res.company.type,model_res_company_type,module_management.group_module_management_company, 1,0,0,0
+base_system_access_res_company_type,res.company.type,model_res_company_type,base.group_system, 1,1,1,1
 access_product_template_base,product.template,model_product_template,module_management.group_module_management_company, 1,1,1,1
 access_res_certification,res.certification,model_res_certification,module_management.group_module_management_company, 1,1,1,0
+management_company_access_res_users,res.users,model_res_users,module_management.group_module_management_company, 1,1,1,1
+management_company_access_res_partner,company.res.partner,model_res_users,module_management.group_module_management_company, 1,1,1,1
 admin_access_res_certification,res.certification,model_res_certification,base.group_system, 1,1,1,1
 inventory_access_stock_warehouse,stock.warehouse,stock.model_stock_warehouse,module_management.group_module_management_inventory, 1,1,1,1
 inventory_access_stock_location,stock.location,stock.model_stock_location,module_management.group_module_management_inventory, 1,1,1,1

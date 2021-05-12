@@ -1,18 +1,22 @@
 # -*- coding: utf-8 -*-
-from odoo.addons.web.controllers.main import Home
+from odoo.addons.web.controllers.main import ensure_db, Home
 from odoo.addons.website.controllers.main import Website
 import odoo
 import odoo.modules.registry
 from odoo.http import content_disposition, dispatch_rpc, request, Response
 import werkzeug
-from odoo import http, tools
+from odoo import http, tools, _
+from odoo.exceptions import ValidationError, UserError
 
 BASE_ULR = 'bnidx.net'
 
 class ModuleManagementHome(Home):
 
     def _get_host(self, request):
-        return request.httprequest.environ.get('HTTP_HOST', '').replace("http://", "").replace("https://", "")
+        host = request.httprequest.environ.get('HTTP_HOST', '').replace("http://", "").replace("https://", "")
+        if host[:4] == 'www.':
+            host = host[4:]
+        return host
 
     def get_base_url(self, request):
         if 'localhost' in request.env['ir.config_parameter'].sudo().get_param('web.base.url', default='localhost:8069'):
@@ -44,20 +48,28 @@ class ModuleManagementHome(Home):
             ex_sub_domain = request.env['res.company'].sudo().search([('company_code', '=', sub_domain)])
             if not ex_sub_domain:
                 print(f"[CHECK_DOMAIN] Can not found domain={sub_domain}")
+                raise ValidationError(_('CAN NOT FOUND YOUR DOMAIN'))
                 raise request.not_found()
         return True
 
-    @http.route('/web/login', type='http', auth="none")
-    def web_login(self, redirect=None, **kw):
+    @http.route(website=True, auth="public", sitemap=False)
+    def web_login(self, redirect=None, *args, **kw):
+        ensure_db()
         self._check_domain(request)
-        return super(ModuleManagementHome, self).web_login(redirect, **kw)
+        res = super(ModuleManagementHome, self).web_login(redirect=redirect, *args, **kw)
+        return res
 
-    @http.route('/', type='http', auth="none")
-    def index(self, s_action=None, db=None, **kw):
+    @http.route('/', type='http', auth="public", website=True)
+    def index(self, **kw):
         self._check_domain(request)
-        return http.local_redirect('/web', query=request.params, keep_hash=True)
+        res = super(ModuleManagementHome, self).index(**kw)
+        return res
 
-    @http.route('/web', type='http', auth="none")
-    def web_client(self, s_action=None, **kw):
-        self._check_domain(request)
-        return super(ModuleManagementHome, self).web_client(s_action, **kw)
+
+    # @http.route('/web', type='http', auth="none")
+    # def web_client(self, s_action=None, **kw):
+    #     ensure_db()
+    #
+    #     res = super(ModuleManagementHome, self).web_client(s_action, **kw)
+    #     self._check_domain(request)
+    #     return res

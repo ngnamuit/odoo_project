@@ -2,7 +2,6 @@
 <odoo>
     <data>
         <!-- ADD MENU -->
-        <menuitem id="menu_product" name="Products" sequence="10" groups="module_management.group_module_management_product"/>
         <menuitem id="menu_product_variant" name="Product" action="stock.product_template_action_product"
             parent="module_management.menu_product" sequence="20"/>
 
