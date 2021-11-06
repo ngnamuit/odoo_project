@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <template id="survey_assets_custom" name="survey assets" inherit_id="survey.survey_assets">
+        <xpath expr="." position="inside">
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" />
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+            <link rel="stylesheet" href="/survey_custom/static/src/css/survey_result.css"/>
+            <script type="text/javascript" src="/survey_custom/static/src/js/survey_form.js" />
+        </xpath>
+    </template>
+
+</data>
+</odoo>
