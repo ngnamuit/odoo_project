@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- REPORT TEMPLATE   -->
+    <template id="report_sale_customer_invoices">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="company" t-value="o.company_id"/>
+                <t t-set="partner" t-value="o.partner_id"/>
+                <t name="partner_header">
+                    <div class="header" style="font-family: 'Times New Roman', Times, serif !important; margin-left: 20px; width: 100%; max-height: 180px; border-bottom: 1px solid black">
+                        <div class="header-left">
+                            <img t-att-src="image_data_uri(company.logo)" style="float:left; height: 120px; width: 120px;"/>
+                            <div style="float:left; margin-left: 5px; text-align:center;">
+                                <h3><span t-esc="company.name"/></h3>
+                                <span t-esc="company.street"/>, <span t-esc="company.street2"/>, <span t-esc="company.city"/>, <span t-esc="company.state_id.name"/><br/>
+                                <span>ĐT: </span><span t-esc="company.phone"/>  <span style="margin-left:20px">FAX: 028.62562925</span><br/>
+                                <span>Email: <span t-esc="company.email"/></span>
+                            </div>
+                            <br/>
+                        </div><div style="clear: both"/>
+                    </div>
+
+                    <div class="page" style="font-family: 'Times New Roman', Times, serif !important; width: 100%; margin-left:20px; margin-right: 20px;">
+
+                        <p style="margin-top:5px;text-align: center; font-size: 24px;">
+                            <b>BẢNG CHI TIẾT CÔNG NỢ</b>
+                        </p>
+                        <table style="width: 90%;">
+                            <tr width="100%">
+                                <td style="width: 14%">Tên KH <span style="text-align:right">:</span></td>
+                                <td style="width: 80%; font-weight: bold">
+                                    <span t-field="partner.name"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Địa chỉ <span style="text-align:right">:</span></td>
+                                <td>
+                                    <span t-field="partner.street"/>, <span t-field="partner.street2"/>, <span t-field="partner.state_id.name"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Điện thoại <span style="text-align:right">:</span></td>
+                                <td><span t-field="partner.phone"/></td>
+                            </tr>
+                        </table>
+                        <table class="table table-sm" name="stock_move_table" style=" border: 1px solid black; border-collapse: collapse; width: 98%;">
+                            <tr style="text-align: center; font-size: 14px">
+                                <td style="border: 1px solid black;padding-top:10px; padding-bottom: 10px" name="th_sm_stt">
+                                    <strong>NGÀY</strong>
+                                </td>
+                                <td style=" border: 1px solid black;" name="th_sm_product">
+                                    <strong>CTỪ</strong>
+                                </td>
+                                <td style="border: 1px solid black;" name="th_sm_product_uom">
+                                    <strong>NỘI DUNG</strong>
+                                </td>
+                                <td style="border: 1px solid black;" name="th_sm_qty">
+                                    <strong>SL</strong>
+                                </td>
+                                <td style="border: 1px solid black;" name="th_sm_qty">
+                                    <strong>ĐGIÁ</strong>
+                                </td>
+                                <td style="border: 1px solid black;" name="th_sm_qty">
+                                    <strong>CK</strong>
+                                </td>
+                                <td style="border: 1px solid black;" name="th_sm_qty">
+                                    <strong>Tiền Hàng</strong>
+                                </td>
+                                <td style="border: 1px solid black;" name="th_sm_qty">
+                                    <strong>KH Trả</strong>
+                                </td>
+                                <td style="border: 1px solid black;" name="th_sm_qty">
+                                    <strong>CÒN LẠI</strong>
+                                </td>
+                            </tr>
+                            <t t-set="index" t-value="0"/>
+                            <t t-set="last_move" t-value="0"/>
+                            <tr t-foreach="lines" t-as="move" style="font-size: 13px">
+                                <t t-set="index" t-value="index+1"/>
+                                <t t-if="index == len(lines)-1">
+                                    <t t-set="last_move" t-value="move['con_lai']"/>
+                                </t>
+                                <td style="padding:5px; border: 1px solid black; text-align: center">
+                                    <span t-esc="move['ngay']"/>
+                                </td>
+                                <td style="padding:5px; border: 1px solid black; text-align: center">
+                                    <span t-esc="move['ctu']"/>
+                                </td>
+                                <td style="padding:5px; border: 1px solid black; text-align: center">
+                                    <t t-if="not move['ngay'] and not move['ctu'] and not move['sl']">
+                                        <strong t-esc="move['noi_dung']"/>
+                                    </t>
+                                    <t t-else=""><span t-esc="move['noi_dung']"/></t>
+
+                                </td>
+                                <td style="padding:5px; border: 1px solid black; text-align: center">
+                                    <span t-esc="move['sl']"/>
+                                </td>
+                                <td style="padding:5px; border: 1px solid black; text-align: center">
+                                    <span t-esc="move['dgia']"/>
+                                </td>
+                                <td style="padding:5px; border: 1px solid black; text-align: center">
+                                    <span t-esc="move['ck']"/>
+                                </td>
+                                <td style="padding:5px; border: 1px solid black; text-align: center">
+                                    <t t-if="index == len(lines)">
+                                        <strong t-esc="move['tien_hang']"/>
+                                    </t>
+                                    <t t-else=""><span t-esc="move['tien_hang']"/></t>
+                                </td>
+                                <td style="padding:5px; border: 1px solid black; text-align: center">
+                                    <t t-if="index == len(lines)">
+                                        <strong t-esc="move['kh_tra']"/>
+                                    </t>
+                                    <t t-else=""><span t-esc="move['kh_tra']"/></t>
+
+                                </td>
+                                <td style="padding:5px; border: 1px solid black; text-align: center">
+                                    <b><span t-esc="move['con_lai']"/></b>
+                                </td>
+                            </tr>
+                            <t t-if="index == len(lines) and len(lines)&gt;2">
+                                <tr>
+                                    <td colspan="7" style="text-align: right; padding-right: 30px;">
+                                        <b>CÒN</b>
+                                    </td>
+                                    <td colspan="2" style="text-align: left; padding-lef: 10px;">
+                                        <b t-esc="last_move"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </table>
+
+                        <br/><br/>
+                        <table style="width: 100%;">
+                            <tr width="100%">
+                                <td style="width: 30%; font-weight: bold; text-align:center">Xác nhận bên bán <br/>(người quản lý)</td>
+                                <td style="width: 30%; font-weight: bold; text-align:center">Khách hàng</td>
+                                <td style="width: 30%; font-weight: bold; text-align:center">Kế toán</td>
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_sale_customer_invoices" model="ir.actions.report">
+        <field name="name">Sale Customer Invoices</field>
+        <field name="model">sale.customer.invoices.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">manufatory_dat_custom.report_sale_customer_invoices</field>
+        <field name="report_file">manufatory_dat_custom.report_sale_customer_invoices</field>
+        <field name="print_report_name">Báo cáo chi tiết công nợ khách hàng</field>
+        <field name="binding_model_id" ref="model_sale_customer_invoices_wizard"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- WIZARD FORM   -->
+    <record id="sale_customer_invoices_wizard_form" model="ir.ui.view">
+        <field name="name">sale.customer.invoices.wizard.form</field>
+        <field name="model">sale.customer.invoices.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Báo cáo chi tiết công nợ khách hàng">
+                <group>
+                    <group>
+                        <field name="from_date" required="1"/>
+                        <field name="partner_id" required="1" />
+                    </group>
+                    <group>
+                        <field name="to_date" required="1" />
+                    </group>
+                </group>
+                <footer>
+                    <button name="print_report" string="Print" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_date_sale_customer_invoices_wizard" model="ir.actions.act_window">
+        <field name="name">Báo cáo chi tiết công nợ khách hàng</field>
+        <field name="res_model">sale.customer.invoices.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+    <menuitem id="menu_report_dat_sale_invoice"
+          name="Báo cáo chi tiết công nợ khách hàng"
+          action="action_date_sale_customer_invoices_wizard"
+          parent="sale.menu_sale_report"/>
+</odoo>

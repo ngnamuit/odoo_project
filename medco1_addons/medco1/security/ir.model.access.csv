@@ -1,0 +1,12 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_kind_of_variation,kind.of.variation,model_kind_of_variation,base.group_user,1,1,1,1
+access_kind_of_dossier,kind.of.dossier,model_kind_of_dossier,base.group_user,1,1,1,1
+access_manufactory_line,manufactory_line,model_manufactory_line,base.group_user,1,1,1,1
+access_project_info_line,project_info_line,model_project_info_line,base.group_user,1,1,1,1
+access_res_partner,res_partner,model_res_partner,base.group_user,1,1,1,1
+access_project_project,project_project,model_project_project,base.group_user,1,1,1,1
+access_application_line,application_line,model_application_line,base.group_user,1,1,1,1
+
+
+
+

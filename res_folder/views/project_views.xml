@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="project_res_folder_form_inherit_view" model="ir.ui.view">
+            <field name="name">Edit Project</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='settings']" position="after">
+                    <page name="folder" string="Folder">
+                        <group>
+                            <field name="folder_id" domain="[('parent_id', '=', False)]"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+
+        <record id="project_task_form_inherit_view" model="ir.ui.view">
+            <field name="name">Project Task Form Inherit</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_form2"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='extra_info']" position="after">
+                    <page name="file_ids" string="Files">
+                        <group>
+                            <field name="folder_parent_id" invisible="1"/>
+                            <field name="file_ids" nolabel="1">
+                                <tree string="Files" editable="bottom" >
+                                    <field name="folder_id" required="1" style="min-width:150px" domain="[('parent_id', '=', parent.folder_parent_id)]" attrs="{'readonly': [('url', '!=', False)]}"/>
+                                    <field name="file_name" attrs="{'readonly': [('url_backup', '=', False)]}" style="min-width:150px" force_save="1"/>
+                                    <field name="file" filename="file_name" style="min-width:150px" attrs="{'invisible': [('url_backup', '!=', False)]}"/>
+                                    <field name="url" readonly="1" force_save="1" widget="url" attrs="{'invisible': [('url_backup', '!=', False)]}" style="width:200px !important;overflow:hidden;height:50px;line-height:50px;" />
+                                    <field name="url_backup" attrs="{'invisible': ['|', ('url', '!=', False), ('file_name', '!=', False)]}" widget="url" style="width:200px !important;overflow:hidden;height:50px;line-height:50px;"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

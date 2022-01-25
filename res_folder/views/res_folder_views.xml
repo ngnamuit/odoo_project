@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_folder_form_view" model="ir.ui.view">
+            <field name="name">Res Folder Form View</field>
+            <field name="model">res.folder</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="parent_id" attrs="{'invisible': [('parent_id', '=', False)]}" />
+                            <field name="child_id" attrs="{'invisible': [('parent_id', '!=', False)]}" >
+                                <tree>
+                                    <field name="name" />
+                                </tree>
+                                <form>
+                                    <field name="name" />
+                                </form>
+                            </field>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="res_folder_tree_view" model="ir.ui.view">
+            <field name="name">res.folder.list</field>
+            <field name="model">res.folder</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <tree string="Res Folder">
+                    <field name="complete_name"/>
+                </tree>
+            </field>
+        </record>
+
+
+
+        <record id="res_folder_action" model="ir.actions.act_window">
+            <field name="name">Folders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.folder</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="res_folder_tree_view"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new folder
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="project_menu_config_res_folder"
+            action="res_folder_action"
+            parent="project.menu_project_config"
+            sequence="1000"
+        />
+    </data>
+</odoo>

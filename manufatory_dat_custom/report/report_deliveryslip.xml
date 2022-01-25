@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="report_delivery_document_inherit">
+        <t t-call="web.html_container">
+            <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)"/>
+            <t t-set="company" t-value="o.company_id.sudo()"/>
+            <t t-set="partner" t-value="o.partner_id or (o.move_lines and o.move_lines[0].partner_id) or False"/>
+            <t name="partner_header">
+                <div class="header" style="width: 100%">
+                    <div class="header-left" style="margin-left: 60px">
+                        <img t-att-src="image_data_uri(company.logo)" style="float:left; height: 120px; width: 120px;"/>
+                        <div style="font-weight:bold; float:left; padding-left: 7px; font-size: 15px;">
+                            <span t-esc="company.name"/><br/>
+                            <span>VP: Lô B31 Đường số 1, KDC Bình Chiểu 2, P.Bình Chiểu, TP. Thủ Đức</span><br/>
+                            <span>NM: </span><span t-esc="company.street"/>, <span t-esc="company.street2"/>, <span t-esc="company.city"/>, <span t-esc="company.state_id.name"/>,  <span t-esc="company.country_id.name"/><br/>
+                            <span>DT: </span><span t-esc="company.phone"/>; 028.3606 7370<br/>
+                            <span>Website: </span><span t-esc="company.website"/>; <span>Email: <span t-esc="company.email"/></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="clear: both"/>
+
+                <div class="page" style="width: 100%; margin-left:20px; margin-right: 20px;">
+                    <h1 style="text-align: center;">
+                        <span>PHIẾU GIAO HÀNG</span>
+                    </h1>
+                    <table style="width: 90%;">
+                        <tr width="100%">
+                            <td style="width: 20%">Tên KH</td>
+                            <td style="width: 80%; font-weight: bold"><span style="margin-right:20px">:</span> <span t-field="partner.name"/></td>
+                        </tr>
+                        <tr>
+                            <td>Địa chỉ</td>
+                            <td><span style="margin-right:20px">:</span><span t-field="partner.street"/>, <span t-field="partner.street2"/>, <span t-field="partner.city"/>, <span t-field="partner.state_id.name"/>,  <span t-field="partner.country_id.name"/></td>
+                        </tr>
+                        <tr>
+                            <td>Điện thoại</td>
+                            <td><span style="margin-right:20px">:</span><span t-field="partner.mobile"/></td>
+                        </tr>
+                        <tr>
+                            <td>Ngày giao hàng</td>
+                            <td><span style="margin-right:20px">:</span><span t-field="o.scheduled_date" t-options="{&quot;widget&quot;: &quot;date&quot;}"/></td>
+                        </tr>
+                    </table>
+                    <table class="table table-sm" name="stock_move_table" style=" border: 1px solid black; border-collapse: collapse; width: 90%;">
+                        <tr style="text-align: center">
+                            <td style="width: 10%; border: 1px solid black;padding-top:10px; padding-bottom: 10px" name="th_sm_stt">
+                                <strong>STT</strong>
+                            </td>
+                            <td style="width: 40%; border: 1px solid black;" name="th_sm_product">
+                                <strong>Sản phẩm</strong>
+                            </td>
+                            <td style="width: 20%; border: 1px solid black;" name="th_sm_product_uom">
+                                <strong>Đơn vị tính</strong>
+                            </td>
+                            <td style="width: 20%; border: 1px solid black;" name="th_sm_qty">
+                                <strong>SL bán</strong>
+                            </td>
+                        </tr>
+                        <t t-set="stt" t-value="0"/>
+                        <t t-set="sum_product_qty" t-value="0"/>
+                        <t t-set="lines" t-value="o.move_lines.filtered(lambda x: x.product_uom_qty)"/>
+                        <tr t-foreach="lines" t-as="move">
+                            <t t-set="stt" t-value="stt + 1"/>
+                            <t t-set="sum_product_qty" t-value="sum_product_qty + move.product_uom_qty"/>
+                            <td style="border: 1px solid black; text-align: center">
+                                <span t-esc="stt"/>
+                            </td>
+                            <td style="padding:5px; border: 1px solid black; border-collapse: collapse;">
+                                <span t-field="move.product_id"/>
+                                <p t-if="move.description_picking != move.product_id.name">
+                                    <span t-field="move.description_picking"/>
+                                </p>
+                            </td>
+                            <td style="padding:5px; border: 1px solid black; text-align: center;">
+                                <span t-field="move.product_uom"/>
+                            </td>
+                            <td style="padding:5px; border: 1px solid black; text-align: center; border-collapse: collapse;">
+                                <span t-esc="'{:0,.0f}'.format(move.product_uom_qty)" />
+                            </td>
+                        </tr>
+                        <t t-if="len(lines) &gt; 0">
+                            <tr style="font-weight: bold">
+                                <td colspan="3" style="padding:5px; border: 1px solid black; text-align: center; border-collapse: collapse;">
+                                    <b>Tổng cộng</b>
+                                </td>
+                                <td style="padding:5px; border: 1px solid black; text-align: center; border-collapse: collapse;">
+                                    <t t-esc="'{:0,.0f}'.format(sum_product_qty)"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </table>
+
+                    <table style="width: 90%;margin-top:30px">
+                        <tr width="100%">
+                            <td style="width: 40%; text-align:center">XÁC NHẬN CỦA XE</td>
+                            <td style="width: 30%; text-align:center">BÊN GIAO</td>
+                            <td style="width: 30%; text-align:center">KẾ TOÁN</td>
+                        </tr>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <template id="report_deliveryslip_inherit" inherit_id="stock.report_deliveryslip">
+        <xpath expr="//t[@t-call='stock.report_delivery_document']"  position="replace" >
+            <t t-call="manufatory_dat_custom.report_delivery_document_inherit" t-lang="o.partner_id.lang"/>
+        </xpath>
+    </template>
+</odoo>

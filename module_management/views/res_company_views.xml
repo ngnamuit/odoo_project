@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- =========== REGION FOR RES COMPANY =============== -->
+        <record id="module_management_res_company_form_view" model="ir.ui.view">
+            <field name="name">res.company.form</field>
+            <field name="model">res.company</field>
+            <field name="arch" type="xml">
+                <form string="Company">
+                  <sheet>
+                    <field name="logo" widget="image"  class="oe_avatar"/>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <notebook colspan="4">
+                        <page string="General Information">
+                            <group>
+                                <group>
+                                    <field name="active" groups="base.group_system" />
+                                    <field name="type_id" groups="base.group_system" edit="0" create="0"/>
+                                    <field name="established_year"/>
+                                    <label for="street" string="Address"/>
+                                    <div class="o_address_format">
+                                        <field name="street" placeholder="Street..." class="o_address_street"/>
+                                        <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                                        <field name="city" placeholder="City" class="o_address_city"/>
+                                        <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}'/>
+                                        <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                                        <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True}'/>
+                                    </div>
+                                    <field name="number_factories"/>
+                                    <field name="employees"/>
+
+                                </group>
+                                <group>
+                                    <field name="product_categ_ids" widget="many2many_tags"/>
+                                    <field name="certification_ids" widget="many2many_tags"/>
+                                    <field name="brand"/>
+                                    <field name="website" string="Website" widget="url" placeholder="e.g. https://www.odoo.com"/>
+                                    <field name="check_field" invisible="1"/>
+                                    <field name="company_code" attrs="{'readonly': [('check_field', '!=', True)]}"/>
+                                    <field name="domain" attrs="{'readonly': [('check_field', '!=', True)]}"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Users" groups="base.group_system">
+                            <field name="user_ids">
+                                <tree edit="0" create="0" delete="0">
+                                    <field name="name"/>
+                                    <field name="login"/>
+                                    <field name="email"/>
+                                    <field name="group_type"/>
+                                    <field name="mobile"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="module_module_management_company_tree" model="ir.ui.view">
+            <field name="name">res.company.tree</field>
+            <field name="model">res.company</field>
+            <field name="arch" type="xml">
+                <tree string="Companies">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="domain"/>
+                    <field name="type_id"/>
+                </tree>
+            </field>
+        </record>
+        <!-- =========== ENDREGION FOR RES COMPANY =============== -->
+
+
+        <!-- =========== REGION FOR RES COMPANY TYPE =============== -->
+        <record id="module_management_res_company_type_form_view" model="ir.ui.view">
+            <field name="name">res.company.type.form</field>
+            <field name="model">res.company.type</field>
+            <field name="arch" type="xml">
+                <form string="Company">
+                  <sheet>
+                      <group>
+                          <group>
+                              <field name="name" string="Name" />
+                              <field name="code" string="Code" />
+                          </group>
+
+                          <group>
+                              <field name="group_id" domain="[('code', '=', 'support')]"/>
+                              <field name="default_categ_id" invisible="1" readonly="1" string="Filter Category Id"/>
+                          </group>
+                      </group>
+                        <notebook colspan="4">
+                            <page string="Groups">
+                                <field name="group_ids"  domain="[('category_id','=', default_categ_id), ('code','!=', 'support')]">
+                                    <tree string="Groups">
+                                        <field name="name" />
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Companies">
+                                <field name="company_ids" edit="0" create="0">
+                                    <tree string="Companies">
+                                        <field name="name"/>
+                                        <field name="domain"/>
+                                        <field name="group_ids" widget="many2many_tags"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="module_module_management_res_company_type_tree" model="ir.ui.view">
+            <field name="name">res.company.type.tree</field>
+            <field name="model">res.company.type</field>
+            <field name="arch" type="xml">
+                <tree string="Business Type">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="group_id"/>
+                </tree>
+            </field>
+        </record>
+    </data>
+</odoo>

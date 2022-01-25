@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_task_form2_inherit_old_project" model="ir.ui.view">
+            <field name="name">project.task.form.inherit</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_form2"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='project_id']" position="replace">
+                    <field name="project_id" required="1" />
+                </xpath>
+
+            </field>
+        </record>
+
+
+        <!--   UPDATE ACTION VIEWS     -->
+        <record id="project.open_view_project_all" model="ir.actions.act_window">
+            <field name="domain">[('project_type', '!=', 'daily_work')]</field>
+        </record>
+
+        <record id="project.action_view_all_task" model="ir.actions.act_window">
+            <field name="domain">[('project_id.project_type', '!=', 'daily_work')]</field>
+        </record>
+
+        <record id="project.action_project_task_user_tree" model="ir.actions.act_window">
+            <field name="domain">[('project_id.project_type', '!=', 'daily_work')]</field>
+        </record>
+
+        <record id="project.open_task_type_form" model="ir.actions.act_window">
+            <field name="domain">[('is_daily_task', '!=', True)]</field>
+        </record>
+
+        <record id="project.open_view_project_all_config" model="ir.actions.act_window">
+            <field name="domain">[('project_type', '!=', 'daily_work')]</field>
+        </record>
+    </data>
+</odoo>
