@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+     <record id="view_account_in_list_inherit" model="ir.ui.view">
+            <field name="name">project.project.view.inherit</field>
+            <field name="model">project.project</field>
+             <field name="inherit_id" ref="project.view_project"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="kind_of_variation_id"/>
+                  <field name="kind_of_dossier_id"/>
+                  <field name="product_template_id"/>
+                  <field name="manufactory_line_id"/>
+                  <field name="res_partner_id"/>
+                  <field name="exp_date"/>
+                  <field name="test_result"/>
+                  <field name="note"/>
+                  <field name="remark"/>
+                </xpath>
+            </field>
+        </record>
+    <record id="view_project_form_inherit" model="ir.ui.view">
+        <field name="name">project.project.form.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+             <xpath expr="//field[@name='label_tasks']/.." position="after">
+                  <link rel="stylesheet" href="/medco1/static/src/css/style.css"/>
+                  <group name="test">
+                            <group>
+                                 <field name="kind_of_dossier_id" required="1"/>
+                                 <field name="kind_of_variation_id" required="1" domain="[('kind_of_dossier_id', '=', kind_of_dossier_id)]"/>
+                                 <field name="product_template_id" required="1"/>
+                                 <field name="res_partner_id" required="1"/>
+                                 <field name="application_line_id" domain="[('res_partner_id', '=', res_partner_id)]" required="1"/>
+
+                            </group>
+
+                            <group>
+                                 <field name="exp_date"/>
+                                 <field name="test_result"/>
+                                 <field name="remark"/>
+                                 <field name="note"/>
+                                 <field name="manufactory_line_id" domain="[('application_line_id', '=', application_line_id)]" required="1"/>
+                            </group>
+                        </group>
+                </xpath>
+
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="internal_layout_dat_inherit" inherit_id="web.internal_layout">
+        <xpath expr="//div[hasclass('offset-2')]"  position="replace">
+            <div class="col-2 offset-2 text-center">
+<!--                <img t-att-src="image_data_uri(company.logo)" style="max-height:45pt;max-width:90%" alt="Company Logo"/>-->
+<!--                <span style="padding-left:5px;" t-esc="company.name"/>-->
+            </div>
+        </xpath>
+    </template>
+    <template id="report_mrporder_dat_inherit" inherit_id="mrp.report_mrporder">
+        <xpath expr="//div[hasclass('oe_structure')]"  position="after">
+            <div style="margin-left: 5%; margin-top: 0px !important; margin-bottom: 30px; font-size: 24px">
+                <div style="float:left">
+                    <img t-att-src="image_data_uri(o.company_id.logo)" style="height:90px;width:100px" alt="Company Logo"/>
+                </div>
+                <div style="float:left;padding-left:5px; font-size: 30px">
+                    <span t-esc="o.company_id.name"/>
+                </div>
+                <div style="clear:both" />
+            </div>
+        </xpath>
+        <xpath expr="//span[@t-field='o.product_qty']" position="replace">
+            <span t-field="o.product_qty" t-options='{"widget": "float", "precision": 2}'/>
+        </xpath>
+        <xpath expr="//span[@t-field='raw_line.product_uom_qty']" position="replace">
+            <span t-field="raw_line.product_uom_qty" t-options='{"widget": "float", "precision": 2}'/>
+        </xpath>
+        <xpath expr="//div[hasclass('col-5')]"  position="replace">
+        </xpath>
+    </template>
+
+    <record id="mrp.action_report_production_order" model="ir.actions.report">
+        <field name="paperformat_id" ref="manufatory_dat_custom.paperformat_a5_format"/>
+    </record>
+</odoo>

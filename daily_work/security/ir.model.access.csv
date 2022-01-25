@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_res_folder,res.folder.user,model_res_folder,base.group_user,1,1,1,1
+access_res_file,res.file.user,model_res_file,base.group_user,1,1,1,1
+

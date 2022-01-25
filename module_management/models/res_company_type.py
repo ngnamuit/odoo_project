@@ -3,7 +3,7 @@ import logging
 from odoo import api, fields, models, _
 from math import copysign
 from odoo.exceptions import UserError
-from odoo.marketplace_2020.module_management.models.res_company import find_user_system_ids
+from odoo.addons.module_management.models.res_company import find_user_system_ids
 _logger = logging.getLogger(__name__)
 SUPERUSER_ID = 2
 

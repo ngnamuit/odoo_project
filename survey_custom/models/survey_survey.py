@@ -34,11 +34,19 @@ class Survey(models.Model):
         (https://tools.ietf.org/html/rfc2397) for all kind of supported images
         (PNG, GIF, JPG and SVG), defaulting on PNG type if not mimetype detected.
         """
+        company = self.env['res.company'].sudo().browse(1)
+        base64_source = company.logo
         return 'data:image/%s;base64,%s' % (
             FILETYPE_BASE64_MAGICWORD.get(base64_source[:1], 'png'),
             base64_source.decode(),
         )
-
+    # def _get_next_page_or_question(self, user_input, page_or_question_id=False, go_back=False):
+    #     if page_or_question_id is False:
+    #         survey = user_input.survey_id
+    #         pages_or_questions = survey._get_pages_or_questions(user_input)
+    #         ids = pages_or_questions.ids
+    #         page_or_question_id = ids[0]
+    #     return super(Survey, self)._get_next_page_or_question(user_input, page_or_question_id, go_back)
 
 class SurveyQuestion(models.Model):
     _inherit = 'survey.question'
@@ -51,4 +59,3 @@ class SurveyQuestion(models.Model):
             else:
                 return {self.id: self.constr_error_msg}
         return super(SurveyQuestion, self).validate_question(answer, comment)
-

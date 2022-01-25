@@ -5,6 +5,14 @@ from odoo import fields, api, models
 class SurveyUserInput(models.Model):
     _inherit = "survey.user_input"
 
+    note = fields.Char(string='Note')
+    state = fields.Selection([
+        ('new', 'Not started yet'),
+        ('in_progress', 'In Progress'),
+        ('review', 'In Review'),
+        ('done', 'Completed'),
+    ], string='Status', default='new', readonly=True)
+
     def save_lines(self, question, answer, comment=None):
         old_answers = self.env['survey.user_input.line'].search([
             ('user_input_id', '=', self.id),

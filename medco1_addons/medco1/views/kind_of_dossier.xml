@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_kind_of_dossier" model="ir.ui.view">
+            <field name="name">kind.of.dossier.tree.view</field>
+            <field name="model">kind.of.dossier</field>
+            <field name="arch" type="xml">
+                <tree string="Kind of Dossier" editable="top" create="1" delete="1" multi_edit="1">
+                    <field name="code" />
+                    <field name="name"/>
+                    <field name="sort_order"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_view_kind_of_dossier" model="ir.actions.act_window">
+            <field name="name">Kind of Dossier</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">kind.of.dossier</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    <menuitem id="view_kind_of_dossier_form"
+              name="Kind Of Dossier"
+              parent="project.menu_project_config"
+              action="action_view_kind_of_dossier"
+              groups="base.group_user"
+              sequence="2"
+    />
+</odoo>

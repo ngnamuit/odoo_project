@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_kind_of_variation" model="ir.ui.view">
+            <field name="name">kind.of.variation.tree.view</field>
+            <field name="model">kind.of.variation</field>
+            <field name="arch" type="xml">
+                <tree string="Kind of Variation" editable="top" create="1" delete="1" multi_edit="1">
+                    <field name="kind_of_dossier_id"/>
+                    <field name="code" />
+                    <field name="name"/>
+                    <field name="qty_days"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_kind_of_variation" model="ir.actions.act_window">
+            <field name="name">Sub Dossiers</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">kind.of.variation</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    <menuitem id="kind_of_variation_form"
+              name="Sub Dossiers"
+              parent="project.menu_project_config"
+              action="action_kind_of_variation"
+              groups="base.group_user"
+              sequence="2"
+    />
+</odoo>

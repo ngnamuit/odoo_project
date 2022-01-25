@@ -1,22 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 <data>
+    <template id="survey_page_fill_inherit" inherit_id="survey.survey_page_fill" >
+        <xpath expr="//t[@t-call='survey.layout']" position="before">
+            <title>ITI - Đăng ký gọi vốn</title>
+        </xpath>
+    </template>
+
     <template id="survey_fill_form_in_progress_inherit" inherit_id="survey.survey_fill_form_in_progress" >
         <xpath expr="//div[hasclass('row')]" position="replace">
                 <div class="row bnt-submit-survey">
-                    <div style="font-weight: bold" class="col-12 mt16" data-can-go-back="True" t-att-data-can-go-back="survey.users_can_go_back"
+                    <div style="font-weight: bold;  position: relative;" class="col-12 mt16" data-can-go-back="True" t-att-data-can-go-back="survey.users_can_go_back"
                 t-att-data-pages="json.dumps(breadcrumb_pages)" >
-                         <button t-if="can_go_back"
+                         <button t-if="can_go_back" style="margin-right: 22px"
                             type="submit" class="btn p-0 shadow-none o_survey_navigation_submit" name="button_submit" value="previous" t-att-data-previous-page-id="previous_page_id">
-                             <i class="fa fa-angle-left" style="font-size:30px"></i>
+                             <i class="fa fa-angle-left" style="font-size:40px"></i>
 
                          </button>
-                        <span style="font-size:19px; font-weight: 100 !important; padding: 5px;"><![CDATA[&nbsp;&nbsp;]]>  |<![CDATA[&nbsp;&nbsp;]]></span>
-                         <button type="submit"  t-att-value="'next' if not survey_last else 'finish'" class="btn p-0 shadow-none o_survey_navigation_submit">
-                            <t t-if="not survey_last"><i class="fa fa-angle-right" style="font-size:30px"></i></t>
+                        <span t-att-style="'font-size: 22px; font-weight: 200 !important; padding: 5px ; position: absolute; right: 25px ; top: 0px ;' + ('right: 95px;' if survey_last else '')">
+                            <![CDATA[&nbsp;&nbsp;]]>  |<![CDATA[&nbsp;&nbsp;]]>
+                        </span>
+<!--                         <button type="submit"  t-att-value="'next' if not survey_last else 'finish'" class="btn p-0 shadow-none o_survey_navigation_submit">-->
+<!--                            <t t-if="not survey_last"><i class="fa fa-angle-right" style="font-size:30px"></i></t>-->
+<!--                            <t t-else="">-->
+<!--                                <b class="btn-submit-survey" style="padding: 5px 15px 5px 15px;border: 3px solid red;border-radius: 10px;">Submit</b></t>-->
+<!--                         </button>-->
+
+                            <t t-if="not survey_last">
+                                <button type="submit" t-att-value="'next' if not survey_last else 'review'"
+                                    class="btn p-0 shadow-none o_survey_navigation_submit">
+                                    <i class="fa fa-angle-right" style="font-size:40px"></i>
+                                </button>
+                            </t>
                             <t t-else="">
-                                <b class="btn-submit-survey" style="padding: 5px 15px 5px 15px;border: 3px solid red;border-radius: 10px;">Submit</b></t>
-                         </button>
+                              <button type="submit" value="review" class="btn p-0 shadow-none o_survey_navigation_submit">
+                                   <t t-set="lang" t-value="survey._context.get('lang')"  />
+                                    <a style="padding: 5px 15px 5px 15px !important;background-color: #c00000 !important;; color:white !important;border-radius: 10px;">
+                                        <t t-if="lang != 'vi_VN'">Review</t>
+                                        <t t-if="lang == 'vi_VN'">Xem lại</t>
+                                    </a>
+                              </button>
+                            </t>
                     </div>
                 </div>
         </xpath>
@@ -28,7 +52,7 @@
                 <div class="container m-0 p-0">
                     <div class="row">
                         <div  class="col-12">
-                            <img t-if="survey.company_id.logo" t-att-src="survey.image_data_uri(survey.company_id.logo)" alt="Logo" class="company_logo"/>
+                            <img t-if="survey.sudo().company_id.logo" t-att-src="survey.image_data_uri(survey.sudo().company_id.logo)" alt="Logo" class="company_logo"/>
                             <h1 t-if="answer.state == 'new' or survey.questions_layout != 'page_per_question'"
                                 t-esc="survey.title" class="o_survey_main_title pt-4"></h1>
 
@@ -63,8 +87,8 @@
                         <t t-set="answer_class" t-if="not has_correct_answer" t-value="''" />
                         <t t-set="answer_class" t-elif="is_correct" t-value="'bg-success'" />
                         <t t-set="answer_class" t-elif="not is_correct" t-value="'bg-danger'" />
-                        <label t-att-for="str(question.id) + '_' + str(label.id)"
-                               t-att-class="'o_survey_choice_btn mr-2 mb-2 py-1 px-3 rounded %s %s flex%s' % (answer_class, 'o_survey_selected' if answer_selected else '', question.column_nb)">
+                        <label style="min-width: 100%" t-att-for="str(question.id) + '_' + str(label.id)"
+                               t-att-class="'o_survey_choice_btn rounded %s %s col-lg-12' % (answer_class, 'o_survey_selected' if answer_selected else '')">
                             <t t-call="survey.survey_selection_key">
                                 <t t-set="selection_key_class" t-value="'position-relative o_survey_radio_btn float-left d-flex'"/>
                             </t>
@@ -73,15 +97,18 @@
                                    t-att-name='question.id'
                                    t-att-checked="answer_line and answer_line.suggested_answer_id.id == label.id and 'checked' or None"
                                    t-att-data-selection-key="letters[item_idx] if useKeySelection else ''"/>
+
                             <i class="fa fa-check-circle float-right mt-1 position-relative"></i>
-                            <i class="fa fa-circle-thin float-right mt-1 position-relative"></i>
+                            <t t-if="not answer_selected">
+                                <i class="fa fa-circle-thin float-right mt-1 position-relative"></i>
+                            </t>
                             <t t-call="survey.question_suggested_value_image"/>
                         </label>
                     </t>
                 </div>
                 <div t-if='question.comments_allowed and question.comment_count_as_answer' class="js_comments col-lg-12" >
                     <div class="d-flex flex-wrap">
-                        <label t-att-class="'o_survey_choice_btn mr-2 py-1 px-3 rounded %s' % ('o_survey_selected' if comment_line else '')">
+                        <label t-att-class="'o_survey_choice_btn rounded %s col-lg-12' % ('o_survey_selected' if comment_line else '')">
                             <t t-set="item_idx" t-value="item_idx + 1"/>
                             <t t-call="survey.survey_selection_key">
                                 <t t-set="selection_key_class" t-value="'position-relative o_survey_radio_btn float-left d-flex'"/>
@@ -126,8 +153,7 @@
                         <t t-set="answer_class" t-if="not has_correct_answer" t-value="''" />
                         <t t-set="answer_class" t-elif="is_correct" t-value="'bg-success'" />
                         <t t-set="answer_class" t-elif="not is_correct" t-value="'bg-danger'" />
-
-                        <label t-att-class="'o_survey_choice_btn mr-2 py-1 px-3 rounded %s %s flex%s' % (answer_class, 'o_survey_selected' if answer_line else '', question.column_nb)">
+                        <label style="min-width: 100%; padding-left:15px" t-att-class="'o_survey_choice_btn rounded %s %s' % (answer_class, 'o_survey_selected' if answer_line else '')">
                             <t t-call="survey.survey_selection_key">
                                 <t t-set="selection_key_class" t-value="'position-relative float-left d-flex'"/>
                             </t>
@@ -135,9 +161,11 @@
                                    t-att-name="question.id"
                                    t-att-checked="'checked' if answer_line else None"
                                    t-att-data-selection-key="letters[item_idx] if useKeySelection else ''"/>
-                            <span class="ml-2" t-field='label.value'/>
-                            <i class="fa fa-check-square float-right mt-1 position-relative"></i>
-                            <i class="fa fa-square-o float-right mt-1 position-relative"></i>
+                            <span t-field='label.value' style="margin-left: 10px"/>
+                            <i class="fa fa-check-circle float-right mt-1 position-relative"></i>
+                            <t t-if="not answer_selected">
+                                <i class="fa fa-circle-thin float-right mt-1 position-relative"></i>
+                            </t>
                             <t t-call="survey.question_suggested_value_image"/>
                         </label>
                     </t>
@@ -356,23 +384,113 @@
 
     <!-- Finished (taken and finished) survey page -->
     <template inherit_id="survey.survey_fill_form_done" id="survey_fill_form_done_inherit" name="Survey: finished">
+        <xpath expr="." position="inside">
+                 <link rel="stylesheet" href="/survey_custom/static/src/css/survey_result.css"/>
+        </xpath>
         <xpath expr="//div[hasclass('o_survey_finished')]" position="replace">
             <div class="wrap">
                 <div class="o_survey_finished mt32 mb32">
-                    <div t-field="survey.survey_done" style="width: 100%"/>
+                    <div t-field="survey.survey_done" style="margin-top: 100px; width: 100%"/>
                     <div class="bnt-retry" style="margin-left: 25%; margin-top: 20px; width: 50%;">
 <!--                        <a role="button" class="btn btn-lg" style="background: #0284ff; color: white;" t-att-href="'/survey/retry/%s/%s' % (survey.access_token, answer.access_token)">-->
 <!--                            Thử lại-->
 <!--                        </a>-->
-                        <a href="/" role="button"  style="background: #0284ff; color: white; width: 100%;" class="btn btn-lg">Quay lại trang chủ</a>
+                        <button href="/" style="background: #0284ff; color: white; width: 100%; font-size: 20px; border: 0px ; padding: 10px ; border-radius: 5px ;" class="btn btn-lg">
+                            <a href="/" style="color: white; width: 100%; text-decoration: none;">
+                                <t t-if="survey._context.get('lang') == 'vi_VN'">Quay lại trang chủ</t>
+                                <t t-else="">Go back home</t>
+                            </a>
+                        </button>
                     </div>
-                    <div t-if="survey.scoring_type != 'scoring_without_answers'" style="text-align: center; margin-top:10px">
-                            Nếu muốn , bạn có thể <a t-att-href="'/survey/print/%s?answer_token=%s&amp;review=True' % (survey.access_token, answer.access_token)">xem lại câu trả lời của bạn</a>
-                    </div>
+<!--                    <div t-if="survey.scoring_type != 'scoring_without_answers'" style="text-align: center; margin-top:10px">-->
+<!--                            Nếu muốn , bạn có thể <a t-att-href="'/survey/print/%s?answer_token=%s&amp;review=True' % (survey.access_token, answer.access_token)">xem lại câu trả lời của bạn</a>-->
+<!--                    </div>-->
                 </div>
             </div>
         </xpath>
     </template>
+
+
+    <!-- RETAKE FORM   -->
+    <template id="iti_question_text_box" name="Question: free text box">
+        <textarea style="display: inline !important" class="form-control o_survey_question_text_box bg-transparent text-dark rounded-0 p-0" rows="3" t-att-name="question.id"
+                  t-att-data-question-type="question.question_type"><t t-if="answer_lines" t-esc="answer_lines[0].value_text_box or None"/></textarea>
+    </template>
+    <template id="iti_question_char_box" name="Question: text box">
+        <input style="display: inline !important" t-att-type="'email' if question.validation_email else 'text'"
+               class="form-control o_survey_question_text_box bg-transparent text-dark rounded-0 p-0" t-att-name="question.id"
+               t-att-value="answer_lines[0].value_char_box if answer_lines else None"
+               t-att-data-question-type="question.question_type"
+               t-att-data-validation-length-min="question.validation_length_min if question.validation_required else False"
+               t-att-data-validation-length-max="question.validation_length_max if question.validation_required else False"/>
+    </template>
+
+    <template id="iti_question_numerical_box" name="Question: numerical box">
+        <input style="display: inline !important; height: 22px" type="number" step="any" class="form-control o_survey_question_numerical_box bg-transparent text-dark rounded-0 p-0"
+               t-att-name="question.id" t-att-value="answer_lines[0].value_numerical_box if answer_lines else None"
+               t-att-data-question-type="question.question_type"
+               t-att-data-validation-float-min="question.validation_min_float_value if question.validation_required else False"
+               t-att-data-validation-float-max="question.validation_max_float_value if question.validation_required else False"/>
+    </template>
+
+    <template inherit_id="survey.survey_page_print" id="urvey_page_print_inherit" >
+        <xpath expr="//t[@t-if='review']" position="replace"></xpath>
+        <xpath expr="//div[@role='form']" position="after">
+            <t t-set="lang" t-value="survey._context.get('lang')"  />
+            <div class="text-align" style="float: right">
+                    <a role="button" style="border: 0px !important; padding: 5px 25px 5px 25px !important; background-color: #c00000 !important;; color:white !important;border-radius: 10px;" class="btn btn-primary" t-att-href="'/survey/retry/%s/%s' % (survey.access_token, answer.access_token)">
+                        <t t-if="lang != 'vi_VN'">Edit</t>
+                        <t t-if="lang == 'vi_VN'">Chỉnh sửa</t>
+                    </a>
+                    <a role="button" class="btn p-0 shadow-none o_survey_navigation_submit" t-att-href="'/survey/submit_on_print/%s/%s' % (survey.access_token, answer.access_token)"
+                        style="margin-left:10px; padding: 5px 15px 5px 15px !important;background-color: #c00000 !important;; color:white !important;border-radius: 10px;">
+                        <t t-if="lang != 'vi_VN'">Submit</t>
+                        <t t-if="lang == 'vi_VN'">Gửi</t>
+
+                    </a>
+            </div>
+        </xpath>
+        <xpath expr="//div[@role='form']/fieldset" position="before">
+            <t t-set="index" t-value="0" />
+        </xpath>
+        <xpath expr="//div[@role='form']/fieldset/t[@t-foreach='survey.question_and_page_ids']/t" position="before">
+            <t t-set="index" t-value="index+1" />
+        </xpath>
+        <xpath expr="//div[hasclass('js_question-wrapper')]" position="replace">
+            <t t-if="index &lt; 7">
+                <span>
+                    <span t-field='question.title'/>
+                    <span t-if="question.constr_mandatory" class="text-danger">*</span>
+                    <span t-if="scoring_display_correction" class="badge badge-pill" t-att-data-score-question="question.id"></span>
+                </span>
+                <t t-if="question.description"><div class="text-muted oe_no_empty" t-field='question.description'/></t>
+                <t t-if="question.question_type == 'text_box'"><t t-call="survey_custom.iti_question_text_box"/></t>
+                <t t-if="question.question_type == 'char_box'"><t t-call="survey_custom.iti_question_char_box"/></t>
+                <t t-if="question.question_type == 'numerical_box'"><t t-call="survey_custom.iti_question_numerical_box"/></t>
+            </t>
+            <t t-else="">
+                <p>
+                    <span t-field='question.title'/>
+                    <span t-if="question.constr_mandatory" class="text-danger">*</span>
+                    <span t-if="scoring_display_correction" class="badge badge-pill" t-att-data-score-question="question.id"></span>
+                </p>
+                <t t-if="question.description"><div class="text-muted oe_no_empty" t-field='question.description'/></t>
+                <t t-if="question.question_type == 'text_box'"><t t-call="survey.question_text_box"/></t>
+                <t t-if="question.question_type == 'char_box'"><t t-call="survey.question_char_box"/></t>
+                <t t-if="question.question_type == 'numerical_box'"><t t-call="survey.question_numerical_box"/></t>
+            </t>
+
+            <t t-if="question.question_type == 'date'"><t t-call="survey.question_date"/></t>
+            <t t-if="question.question_type == 'datetime'"><t t-call="survey.question_datetime"/></t>
+            <t t-if="question.question_type == 'simple_choice'"><t t-call="survey.question_simple_choice"/></t>
+            <t t-if="question.question_type == 'multiple_choice'"><t t-call="survey.question_multiple_choice"/></t>
+            <t t-if="question.question_type == 'matrix'"><t t-call="survey.question_matrix"/></t>
+            <div class="o_survey_question_error overflow-hidden border-0 py-0 px-3 alert alert-danger" role="alert"></div>
+        </xpath>
+    </template>
+
+
+
 </data>
 </odoo>
 

@@ -11,6 +11,7 @@
     'sequence': 45,
     'depends': [
         'base',
+        'web',
         'survey',
     ],
     'data': [

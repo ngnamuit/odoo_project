@@ -1,9 +1,21 @@
-.o_survey_wrap {
+.o_survey_wrap, .o_survey_finished {
     margin: 0 auto;
     max-width: 890px;
+    font-family: "Avenir Next" !important;
+}
+.o_survey_finished {
+    font-size: 14px;
+}
+.o_survey_finished img{
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
 }
 .o_survey_start, .o_survey_finished {
     margin-top: -50px !important;
+}
+.o_survey_start img {
+    outline: 0px !important;
 }
 .o_survey_breadcrumb_container {
     display: block;
@@ -569,12 +581,28 @@ Multi steps indicator
     height: 12px;
     width: 12px;
     border-radius: 50%;
-    background-color: #edeff0;
+    background-color: white;
   }
+
+  .cd-multi-steps.text-top li.visited > *::before, .cd-multi-steps.text-bottom li.visited > *::before {
+    /* this is the spot indicator */
+    height: 19px !important;
+    width: 19px !important;
+    border-radius: 50%;
+  }
+  .cd-multi-steps.text-top li.next-step > *::before, .cd-multi-steps.text-bottom li.next-step > *::before {
+    border: 1px solid black;
+  }
+  .cd-multi-steps.text-top li.current > *::before, .cd-multi-steps.text-bottom li.current > *::before {
+    height: 19px !important;
+    width: 19px !important;
+    border: 1px solid rgb(3, 126, 199);
+  }
+
   .cd-multi-steps li.visited > *::before{
     background-color: #037ec7 !important;
     content: "\2713" !important;
-
+    font-size: 11px !important;
   }
   li.visited span, li.current span{
     color: #037ec7 !important;
@@ -657,4 +685,19 @@ Add a counter to the multi-steps indicator
     font-size: 13px;
     padding-top: 23px;
   }
+}
+
+.o_survey_print .o_survey_choice_btn {
+    background-color: #adb5bd00 !important;
+    color: black;
+    font-weight: normal !important;
+}
+label.o_survey_selected span {
+    background-color: #f76d8047 !important;
+    display: inline-block;
+    width: 81.5%;
+    font-weight: bold !important;
+}
+.o_survey_print .o_survey_choice_btn i.fa-square-o, .o_survey_print .o_survey_choice_btn i.fa-circle-thin {
+    display: block !important;
 }

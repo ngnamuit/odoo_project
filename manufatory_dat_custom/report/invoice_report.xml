@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="report_invoice_document_dat_inherit" inherit_id="account.report_invoice_document">
+        <xpath expr="//t/t[@t-set='address']"  position="replace" >
+            <t t-set="partner" t-value="o.partner_id" />
+            <table style="width: 95%;">
+                <tr width="100%">
+                    <td style="width: 13%">Tên KH</td>
+                    <td style="width: 85%; font-weight: bold"><span style="margin-right:20px">:</span> <span t-field="partner.name"/></td>
+                </tr>
+                <tr>
+                    <td>Địa chỉ</td>
+                    <td><span style="margin-right:20px">:</span><span t-field="partner.street"/>, <span t-field="partner.street2"/>, <span t-field="partner.city"/>, <span t-field="partner.state_id.name"/>,  <span t-field="partner.country_id.name"/></td>
+                </tr>
+                <tr>
+                    <td>Mã số thuế</td>
+                    <td><span style="margin-right:20px">:</span><span t-field="partner.vat" /></td>
+                </tr>
+            </table>
+        </xpath>
+        <xpath expr="//t/div/table[@name='invoice_line_table']/tbody"  position="replace" >
+            <t t-set="current_subtotal" t-value="0"/>
+            <t t-set="lines" t-value="o.invoice_line_ids.sorted(key=lambda l: (-l.sequence, l.date, l.move_name, -l.id), reverse=True)"/>
+
+            <t t-foreach="lines" t-as="line">
+                <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
+                <t t-set="current_subtotal" t-value="current_subtotal + line.price_total" groups="account.group_show_line_subtotals_tax_included"/>
+
+                <tr t-att-class="'bg-200 font-weight-bold o_line_section' if line.display_type == 'line_section' else 'font-italic o_line_note' if line.display_type == 'line_note' else ''">
+                    <t t-if="not line.display_type" name="account_invoice_line_accountable">
+                        <td name="account_invoice_line_name"><span t-field="line.name" t-options="{'widget': 'text'}"/></td>
+                        <td class="text-right">
+                            <span t-esc="'{:0,.0f}'.format(line.quantity)"/>
+                            <span t-field="line.product_uom_id"  groups="uom.group_uom"/>
+                        </td>
+                        <td t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                            <span class="text-nowrap" t-esc="'{:0,.0f}'.format(line.price_unit)"/>
+                        </td>
+                        <td t-if="display_discount" t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                            <span class="text-nowrap" t-esc="'{:0,.0f}'.format(line.discount)"/>
+                        </td>
+                        <td t-attf-class="text-left {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                            <span t-esc="', '.join(map(lambda x: (x.description or x.name), line.tax_ids))" id="line_tax_ids"/>
+                        </td>
+                        <td class="text-right o_price_total">
+                            <span class="text-nowrap" t-esc="'{:0,.0f}'.format(line.price_subtotal)" groups="account.group_show_line_subtotals_tax_excluded"/>
+                            <span class="text-nowrap" t-esc="'{:0,.0f}'.format(line.price_total)" groups="account.group_show_line_subtotals_tax_included"/>
+                        </td>
+                    </t>
+                    <t t-if="line.display_type == 'line_section'">
+                        <td colspan="99">
+                            <span t-field="line.name" t-options="{'widget': 'text'}"/>
+                        </td>
+                        <t t-set="current_section" t-value="line"/>
+                        <t t-set="current_subtotal" t-value="0"/>
+                    </t>
+                    <t t-if="line.display_type == 'line_note'">
+                        <td colspan="99">
+                            <span t-field="line.name" t-options="{'widget': 'text'}"/>
+                        </td>
+                    </t>
+                </tr>
+
+                <t t-if="current_section and (line_last or lines[line_index+1].display_type == 'line_section')">
+                    <tr class="is-subtotal text-right">
+                        <td colspan="99">
+                            <strong class="mr16">Subtotal</strong>
+                            <span
+                                    t-esc="'{:0,.0f}'.format(current_subtotal)"
+                            />
+                        </td>
+                    </tr>
+                </t>
+            </t>
+        </xpath>
+
+        <xpath expr="//div[@id='total']/div" position="replace">
+            <div t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'} ml-auto">
+            <table class="table table-sm" style="page-break-inside: avoid;">
+                <tr class="border-black o_subtotal" style="">
+                    <td><strong>Subtotal</strong></td>
+                    <td class="text-right">
+                        <span t-esc="'{:0,.0f}'.format(o.amount_untaxed)"/>
+                    </td>
+                </tr>
+                <t t-foreach="o.amount_by_group" t-as="amount_by_group">
+                    <tr style="">
+                        <t t-if="len(o.line_ids.filtered(lambda line: line.tax_line_id)) in [0, 1] and o.amount_untaxed == amount_by_group[2]">
+                            <td><span class="text-nowrap" t-esc="amount_by_group[0].replace('.00', '')"/></td>
+                            <td class="text-right o_price_total">
+                                <span class="text-nowrap" t-esc="amount_by_group[3].replace('.00', '')" />
+                            </td>
+                        </t>
+                        <t t-else="">
+                            <td>
+                                <span t-esc="amount_by_group[0]"/>
+                                <span class="text-nowrap"> on
+                                    <t t-esc="'{:0,.0f}'.format(amount_by_grTaxoup[4]).replace('.00', '')"/>
+                                </span>
+                            </td>
+                            <td class="text-right o_price_total">
+                                <span class="text-nowrap" t-esc="amount_by_group[3].replace('.00', '')"/>
+                            </td>
+                        </t>
+                    </tr>
+                </t>
+                <tr class="border-black o_total">
+                    <td><strong>Total</strong></td>
+                    <td class="text-right">
+                        <span class="text-nowrap" t-esc="'{:0,.0f}'.format(o.amount_total)"/>
+                    </td>
+                </tr>
+                <t t-if="print_with_payments">
+                    <t t-if="o.payment_state != 'invoicing_legacy'">
+                        <t t-set="payments_vals" t-value="o.sudo()._get_reconciled_info_JSON_values()"/>
+                        <t t-foreach="payments_vals" t-as="payment_vals">
+                            <tr>
+                                <td>
+                                    <i class="oe_form_field text-right oe_payment_label">Paid on <t t-esc="payment_vals['date']" t-options='{"widget": "date"}'/></i>
+                                </td>
+                                <td class="text-right">
+                                    <span t-esc="'{:0,.0f}'.format(payment_vals['amount'])" />
+                                </td>
+                            </tr>
+                        </t>
+                        <t t-if="len(payments_vals) > 0">
+                            <tr class="border-black">
+                                <td><strong>Amount Due</strong></td>
+                                <td class="text-right">
+                                    <span t-esc="'{:0,.0f}'.format(o.amount_residual)"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </t>
+                </t>
+            </table>
+        </div>
+        </xpath>
+        <xpath expr="//t/div/p[@name='payment_communication']"  position="replace" />
+        <xpath expr="//t/div/p[@name='payment_term']"  position="replace" />
+        <xpath expr="//t/div/div[@t-if='o.display_qr_code']"  position="after" >
+            <div style="margin-top:20px">
+                <table style="width: 100%">
+                    <tr style="width: 100%">
+                        <td style="width: 30%; text-align:center">QUẢN LÝ</td>
+                        <td style="width: 40%; text-align:center">NGƯỜI LẬP PHIẾU</td>
+                        <td style="width: 30%; text-align:center">KẾ TOÁN</td>
+                    </tr>
+                </table>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="external_layout_standard_inherit" inherit_id="web.external_layout_standard">
+        <xpath expr="//div[contains(@t-attf-class, 'header')]"  position="replace" >
+            <div t-attf-class="header " t-att-style="report_header_style">
+                <div class="header-left" style="margin-left: 60px">
+                    <img t-att-src="image_data_uri(company.logo)" style="float:left; height: 120px; width: 120px;"/>
+                    <div style="font-weight:bold; float:left; padding-left: 7px; font-size: 15px;">
+                        <span t-esc="company.name"/><br/>
+                        <span>VP: Lô B31 Đường số 1, KDC Bình Chiểu 2, P.Bình Chiểu, TP. Thủ Đức</span><br/>
+                        <span>NM: </span><span t-esc="company.street"/>, <span t-esc="company.street2"/>, <span t-esc="company.city"/>, <span t-esc="company.state_id.name"/>,  <span t-esc="company.country_id.name"/><br/>
+                        <span>DT: </span><span t-esc="company.phone"/>; 028.3606 7370<br/>
+                        <span>Website: </span><span t-esc="company.website"/>; <span>Email: <span t-esc="company.email"/></span>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <!--  QUOTATION/SALE ORDER REPORT  -->
+    <template id="report_saleorder_document_dat_inherit" inherit_id="sale.report_saleorder_document">
+        <xpath expr="//t/div/table/tbody/t/tr/t/td[@name='td_quantity']"  position="replace">
+            <td name="td_quantity" class="text-right">
+                <span t-esc="'{:0,.0f}'.format(line.product_uom_qty)"/>
+                <span t-field="line.product_uom"/>
+            </td>
+        </xpath>
+        <xpath expr="//t/div/table/tbody/t/tr/t/td[@name='td_priceunit']"  position="replace">
+            <td name="td_priceunit" class="text-right">
+                <span t-esc="'{:0,.0f}'.format(line.price_unit)"/>
+            </td>
+        </xpath>
+        <xpath expr="//t/div/table/tbody/t/tr/t/td[@t-if='display_discount']"  position="replace">
+            <td t-if="display_discount" class="text-right" groups="product.group_discount_per_so_line">
+                <span t-esc="'{:0,.0f}'.format(line.discount)"/>
+            </td>
+        </xpath>
+        <xpath expr="//t/div/table/tbody/t/tr/t/td[@name='td_taxes']"  position="replace">
+            <td name="td_taxes" class="text-right">
+                <span t-esc="', '.join(map(lambda x: (x.description or x.name), line.tax_id)).replace('.00','')"/>
+            </td>
+        </xpath>
+        <xpath expr="//t/div/table/tbody/t/tr/t/td[@name='td_subtotal']"  position="replace">
+            <td name="td_subtotal" class="text-right o_price_total">
+                <span  t-esc="'{:0,.0f}'.format(line.price_subtotal)" groups="account.group_show_line_subtotals_tax_excluded"/>
+                <span  t-esc="'{:0,.0f}'.format(line.price_total)" groups="account.group_show_line_subtotals_tax_included"/>
+            </td>
+        </xpath>
+
+
+        <xpath expr="//t/div/div[hasclass('clearfix')]/div/div/table/tr/td[@name='td_amount_untaxed']"  position="replace">
+            <td name="td_amount_untaxed" class="text-right">
+                <span t-esc="'{:0,.0f}'.format(doc.amount_untaxed)"/>
+            </td>
+        </xpath>
+        <xpath expr="//t/div/div[hasclass('clearfix')]/div/div/table/tr/td[@name='td_amount_total']"  position="replace">
+            <td name="td_amount_total" class="text-right">
+                <span t-esc="'{:0,.0f}'.format(doc.amount_total)"/>
+            </td>
+        </xpath>
+
+
+        <xpath expr="//t/div/div[hasclass('clearfix')]/div/div/table/t/tr/t/td[@name='td_amount_by_group_label_3']"  position="replace">
+            <td name="td_amount_by_group_label_3">
+                <span t-esc="amount_by_group[0].replace('.00','')"/>
+                <span>&amp;nbsp;<span>on</span>&amp;nbsp;<t t-esc="'{:0,.0f}'.format(amount_by_group[2])" /></span>
+            </td>
+        </xpath>
+        <xpath expr="//t/div/div[hasclass('clearfix')]/div/div/table/t/tr/t/td[@name='td_amount_by_group_3']"  position="replace">
+            <td name="td_amount_by_group_3" class="text-right o_price_total">
+                <span t-esc="'{:0,.0f}'.format(amount_by_group[1])" />
+            </td>
+        </xpath>
+        <xpath expr="//t/div/div[hasclass('clearfix')]/div/div/table/t/tr/t/td[@name='td_amount_by_group_label']"  position="replace">
+            <td name="td_amount_by_group_label">
+                <span t-esc="'{:0,.0f}'.format(amount_by_group[0])"/>
+            </td>
+        </xpath>
+        <xpath expr="//t/div/div[hasclass('clearfix')]/div/div/table/t/tr/t/td[@name='td_amount_by_group']"  position="replace">
+            <td name="td_amount_by_group" class="text-right o_price_total">
+                <span t-esc="'{:0,.0f}'.format(amount_by_group[1])" />
+            </td>
+        </xpath>
+    </template>
+</odoo>

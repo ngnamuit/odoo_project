@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="mail_template_survey_submitted_en" model="mail.template">
+            <field name="name">Survey Submitted</field>
+            <field name="model_id" ref="model_survey_survey" />
+            <field name="subject">Survey Submitted</field>
+            <field name="email_to">${(object.company_id.email) |safe}</field>
+            <field name="body_html" type="html">
+<div style="margin:0px;padding: 0px; font-size: 13px;">
+    <p>Xin chào ${ctx['full_name']},</p>
+    <p>Cám ơn vì đã tin chọn quỹ ITI để đồng hành cùng dự án khởi nghiệp của bạn!</p>
+
+<p>Quỹ ITI xác nhận “Đã nhận được thông tin đăng ký gọi vốn” từ dự án ${ctx['project_name']} </p>
+
+<p>Trong vòng 10 ngày làm việc, bộ phận thẩm định của quỹ sẽ kiểm tra sơ bộ và phản hồi theo thông tin bạn đã cung cấp. Trong thời gian chờ đợi, bạn có thể tìm hiểu thêm về quỹ ITI cũng như các dự án mà chúng tôi đã thực hiện tạị <a href="#">[Chèn link portfolio]</a>.</p>
+
+<p>Trường hợp đã qua 10 ngày làm việc nhưng bạn vẫn chưa nhận được liên lạc từ phía quỹ ITI, hãy liên hệ đến quỹ ITI theo một trong hai cách sau để được hỗ trợ nhanh chóng:</p>
+    <p style="padding-left:20px;">ð Fanpage <a href="#">[Chèn link fanpage]</a></p>
+    <p style="margin-left:20px;">ð Hotline <a href="#">[Chèn sdt công ty/ Hotline]</a></p>
+<p style="float:right">
+<span>Chúc bạn thành công!</span><br/>
+
+<span style="padding-left:40px;">ITI Fund.</span></p>
+</div>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>
