@@ -8,6 +8,9 @@
     </template>
 
     <template id="survey_fill_form_in_progress_inherit" inherit_id="survey.survey_fill_form_in_progress" >
+        <xpath expr="//t/h2[@t-field='question.title']" position="replace">
+<!--            <h2 t-if="question.is_page" style="margin-top: -65px; margin-bottom: 30px;" t-field='question.title' class="o_survey_title pb16" />-->
+        </xpath>
         <xpath expr="//div[hasclass('row')]" position="replace">
                 <div class="row bnt-submit-survey">
                     <div style="font-weight: bold;  position: relative;" class="col-12 mt16" data-can-go-back="True" t-att-data-can-go-back="survey.users_can_go_back"
@@ -20,12 +23,6 @@
                         <span t-att-style="'font-size: 22px; font-weight: 200 !important; padding: 5px ; position: absolute; right: 25px ; top: 0px ;' + ('right: 95px;' if survey_last else '')">
                             <![CDATA[&nbsp;&nbsp;]]>  |<![CDATA[&nbsp;&nbsp;]]>
                         </span>
-<!--                         <button type="submit"  t-att-value="'next' if not survey_last else 'finish'" class="btn p-0 shadow-none o_survey_navigation_submit">-->
-<!--                            <t t-if="not survey_last"><i class="fa fa-angle-right" style="font-size:30px"></i></t>-->
-<!--                            <t t-else="">-->
-<!--                                <b class="btn-submit-survey" style="padding: 5px 15px 5px 15px;border: 3px solid red;border-radius: 10px;">Submit</b></t>-->
-<!--                         </button>-->
-
                             <t t-if="not survey_last">
                                 <button type="submit" t-att-value="'next' if not survey_last else 'review'"
                                     class="btn p-0 shadow-none o_survey_navigation_submit">
@@ -54,7 +51,7 @@
                         <div  class="col-12">
                             <img t-if="survey.sudo().company_id.logo" t-att-src="survey.image_data_uri(survey.sudo().company_id.logo)" alt="Logo" class="company_logo"/>
                             <h1 t-if="answer.state == 'new' or survey.questions_layout != 'page_per_question'"
-                                t-esc="survey.title" class="o_survey_main_title pt-4"></h1>
+                                t-esc="survey.title" class="o_survey_main_title pt-4" style="min-height: 70px;"></h1>
 
                         </div>
 
@@ -392,19 +389,14 @@
                 <div class="o_survey_finished mt32 mb32">
                     <div t-field="survey.survey_done" style="margin-top: 100px; width: 100%"/>
                     <div class="bnt-retry" style="margin-left: 25%; margin-top: 20px; width: 50%;">
-<!--                        <a role="button" class="btn btn-lg" style="background: #0284ff; color: white;" t-att-href="'/survey/retry/%s/%s' % (survey.access_token, answer.access_token)">-->
-<!--                            Thử lại-->
-<!--                        </a>-->
-                        <button href="/" style="background: #0284ff; color: white; width: 100%; font-size: 20px; border: 0px ; padding: 10px ; border-radius: 5px ;" class="btn btn-lg">
-                            <a href="/" style="color: white; width: 100%; text-decoration: none;">
+                        <button style="border: 0px !important; padding: 10px 15px 10px 15px !important;background-color: #c00000 !important; color:white !important;border-radius: 10px; width: 100%; font-size: 20px;"
+                                class="btn btn-lg">
+                            <a href="https://itifund.com/" style="color: white; width: 100%; text-decoration: none;">
                                 <t t-if="survey._context.get('lang') == 'vi_VN'">Quay lại trang chủ</t>
                                 <t t-else="">Go back home</t>
                             </a>
                         </button>
                     </div>
-<!--                    <div t-if="survey.scoring_type != 'scoring_without_answers'" style="text-align: center; margin-top:10px">-->
-<!--                            Nếu muốn , bạn có thể <a t-att-href="'/survey/print/%s?answer_token=%s&amp;review=True' % (survey.access_token, answer.access_token)">xem lại câu trả lời của bạn</a>-->
-<!--                    </div>-->
                 </div>
             </div>
         </xpath>

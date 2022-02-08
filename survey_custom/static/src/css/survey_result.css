@@ -46,7 +46,7 @@ img.company_logo{
     max-height: 40px;
 }
 .breadcum-nav ol {
-    width: 100% important;
+    width: 100% !important;
     margin: 0rem !important;
 }
 .o_survey_title {
@@ -54,6 +54,8 @@ img.company_logo{
     font-weight: bold;
     font-size: 16px !important;
     padding-bottom: 0px !important;
+    margin-top: -70px !important;
+    margin-bottom: 40px !important;
 }
 .mb-4{
     font-size: 16px !important;
@@ -691,6 +693,17 @@ Add a counter to the multi-steps indicator
     background-color: #adb5bd00 !important;
     color: black;
     font-weight: normal !important;
+}
+.o_survey_print label{
+    font-size: 14px !important;
+}
+.o_survey_print .o_page_header h1{
+    font-size: 24px !important;
+    font-weight: bold;
+}
+.o_page_header{
+    border-bottom-width: 0px !important;
+    margin-bottom: -10px !important;
 }
 label.o_survey_selected span {
     background-color: #f76d8047 !important;

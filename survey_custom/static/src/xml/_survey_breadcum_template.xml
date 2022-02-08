@@ -1,0 +1,55 @@
+<!-- CUSTOMS FOR ITI BREADCRUMB - NO NEED TO IMPORT  -->
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+<t t-name="survey.survey_breadcrumb_template">
+    <nav clas="breadcum-nav" style="margin-top: -145px; font-size: 13px; margin-right: -70px;">
+        <ol class="breadcrumb justify-content-end bg-transparent cd-multi-steps text-bottom count">
+            <t t-set="canGoBack" t-value="widget.canGoBack"/>
+            <t t-set="page_index" t-value="0" />
+            <t t-set="current_page_index" t-value="0" />
+            <t t-set="lang" t-value="widget.pages and widget.pages[0].lang or ''"/>
+            <t t-foreach="widget.pages" t-as="page">
+                <t t-set="page_index" t-value="page_index + 1" />
+                <t t-set="isActivePage" t-value="page.id === widget.currentPageId"/>
+                <t t-if="isActivePage">
+                    <t t-set="current_page_index" t-value="page_index" />
+                    <span t-esc="current_page_index" style="display: None" ></span>
+                </t>
+                <t t-set="isvisited" t-value="widget.currentPageId > page.id"/>
+                <t t-if="page_index == 1" >
+                    <li class="visited" style="width: 50px; margin-right:0px "> </li>
+                </t>
+                <li t-att-class="(isActivePage ? 'current': '') + (isvisited ? 'visited': '') + (page_index == widget.pages.length ? ' last_stage': '') + (!isActivePage and !isvisited ? ' next-step': '')"
+                    t-att-data-page-id="page.id"
+                    t-att-data-page-title="page.title"
+                >
+                    <t t-if="widget.currentPageId === page.id">
+                        <!-- Users can only go back and not forward -->
+                        <!-- As soon as we reach the current page, set "can_go_back" to False -->
+                        <t t-set="canGoBack" t-value="false" />
+                    </t>
+                    <t>
+                        <span t-att-class="(isActivePage ? 'current' : '')" t-att-style="'font-weight: bold' + (page_index == widget.pages.length and lang == 'vi_VN') ? 'width: 70px !important ': ''" >
+                            <t t-if="page_index == widget.pages.length and lang != 'vi_VN'">Completed</t>
+                            <t t-elif="page_index == widget.pages.length and lang == 'vi_VN'" style="">Hoàn thành</t>
+                            <t t-elif="page_index == 1 and lang != 'vi_VN'">One</t>
+                            <t t-elif="page_index == 1 and lang == 'vi_VN'">Một</t>
+                            <t t-elif="page_index == 2 and lang != 'vi_VN'">Two</t>
+                            <t t-elif="page_index == 2 and lang == 'vi_VN'">Hai</t>
+                            <t t-elif="page_index == 3 and lang != 'vi_VN'">Three</t>
+                            <t t-elif="page_index == 3 and lang == 'vi_VN'">Ba</t>
+                            <t t-elif="page_index == 4 and lang != 'vi_VN'">Four</t>
+                            <t t-elif="page_index == 4 and lang == 'vi_VN'">Bốn</t>
+                            <t t-elif="page_index == 5 and lang != 'vi_VN'">Five</t>
+                            <t t-elif="page_index == 5 and lang == 'vi_VN'">Năm</t>
+                        </span>
+                    </t>
+                </li>
+                <t t-if="page_index == widget.pages.length" >
+                    <li style="width: 50px; margin-left: 0px "> </li>
+                </t>
+            </t>
+        </ol>
+    </nav>
+</t>
+</templates>

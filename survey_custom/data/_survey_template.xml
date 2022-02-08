@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!--   [R1-Screening] DESCRIPTION    -->
+        <div style="width: 100%">
+            <img class="img-fluid o_we_custom_image o_we_selected_image" src="/web/image/1191-4b3c5f05/Trang%20%C4%91%E1%BA%A7u_ENG.png?access_token=db3a4881-0620-4d58-a9c9-ededfd0f037a" />
+            <button type="submit" value="start" style="margin-left: 20% !important;width: 60%;padding: 5px 15px 5px 15px !important;background-color: #c00000 !important;; color:white !important;border-radius: 10px;">SUMIT HERE</button>
+        </div>
+
+        <div style="width: 100%">
+            <img class="img-fluid o_we_custom_image o_we_selected_image" src="/web/image/1187-5968489c/Trang%20%C4%91%E1%BA%A7u_VI.png?access_token=57a109c6-f3b5-458c-8d7a-654e9fe0dfee" style="width: 100%;" />
+            <button type="submit"
+                    value="start"
+                    style="margin-left: 20% !important;width: 60%; padding: 5px 15px 5px 15px !important;background-color: #c00000 !important;; color:white !important;border-radius: 10px;">ĐĂNG KÝ NGAY</button>
+        </div>
+        <!--   END DESCRIPTION     -->
+
+
+        <!--   [R1-Screening] SURVEY DONE    -->
+        <div class="en" style="font-size: 14px;">
+            <br/><br/>
+            <p>
+                <br/>
+                <img style="width: 180px" class="img-fluid o_we_custom_image o_we_selected_image d-block mx-auto" src="/web/image/984-11d15479/Tick%20%C4%91%E1%BB%8F_211?access_token=0fcfa7e2-9034-4659-95f8-e5eb0b2c656c" />
+                <br/>
+            </p>
+            <div style="padding-left: 20%; padding-right: 5%;">
+                <p style="text-align: left;">Thank you for sharing your startup project with ITI Fund!</p>
+                <p style="text-align: left;">We will send you a confirmation email with following message: “Your proposal for capital raise has successfully been received”! as soon as possible</p>
+                <p style="text-align: left;">In the meantime, please follow this link to find out more about ITI Fund and our invested projects <a href="https://itifund.com/?lang=en#portfolio"> https://itifund.com/?lang=en#portfolio</a>.</p>
+                <p>If you have not received any response from us within next 48 hours, please contact ITI Fund with the following ways for further prompt support.<br/>
+                    <span style="padding-left: 25px">⇨ Fanpage: <a href="https://fb.me/itifund"> https://fb.me/itifund</a></span><br/>
+                    <span style="padding-left: 25px">⇨ Hotline: 090 998 3699</span> <br/>
+                    <span style="padding-left: 25px">⇨ Email: info@itifund.com</span>
+                </p>
+            </div>
+            <div style="margin-left: 17%;">
+                <p style="float: left; margin-left 10%;">
+                    <span>Wish you success!</span><br/>
+                    <span style="padding-left: 0px;">ITI Fund.</span>
+                </p>
+                <div style="clear: both"></div>
+            </div>
+        </div>
+
+        <div class="vi" style="font-size: 14px;">
+            <br/><br/>
+            <p>
+                <br/>
+                <img style="width: 180px" class="img-fluid o_we_custom_image o_we_selected_image d-block mx-auto" src="/web/image/984-11d15479/Tick%20%C4%91%E1%BB%8F_211?access_token=0fcfa7e2-9034-4659-95f8-e5eb0b2c656c" />
+                <br/>
+            </p>
+            <div style="padding-left: 20%; padding-right: 5%;">
+                <p style="text-align: left;">Cám ơn vì đã chia sẻ dự án khởi nghiệp của bạn với chúng tôi!</p>
+                <p style="text-align: left;">Quỹ ITI sẽ gửi email xác nhận “Đã nhận được thông tin đăng ký gọi vốn” trong thời gian sớm nhất.</p>
+                <p style="text-align: left;">Trong khi chờ đợi, bạn có thể tìm hiểu thêm về quỹ ITI cũng như các dự án mà chúng tôi đã thực hiện tạị <a href="https://itifund.com/?lang=vi#portfolio"> https://itifund.com/?lang=vi#portfolio</a>.</p>
+                <p>Trường hợp đã qua 48h nhưng bạn vẫn chưa nhận được phản hồi từ phía quỹ ITI, hãy liên hệ với chúng tôi theo những cách sau để được hỗ trợ nhanh chóng:<br/>
+                    <span style="padding-left: 25px">⇨ Fanpage: <a href="https://fb.me/itifund"> https://fb.me/itifund</a></span><br/>
+                    <span style="padding-left: 25px">⇨ Hotline: 090 998 3699</span> <br/>
+                    <span style="padding-left: 25px">⇨ Email: info@itifund.com</span>
+                </p>
+            </div>
+            <div style="margin-left: 17%;">
+                <p style="float: left; margin-left 10%;">
+                    <span>Chúc bạn thành công!</span><br/>
+                    <span style="padding-left: 0px;">ITI Fund.</span>
+                </p>
+                <div style="clear: both"></div>
+            </div>
+        </div>
+        <!--   END SURVEY DONE     -->
+
+    </data>
+</odoo>
