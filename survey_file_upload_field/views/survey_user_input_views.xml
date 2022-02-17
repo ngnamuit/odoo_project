@@ -10,7 +10,7 @@
                 <field name="user_binary_line" attrs="{'invisible': [('answer_type', '!=', 'upload_file')]}">
                     <tree create="0" edit="0">
                         <field name="binary_filename" invisible="1"/>
-                        <field name="binary_data" widget="binary" filename="binary_filename"/>
+                        <field name="binary_data" widget="image" filename="binary_filename"/>
                     </tree>
                 </field>
             </field>

@@ -179,8 +179,12 @@
                                    t-att-checked="comment_line and 'checked' or None"
                                    t-att-data-selection-key="letters[item_idx] if useKeySelection else ''"/>
                             <span class="ml-2" t-field="question.comments_message" />
-                            <i class="fa fa-check-square float-right mt-1 position-relative"></i>
-                            <i class="fa fa-square-o float-right mt-1 position-relative"></i>
+                            <t t-if="not answer_selected">
+                                <i class="fa fa-check-square float-right mt-1 position-relative"></i>
+                            </t>
+                            <t t-else="">
+                                <i class="fa fa-square-o float-right mt-1 position-relative"></i>
+                            </t>
                         </label>
                     </div>
                     <div t-attf-class="o_survey_comment_container mt-3 py-0 px-1 #{'d-none' if not comment_line else ''}">
@@ -342,7 +346,11 @@
     <template id="question_container_inherit" inherit_id="survey.question_container">
         <xpath expr="//div[hasclass('o_survey_question_error')]" position="before">
             <t t-if="question.question_type == 'percentage'"><t t-call="survey_custom.question_percentage"/></t>
-            <t t-if="question.question_type == 'currency'"><t t-call="survey_custom.question_currency"/></t>
+            <t t-if="question.question_type == 'currency'"><t t-call="survey_custom.iti_question_char_box"/></t>
+
+        </xpath>
+        <xpath expr="//t[@t-call='survey.question_numerical_box']" position="replace">
+            <t t-call="survey_custom.iti_question_char_box"/>
         </xpath>
     </template>
 
@@ -391,7 +399,7 @@
                     <div class="bnt-retry" style="margin-left: 25%; margin-top: 20px; width: 50%;">
                         <button style="border: 0px !important; padding: 10px 15px 10px 15px !important;background-color: #c00000 !important; color:white !important;border-radius: 10px; width: 100%; font-size: 20px;"
                                 class="btn btn-lg">
-                            <a href="https://itifund.com/" style="color: white; width: 100%; text-decoration: none;">
+                            <a href="https://itifund.com/" style="color: white; width: 100%; text-decoration: none; font-family: Mulish !important;">
                                 <t t-if="survey._context.get('lang') == 'vi_VN'">Quay lại trang chủ</t>
                                 <t t-else="">Go back home</t>
                             </a>
@@ -409,7 +417,7 @@
                   t-att-data-question-type="question.question_type"><t t-if="answer_lines" t-esc="answer_lines[0].value_text_box or None"/></textarea>
     </template>
     <template id="iti_question_char_box" name="Question: text box">
-        <input style="display: inline !important" t-att-type="'email' if question.validation_email else 'text'"
+        <input style="display: inline !important; font-weight: bold;" t-att-type="'email' if question.validation_email else 'text'"
                class="form-control o_survey_question_text_box bg-transparent text-dark rounded-0 p-0" t-att-name="question.id"
                t-att-value="answer_lines[0].value_char_box if answer_lines else None"
                t-att-data-question-type="question.question_type"
@@ -430,16 +438,20 @@
         <xpath expr="//div[@role='form']" position="after">
             <t t-set="lang" t-value="survey._context.get('lang')"  />
             <div class="text-align" style="float: right">
+                <b>
                     <a role="button" style="border: 0px !important; padding: 5px 25px 5px 25px !important; background-color: #c00000 !important;; color:white !important;border-radius: 10px;" class="btn btn-primary" t-att-href="'/survey/retry/%s/%s' % (survey.access_token, answer.access_token)">
                         <t t-if="lang != 'vi_VN'">Edit</t>
                         <t t-if="lang == 'vi_VN'">Chỉnh sửa</t>
                     </a>
+                </b>
+                <b>
                     <a role="button" class="btn p-0 shadow-none o_survey_navigation_submit" t-att-href="'/survey/submit_on_print/%s/%s' % (survey.access_token, answer.access_token)"
                         style="margin-left:10px; padding: 5px 15px 5px 15px !important;background-color: #c00000 !important;; color:white !important;border-radius: 10px;">
                         <t t-if="lang != 'vi_VN'">Submit</t>
                         <t t-if="lang == 'vi_VN'">Gửi</t>
 
                     </a>
+                </b>
             </div>
         </xpath>
         <xpath expr="//div[@role='form']/fieldset" position="before">
@@ -457,8 +469,10 @@
                 </span>
                 <t t-if="question.description"><div class="text-muted oe_no_empty" t-field='question.description'/></t>
                 <t t-if="question.question_type == 'text_box'"><t t-call="survey_custom.iti_question_text_box"/></t>
-                <t t-if="question.question_type == 'char_box'"><t t-call="survey_custom.iti_question_char_box"/></t>
-                <t t-if="question.question_type == 'numerical_box'"><t t-call="survey_custom.iti_question_numerical_box"/></t>
+                <t t-if="question.question_type in ['char_box', 'numerical_box', 'currency']">
+                    <t t-call="survey_custom.iti_question_char_box"/>
+                </t>
+<!--                <t t-if="question.question_type == 'numerical_box'"><t t-call="survey_custom.iti_question_numerical_box"/></t>-->
             </t>
             <t t-else="">
                 <p>
@@ -468,10 +482,26 @@
                 </p>
                 <t t-if="question.description"><div class="text-muted oe_no_empty" t-field='question.description'/></t>
                 <t t-if="question.question_type == 'text_box'"><t t-call="survey.question_text_box"/></t>
-                <t t-if="question.question_type == 'char_box'"><t t-call="survey.question_char_box"/></t>
-                <t t-if="question.question_type == 'numerical_box'"><t t-call="survey.question_numerical_box"/></t>
-            </t>
+                <t t-if="question.question_type in ['char_box', 'numerical_box', 'currency']">
+                    <t t-call="survey_custom.iti_question_char_box"/>
+                </t>
+                <t t-if="question.question_type == 'upload_file'">
+                    <t t-if="answer_lines and answer_lines[0].user_binary_line">
+                        <t t-foreach="answer_lines[0].user_binary_line" t-as="file" >
+                            <t t-if="file and file.binary_data">
+<!--                                <img t-attf-src="data:image/png;base64, #{file.binary_data}" style="max-width: 50% !important;" />-->
+                                <div>
+                                    <a t-attf-href="/web/binary/download/#{file.id}" aria-label="Download" title="Download">
+                                        <i class="fa fa-download" />
+                                        <span><t t-esc="file.binary_filename" /></span>
+                                    </a>
+                                </div>
+                            </t>
 
+                        </t>
+                    </t>
+                </t>
+            </t>
             <t t-if="question.question_type == 'date'"><t t-call="survey.question_date"/></t>
             <t t-if="question.question_type == 'datetime'"><t t-call="survey.question_datetime"/></t>
             <t t-if="question.question_type == 'simple_choice'"><t t-call="survey.question_simple_choice"/></t>
@@ -480,8 +510,6 @@
             <div class="o_survey_question_error overflow-hidden border-0 py-0 px-3 alert alert-danger" role="alert"></div>
         </xpath>
     </template>
-
-
 
 </data>
 </odoo>

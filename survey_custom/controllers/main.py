@@ -15,6 +15,7 @@ from odoo.exceptions import UserError
 from odoo.http import request, content_disposition
 from odoo.osv import expression
 from odoo.tools import format_datetime, format_date, is_html_empty
+from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.web.controllers.main import Binary
 
@@ -23,12 +24,21 @@ _logger = logging.getLogger(__name__)
 # 
 class SurveyCustom(Survey):
 
+    def _prepare_survey_data(self, survey_sudo, answer_sudo, **post):
+        res = super(SurveyCustom, self)._prepare_survey_data(survey_sudo, answer_sudo, **post)
+        if survey_sudo.state not in ['open'] and res['can_go_back'] and res['previous_page_id'] is False:
+            res['can_go_back'] = False
+            page = request.env['survey.question'].sudo().browse(res['breadcrumb_pages'][0]['id'])
+            res['page'] = page
+        return res
+
     @http.route('/survey/submit_on_print/<string:survey_token>/<string:answer_token>', type='http', auth='public', website=True)
     def survey_submit_on_print(self, survey_token, answer_token=None, **post):
         access_data = self._get_access_data(survey_token, answer_token, ensure_token=False)
         survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']
-        if answer_sudo.state == 'review' and answer_sudo.test_entry is True and answer_sudo.note == 'Answer is reviewing':
+        if answer_sudo.state == 'review':
             answer_sudo.write({'test_entry': False, 'state': 'done'})
+            answer_sudo.send_submitted_survey_email()
 
         return request.render('survey.survey_fill_form_done', {
             'survey': survey_sudo,
@@ -52,9 +62,10 @@ class SurveyCustom(Survey):
     @http.route('/survey/retry/<string:survey_token>/<string:answer_token>', type='http', auth='public', website=True)
     def survey_retry(self, survey_token, answer_token, **post):
         user_input = request.env['survey.user_input'].sudo().search([('access_token', '=', answer_token)], limit=1)
-        print("user_input.state == == " + str(user_input.state))
+        if user_input and user_input.state == 'done':
+            raise ValidationError("Survey's done. You can not edit!")
         if user_input and user_input.state == 'review':
-            user_input.write({'state': 'in_progress'})
+            user_input.write({'state': 'in_progress', 'test_entry': False})
 
             # region get previous_page_id
             survey = user_input.survey_id

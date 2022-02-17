@@ -19,6 +19,16 @@ class ResPartner(models.Model):
             else:
                 record.has_posted_invoice = False
 
+    def compute_has_posted_invoice(self):
+        for partner in self.search([]):
+            post_record = self.env['account.move'].search([
+                ('state', '=', 'posted'), ('partner_id', '=', partner.id), ('move_type', 'in', ['out_invoice', 'in_refund'])
+            ], limit=1)
+            if post_record:
+                partner.has_posted_invoice = True
+            else:
+                partner.has_posted_invoice = False
+
 
 class MrpBom(models.Model):
     _inherit = "mrp.bom"

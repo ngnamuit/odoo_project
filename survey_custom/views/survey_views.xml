@@ -11,6 +11,12 @@
                         <field name="survey_done" nolabel="1"/>
                     </page>
                 </xpath>
+                <xpath expr="//notebook/page[@name='options']/group[@name='options']" position="inside">
+                    <group string="Submitted Survey PDF" name="pdf">
+                        <field name="pdf_footer" widget="image"/>
+                        <field name="pdf_header" widget="image"/>
+                    </group>
+                </xpath>
             </field>
         </record>
     </data>

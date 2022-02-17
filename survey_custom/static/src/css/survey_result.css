@@ -122,6 +122,10 @@ textarea.o_survey_comment, textarea.o_survey_question_text_box {
 }
 .js_ck_comments .d-flex {
     float: left;
+    width: 70% !important;
+}
+.js_ck_comments .o_survey_comment_container {
+    margin-left:20px !important;
 }
 .btn-bottom {
     background: None !important;

@@ -2,22 +2,23 @@
 <odoo>
     <data>
         <!--   [R1-Screening] DESCRIPTION    -->
-        <div style="width: 100%">
+        <div style="width: 100%; font-family: Mulish !important;">
             <img class="img-fluid o_we_custom_image o_we_selected_image" src="/web/image/1191-4b3c5f05/Trang%20%C4%91%E1%BA%A7u_ENG.png?access_token=db3a4881-0620-4d58-a9c9-ededfd0f037a" />
-            <button type="submit" value="start" style="margin-left: 20% !important;width: 60%;padding: 5px 15px 5px 15px !important;background-color: #c00000 !important;; color:white !important;border-radius: 10px;">SUMIT HERE</button>
+            <button type="submit"
+                    value="start"
+                    style="margin-top: -10px; border: 0px;margin-left: 20% !important;width: 60%;padding: 5px 15px 5px 15px !important;background-color: #c00000 !important;; color:white !important;border-radius: 10px;"><b>SUMIT HERE</b></button>
         </div>
-
-        <div style="width: 100%">
+        <div style="width: 100%; font-family: Mulish !important;">
             <img class="img-fluid o_we_custom_image o_we_selected_image" src="/web/image/1187-5968489c/Trang%20%C4%91%E1%BA%A7u_VI.png?access_token=57a109c6-f3b5-458c-8d7a-654e9fe0dfee" style="width: 100%;" />
             <button type="submit"
                     value="start"
-                    style="margin-left: 20% !important;width: 60%; padding: 5px 15px 5px 15px !important;background-color: #c00000 !important;; color:white !important;border-radius: 10px;">ĐĂNG KÝ NGAY</button>
+                    style="margin-top: -10px; border: 0px;margin-left: 20% !important;width: 60%; padding: 5px 15px 5px 15px !important;background-color: #c00000 !important;; color:white !important;border-radius: 10px;"><b>ĐĂNG KÝ NGAY</b></button>
         </div>
         <!--   END DESCRIPTION     -->
 
 
         <!--   [R1-Screening] SURVEY DONE    -->
-        <div class="en" style="font-size: 14px;">
+        <div class="en" style="font-size: 17px; font-family: Mulish !important;">
             <br/><br/>
             <p>
                 <br/>
@@ -42,8 +43,7 @@
                 <div style="clear: both"></div>
             </div>
         </div>
-
-        <div class="vi" style="font-size: 14px;">
+        <div class="vi" style="font-size: 17px; font-family: Mulish !important;">
             <br/><br/>
             <p>
                 <br/>
@@ -70,5 +70,51 @@
         </div>
         <!--   END SURVEY DONE     -->
 
+        <!--  TEMPLATE EMAIL   -->
+        <div id="en">
+            <div style="font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;margin:0px;padding: 0px; font-size: 13px;">
+                <p style="margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;">Hi  ${ctx['full_name']},</p>
+                <p style="margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;">Thanks for sharing your startup project with us!</p>
+
+                <p style="margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;">ITI Fund confirms “Receipt of registration information to raise capital" from Project:  ${ctx['project_name']} - <i>attached file</i> </p>
+
+                <p style="margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;">The due diligence department is checking your project information. In the meantime, you can learn more about the ITI fund and the projects we've worked on at: <a href="https://itifund.com/" style="text-decoration:none;background-color:transparent;color:blue;">itifund.com</a>.</p>
+
+                <p style="margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;">In case it has passed 10 working days but you still have not received contact from the ITI fund, please contact us in the following ways for quick support:</p>
+                <div style="margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;padding-left:20px;">
+                    <span>⇨ <a href="https://www.facebook.com/ITIFUND" style="color:blue;">Fanpage</a></span><br/>
+                    <span>⇨ Hotline: 090 998 699</span><br/>
+                    <span>⇨ Email: info@itifund.com</span><br/>
+                </div>
+                <p style="margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;">
+                    <span>Good luck!</span><br/>
+
+                    <span>ITI Fund.</span>
+                </p>
+            </div>
+        </div>
+
+        <div id="vi">
+            <div style="font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;margin:0px;padding: 0px; font-size: 13px;">
+                <p style="margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;">Xin chào  ${ctx['full_name']},</p>
+                <p style="margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;">Cám ơn vì đã chia sẻ dự án khởi nghiệp của bạn với chúng tôi!</p>
+
+                <p style="margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;">Quỹ ITI xác nhận “Đã nhận được thông tin đăng ký gọi vốn” từ dự án  ${ctx['project_name']} - <i>file đính kèm.</i> </p>
+
+                <p style="margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;">Bộ phận thẩm định đang kiểm tra thông tin dự án của bạn. Trong khi chờ đợi, bạn có thể tìm hiểu thêm về quỹ ITI cũng như các dự án mà chúng tôi đã thực hiện tại: <a href="https://itifund.com/" style="color:blue;">itifund.com</a>.</p>
+
+                <p style="margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;">Trường hợp đã qua 10 ngày làm việc nhưng bạn vẫn chưa nhận được liên lạc từ phía quỹ ITI, hãy liên hệ đến chúng tôi theo những cách sau để được hỗ trợ nhanh chóng:</p>
+                <div style="margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;padding-left:20px;">
+                    <span>⇨ <a href="https://www.facebook.com/ITIFUND" style="color:blue;">Fanpage</a></span><br/>
+                    <span>⇨ Hotline: 090 998 699</span><br/>
+                    <span>⇨ Email: info@itifund.com</span><br/>
+                </div>
+                <p style="margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;">
+                    <span>Chúc bạn thành công!</span><br/>
+
+                    <span >ITI Fund.</span>
+                </p>
+            </div>
+        </div>
     </data>
 </odoo>

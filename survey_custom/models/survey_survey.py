@@ -25,6 +25,9 @@ class Survey(models.Model):
         'Survey Done', translate=True, sanitize=False,  # TDE TODO: sanitize but find a way to keep youtube iframe media stuff
         help="Use this field to add additional explanations about your question or to illustrate it with pictures or a video")
 
+    pdf_footer = fields.Binary(string="PDF Footer")
+    pdf_header = fields.Binary(string="PDF Header")
+
     def _compute_company(self):
         for record in self:
             record.company_id = record.env.user.company_id
@@ -46,6 +49,7 @@ class Survey(models.Model):
     #         pages_or_questions = survey._get_pages_or_questions(user_input)
     #         ids = pages_or_questions.ids
     #         page_or_question_id = ids[0]
+    #         go_back = False
     #     return super(Survey, self)._get_next_page_or_question(user_input, page_or_question_id, go_back)
 
 class SurveyQuestion(models.Model):
