@@ -74,11 +74,18 @@
                                 </td>
                             </tr>
                             <t t-set="index" t-value="0"/>
+                            <t t-set="discount" t-value="0"/>
+                            <t t-set="must_paid" t-value="0"/>
                             <t t-set="last_move" t-value="0"/>
+
                             <tr t-foreach="lines" t-as="move" style="font-size: 13px">
                                 <t t-set="index" t-value="index+1"/>
                                 <t t-if="index == len(lines)-1">
                                     <t t-set="last_move" t-value="move['con_lai']"/>
+                                </t>
+                                <t t-if="index == len(lines)">
+                                    <t t-set="discount" t-value="move['discount']"/>
+                                    <t t-set="must_paid" t-value="move['must_paid']"/>
                                 </t>
                                 <td style="padding:5px; border: 1px solid black; text-align: center">
                                     <span t-esc="move['ngay']"/>
@@ -124,8 +131,26 @@
                                     <td colspan="7" style="text-align: right; padding-right: 30px;">
                                         <b>CÒN</b>
                                     </td>
-                                    <td colspan="2" style="text-align: left; padding-lef: 10px;">
+                                    <td colspan="2" style="text-align: right; padding-right: 20px;">
                                         <b t-esc="last_move"/>
+                                    </td>
+                                </tr>
+                            </t>
+                            <t t-if="w_discount and w_discount &gt; 0">
+                                <tr style="border-top: 1px solid black">
+                                    <td colspan="7" style="text-align: center; padding-right: 30px;">
+                                        <b>Số tiền chiết khấu thanh toán</b>
+                                    </td>
+                                    <td colspan="2" style="text-align: right; padding-right: 20px;">
+                                        <b t-esc="discount"/>
+                                    </td>
+                                </tr>
+                                <tr style="border-top: 1px solid black">
+                                    <td colspan="7" style="text-align: center; padding-right: 30px;">
+                                        <b>Số tiền phải thanh toán</b>
+                                    </td>
+                                    <td colspan="2" style="text-align: right; padding-right: 20px;">
+                                        <b t-esc="must_paid"/>
                                     </td>
                                 </tr>
                             </t>
@@ -169,6 +194,7 @@
                     </group>
                     <group>
                         <field name="to_date" required="1" />
+                        <field name="discount" required="0" string="% Chiết khấu" />
                     </group>
                 </group>
                 <footer>

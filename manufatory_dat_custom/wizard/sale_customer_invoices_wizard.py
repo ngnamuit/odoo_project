@@ -14,6 +14,7 @@ class SaleCustomerWizard(models.TransientModel):
     partner_id = fields.Many2one('res.partner', string='Partner', domain="[('has_posted_invoice', '=', True)]")
     from_date = fields.Date(string='From Date')
     to_date = fields.Date(string='To Date')
+    discount = fields.Float(string="% Discount")
 
     def get_datas(self):
         sql = """
@@ -23,15 +24,27 @@ class SaleCustomerWizard(models.TransientModel):
                         res.name AS customer,
                         mo_ori.name AS number_invoice, 
                         mo_ori.invoice_date,
-                        mo_ori.amount_total AS amount_vnd, 
-                        0 as amount_paid_vnd,--mo_ori.amount_total - mo_ori.amount_residual AS amount_paid_vnd,
-                        mo_ori.amount_total as amount_remain_vnd,--mo_ori.amount_residual AS amount_remain_vnd, 
+                        CASE WHEN move_type = 'out_refund' THEN (-1) * mo_ori.amount_total 
+                             ELSE mo_ori.amount_total 
+                          END AS amount_vnd, 
+                        0 as amount_paid_vnd,
+                        CASE WHEN move_type = 'out_refund' THEN (-1) * mo_ori.amount_total 
+                            ELSE mo_ori.amount_total 
+                          END as amount_remain_vnd,
                         mo_ori.date AS payment_date,
                         aml.name as product_name,
-                        aml.quantity as product_qty,
-                        aml.discount as product_discount,
-                        aml.price_unit as product_price_unit,
-                        aml.price_subtotal
+                        CASE WHEN move_type = 'out_refund' THEN (-1) * aml.quantity 
+                            ELSE aml.quantity 
+                          END as product_qty,
+                        CASE WHEN move_type = 'out_refund' THEN (-1) * aml.discount
+                             ELSE aml.discount
+                          END as product_discount,
+                        CASE WHEN move_type = 'out_refund' THEN (-1) * aml.price_unit 
+                             ELSE aml.price_unit 
+                          END as product_price_unit,
+                        CASE WHEN move_type = 'out_refund' THEN (-1) *  aml.price_subtotal
+                             ELSE aml.price_subtotal
+                          END as price_subtotal
                 FROM account_move mo_ori
                 INNER JOIN account_move_line aml on aml.move_id = mo_ori.id
                 INNER JOIN product_product pp on pp.id = aml.product_id
@@ -39,7 +52,7 @@ class SaleCustomerWizard(models.TransientModel):
                 LEFT JOIN res_partner res ON res.id = mo_ori.partner_id
                 LEFT JOIN account_payment ap ON mo_ori.payment_id = ap.id
                 LEFT JOIN account_payment_register apr ON ap.id = apr.id
-                WHERE mo_ori.partner_id = {0} and mo_ori.state = 'posted' AND (move_type = 'out_invoice' OR move_type = 'in_refund') 
+                WHERE mo_ori.partner_id = {0} and mo_ori.state = 'posted' AND (move_type = 'out_invoice' OR move_type = 'in_refund' or move_type = 'out_refund') 
 
             )
             select 
@@ -78,9 +91,8 @@ class SaleCustomerWizard(models.TransientModel):
                     A.price_subtotal
             from A
             WHERE A.invoice_date <= '{1}' and A.invoice_date >= '{2}'
-            ORDER BY invoice_date asc, invoice_date asc, customer asc;
+            ORDER BY invoice_date asc, 2 asc;
         """.format(self.partner_id.id, self.to_date, self.from_date)
-        print("sql === " + sql)
         self.env.cr.execute(sql)
 
         records = self.env.cr.dictfetchall()
@@ -90,16 +102,22 @@ class SaleCustomerWizard(models.TransientModel):
         sql = """
             WITH A AS (
                 SELECT res.name AS customer,
-                    mo_ori.amount_total AS amount_vnd, 
-                    mo_ori.amount_total - mo_ori.amount_residual AS amount_paid_vnd,
-                    mo_ori.amount_residual AS amount_remain_vnd
+                    CASE WHEN move_type = 'out_refund' THEN (-1) * mo_ori.amount_total 
+                         ELSE mo_ori.amount_total  
+                      END AS amount_vnd, 
+                    CASE WHEN move_type = 'out_refund' THEN (-1) * (mo_ori.amount_total - mo_ori.amount_residual)
+                         ELSE mo_ori.amount_total - mo_ori.amount_residual 
+                      END AS amount_paid_vnd,
+                    CASE WHEN move_type = 'out_refund' THEN (-1) * mo_ori.amount_residual 
+                         ELSE mo_ori.amount_residual
+                      END AS amount_remain_vnd
                 FROM account_move mo_ori
                 LEFT JOIN account_journal aj ON mo_ori.journal_id = aj.id
                 LEFT JOIN res_partner res ON res.id = mo_ori.partner_id
                 LEFT JOIN account_payment ap ON mo_ori.payment_id = ap.id
                 LEFT JOIN account_payment_register apr ON ap.id = apr.id
-                WHERE mo_ori.partner_id = %s and mo_ori.invoice_date <= '%s' 
-                        and mo_ori.state = 'posted' AND (move_type = 'out_invoice' OR move_type = 'in_refund') 
+                WHERE mo_ori.partner_id = %s and mo_ori.invoice_date < '%s' 
+                        and mo_ori.state = 'posted' AND (move_type = 'out_invoice' OR move_type = 'in_refund' or move_type = 'out_refund') 
             )
             select customer,
                     SUM(amount_vnd) as amount_vnd,
@@ -114,21 +132,25 @@ class SaleCustomerWizard(models.TransientModel):
 
         sql2 = """
             WITH A as (
-                SELECT mo_ori.name AS name
+                SELECT mo_ori.name AS name,
+                       move_type as move_type
                 FROM account_move mo_ori
                 LEFT JOIN account_journal aj ON mo_ori.journal_id = aj.id
                 LEFT JOIN res_partner res ON res.id = mo_ori.partner_id
                 LEFT JOIN account_payment ap ON mo_ori.payment_id = ap.id
                 LEFT JOIN account_payment_register apr ON ap.id = apr.id
                 WHERE mo_ori.partner_id = %s
-                        and mo_ori.state = 'posted' AND (move_type = 'out_invoice' OR move_type = 'in_refund') 
+                        and mo_ori.state = 'posted' AND (move_type = 'out_invoice' OR move_type = 'in_refund' OR move_type = 'out_refund') 
             
             )
-            select SUM(ac.amount) as amount_paid_vnd
+            select SUM(
+                CASE WHEN A.move_type = 'out_refund' THEN (-1) * ac.amount
+                     ELSE ac.amount END
+            ) as amount_paid_vnd
             from account_payment ac 
                 inner join account_move am on am.id = ac.move_id
                 inner join A on A.name = am.ref
-                where am.state = 'posted' and am.date <= '%s'
+                where am.state = 'posted' and am.date < '%s'
         """%(self.partner_id.id, self.from_date)
         self.env.cr.execute(sql2)
         record2 = self.env.cr.dictfetchone()
@@ -141,6 +163,7 @@ class SaleCustomerWizard(models.TransientModel):
 
     def remake_data(self, records, ton):
         result = []
+        discount = 0
         # write ton record
         result.append({
             'ngay': '',
@@ -227,12 +250,17 @@ class SaleCustomerWizard(models.TransientModel):
             result.append(last)
             import copy
             last_line = copy.deepcopy(last)
+            discount = ((self.discount or 0) * ((sum_tien_hang - sum_tien_con_lai) or 0)) * 0.01
+            must_paid = sum_tien_con_lai - round(discount)
             last_line.update({
                 'tien_hang': '{:0,.0f}'.format(sum_tien_hang or 0),
                 'kh_tra': '{:0,.0f}'.format((sum_tien_hang - sum_tien_con_lai) or 0),
                 'con_lai': '',
+                'discount': '{:0,.0f}'.format(discount) if discount else '0',
+                'must_paid': '{:0,.0f}'.format(must_paid) if must_paid else '0'
             })
             result.append(last_line)
+
         return result
 
     def compute_line(self, record, invoice_invoice_kh_tra):
@@ -273,6 +301,8 @@ class SaleCustomerWizard(models.TransientModel):
         self.ensure_one()
         # validate
         current_date = date.today()
+        if self.discount and (self.discount > 100 or self.discount < 0):
+            raise UserError(_('% Discount is invalid'))
         if not self.from_date or self.from_date >= current_date or (self.from_date >= self.to_date):
             raise UserError(_('From Date or To Date is invalid'))
 
@@ -282,7 +312,7 @@ class SaleCustomerWizard(models.TransientModel):
         partner = [self.partner_id]
         company = [self.env.user.company_id]
         datas = {
-            'ids': [self],
+            'w_discount': self.discount or 0,
             'model': 'sale.customer.invoices.wizard',
             'form': [1],
             'partner': partner,

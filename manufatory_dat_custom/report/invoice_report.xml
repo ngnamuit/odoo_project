@@ -3,23 +3,33 @@
     <template id="report_invoice_document_dat_inherit" inherit_id="account.report_invoice_document">
         <xpath expr="//t/t[@t-set='address']"  position="replace" >
             <t t-set="partner" t-value="o.partner_id" />
+            <div style="text-align: center">
+                <h2>CÔNG NỢ KHÁCH HÀNG (<span t-field="o.name"/>)</h2>
+            </div>
             <table style="width: 95%;">
                 <tr width="100%">
                     <td style="width: 13%">Tên KH</td>
                     <td style="width: 85%; font-weight: bold"><span style="margin-right:20px">:</span> <span t-field="partner.name"/></td>
                 </tr>
                 <tr>
+                    <td>Mã số thuế</td>
+                    <td><span style="margin-right:20px">:</span><span t-field="partner.vat" /></td>
+                </tr>
+                <tr>
                     <td>Địa chỉ</td>
                     <td><span style="margin-right:20px">:</span><span t-field="partner.street"/>, <span t-field="partner.street2"/>, <span t-field="partner.city"/>, <span t-field="partner.state_id.name"/>,  <span t-field="partner.country_id.name"/></td>
                 </tr>
                 <tr>
-                    <td>Mã số thuế</td>
-                    <td><span style="margin-right:20px">:</span><span t-field="partner.vat" /></td>
+                    <td>Số điện thoại</td>
+                    <td><span style="margin-right:20px">:</span><span t-field="partner.mobile" /></td>
                 </tr>
             </table>
         </xpath>
+
+        <xpath expr="//div[hasclass('page')]/h2"  position="replace" /> <!--   REMOVE INVOICE NAME  -->
         <xpath expr="//t/div/table[@name='invoice_line_table']/tbody"  position="replace" >
             <t t-set="current_subtotal" t-value="0"/>
+            <t t-set="total_quantity" t-value="0"/>
             <t t-set="lines" t-value="o.invoice_line_ids.sorted(key=lambda l: (-l.sequence, l.date, l.move_name, -l.id), reverse=True)"/>
 
             <t t-foreach="lines" t-as="line">
@@ -30,6 +40,7 @@
                     <t t-if="not line.display_type" name="account_invoice_line_accountable">
                         <td name="account_invoice_line_name"><span t-field="line.name" t-options="{'widget': 'text'}"/></td>
                         <td class="text-right">
+                            <t t-set="total_quantity" t-value="total_quantity + (line.quantity or 0)"/>
                             <span t-esc="'{:0,.0f}'.format(line.quantity)"/>
                             <span t-field="line.product_uom_id"  groups="uom.group_uom"/>
                         </td>
@@ -72,17 +83,21 @@
                     </tr>
                 </t>
             </t>
+            <tr >
+                <td colspan="2" style="text-align: right"><span t-esc="'{:0,.0f}'.format(total_quantity)"/></td>
+                <td colspan="4"></td>
+            </tr>
         </xpath>
 
         <xpath expr="//div[@id='total']/div" position="replace">
             <div t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'} ml-auto">
             <table class="table table-sm" style="page-break-inside: avoid;">
-                <tr class="border-black o_subtotal" style="">
-                    <td><strong>Subtotal</strong></td>
-                    <td class="text-right">
-                        <span t-esc="'{:0,.0f}'.format(o.amount_untaxed)"/>
-                    </td>
-                </tr>
+<!--                <tr class="border-black o_subtotal" style="">-->
+<!--                    <td><strong>Subtotal</strong></td>-->
+<!--                    <td class="text-right">-->
+<!--                        <span t-esc="'{:0,.0f}'.format(o.amount_untaxed)"/>-->
+<!--                    </td>-->
+<!--                </tr>-->
                 <t t-foreach="o.amount_by_group" t-as="amount_by_group">
                     <tr style="">
                         <t t-if="len(o.line_ids.filtered(lambda line: line.tax_line_id)) in [0, 1] and o.amount_untaxed == amount_by_group[2]">

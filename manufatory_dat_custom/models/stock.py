@@ -21,3 +21,8 @@ class StockPicking(models.Model):
             FILETYPE_BASE64_MAGICWORD.get(base64_source[:1], 'png'),
             base64_source.decode(),
         )
+
+
+    def to_SGT_datetime(self, dt):
+        print("dt == %s"%(dt))
+        return dt.astimezone(VIE_TIMEZONE)
