@@ -159,9 +159,9 @@
                                    t-att-checked="'checked' if answer_line else None"
                                    t-att-data-selection-key="letters[item_idx] if useKeySelection else ''"/>
                             <span t-field='label.value' style="margin-left: 10px"/>
-                            <i class="fa fa-check-circle float-right mt-1 position-relative"></i>
+                            <i class="fa fa-check-square float-right mt-1 position-relative"></i>
                             <t t-if="not answer_selected">
-                                <i class="fa fa-circle-thin float-right mt-1 position-relative"></i>
+                                <i class="fa fa-square-o float-right mt-1 position-relative"></i>
                             </t>
                             <t t-call="survey.question_suggested_value_image"/>
                         </label>
@@ -179,10 +179,8 @@
                                    t-att-checked="comment_line and 'checked' or None"
                                    t-att-data-selection-key="letters[item_idx] if useKeySelection else ''"/>
                             <span class="ml-2" t-field="question.comments_message" />
+                            <i class="fa fa-check-square float-right mt-1 position-relative"></i>
                             <t t-if="not answer_selected">
-                                <i class="fa fa-check-square float-right mt-1 position-relative"></i>
-                            </t>
-                            <t t-else="">
                                 <i class="fa fa-square-o float-right mt-1 position-relative"></i>
                             </t>
                         </label>
@@ -208,33 +206,123 @@
                    id="currency"
                    t-att-name="question.id"
                    t-att-value="answer_lines[0].value_char_box if answer_lines else None"
-                   t-att-data-question-type="question.question_type"
-                   t-att-data-validation-length-min="question.validation_length_min if question.validation_required else False"
-                   t-att-data-validation-length-max="question.validation_length_max if question.validation_required else False"/>
+                   t-att-data-question-type="question.question_type"/>
         </div>
-            &lt;script>
-            var elem = document.getElementById("currency");
+        <script>
+                var elem = document.getElementById("currency");
 
-            elem.addEventListener("keydown",function(event){
-                var key = event.which;
-                if((key&lt;48 || key>57) &#38;&#38; key != 8) event.preventDefault();
-            });
+                elem.addEventListener("keydown",function(event){
+                    var key = event.which;
+                    if((key&lt;48 || key>57) &#38;&#38; key != 8) event.preventDefault();
+                });
 
-            elem.addEventListener("keyup",function(event){
-                var value = this.value.replace(/,/g,"");
-                this.dataset.currentValue=parseInt(value);
-                var caret = value.length-1;
-                while((caret-3)>-1)
-                {
-                    caret -= 3;
-                    value = value.split('');
-                    value.splice(caret+1,0,",");
-                    value = value.join('');
-                }
-                this.value = value;
-            });
+                elem.addEventListener("keyup",function(event){
+                    var value = this.value.replace(/,/g,"");
+                    this.dataset.currentValue=parseInt(value);
+                    var caret = value.length-1;
+                    while((caret-3)>-1)
+                    {
+                        caret -= 3;
+                        value = value.split('');
+                        value.splice(caret+1,0,",");
+                        value = value.join('');
+                    }
+                    this.value = value;
+                });
+        </script>
+<!--        <script>-->
+<!--            $("input[data-type='currency']").on({-->
+<!--            keyup: function() {-->
+<!--            formatCurrency($(this));-->
+<!--            },-->
+<!--            blur: function() {-->
+<!--            validateCurrency($(this));-->
+<!--            formatCurrency($(this), "blur");-->
+<!--            }-->
+<!--            });-->
 
-            &lt;/script>
+<!--            function validateCurrency(input){-->
+<!--            var c = parseFloat(input.val().replace(/\,|$/g,'').replace('$',''));-->
+<!--            if(c&lt;input.attr('min')){-->
+<!--            input.val(input.attr('min'));-->
+<!--            }else if(c>input.attr('max')){-->
+<!--            input.val(input.attr('max'));-->
+<!--            }-->
+<!--            }-->
+<!--            function formatNumber(n) {-->
+<!--            // format number 1000000 to 1,234,567-->
+<!--            return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")-->
+<!--            }-->
+
+
+<!--            function formatCurrency(input, blur) {-->
+<!--            // appends $ to value, validates decimal side-->
+<!--            // and puts cursor back in right position.-->
+
+<!--            // get input value-->
+<!--            var input_val = input.val();-->
+
+<!--            // don't validate empty input-->
+<!--            if (input_val === "") { return; }-->
+
+<!--            // original length-->
+<!--            var original_len = input_val.length;-->
+
+<!--            // initial caret position-->
+<!--            var caret_pos = input.prop("selectionStart");-->
+
+
+<!--            // check for decimal-->
+<!--            if (input_val.indexOf(".") >= 0) {-->
+
+<!--            // get position of first decimal-->
+<!--            // this prevents multiple decimals from-->
+<!--            // being entered-->
+<!--            var decimal_pos = input_val.indexOf(".");-->
+
+<!--            // split number by decimal point-->
+<!--            var left_side = input_val.substring(0, decimal_pos);-->
+<!--            var right_side = input_val.substring(decimal_pos);-->
+
+<!--            // add commas to left side of number-->
+<!--            left_side = formatNumber(left_side);-->
+
+<!--            // validate right side-->
+<!--            right_side = formatNumber(right_side);-->
+
+<!--            // On blur make sure 2 numbers after decimal-->
+<!--            if (blur === "blur") {-->
+<!--            right_side += "00";-->
+<!--            }-->
+
+<!--            // Limit decimal to only 2 digits-->
+<!--            right_side = right_side.substring(0, 2);-->
+
+<!--            // join number by .-->
+<!--            input_val = left_side + "." + right_side + ' %';-->
+
+<!--            } else {-->
+<!--            // no decimal entered-->
+<!--            // add commas to number-->
+<!--            // remove all non-digits-->
+<!--            input_val = formatNumber(input_val);-->
+<!--            input_val = input_val;-->
+
+<!--            // final formatting-->
+<!--            if (blur === "blur") {-->
+<!--            input_val += ".00" + ' %';-->
+<!--            }-->
+<!--            }-->
+
+<!--            // send updated string to input-->
+<!--            input.val(input_val);-->
+
+<!--            // put caret back in the right position-->
+<!--            var updated_len = input_val.length;-->
+<!--            caret_pos = updated_len - original_len + caret_pos;-->
+<!--            input[0].setSelectionRange(caret_pos, caret_pos);-->
+<!--            }-->
+<!--        </script>-->
     </template>
 
     <template id="question_percentage" name="Question: Currency" >
@@ -354,12 +442,12 @@
         </xpath>
     </template>
 
-    <template id="survey_page_print_inherit" inherit_id="survey.survey_page_print">
-        <xpath expr="//div[hasclass('o_survey_question_error')]" position="before">
-            <t t-if="question.question_type == 'percentage'"><t t-call="survey_custom.question_percentage"/></t>
-            <t t-if="question.question_type == 'currency'"><t t-call="survey_custom.question_currency"/></t>
-        </xpath>
-    </template>
+<!--    <template id="survey_page_print_inherit" inherit_id="survey.survey_page_print">-->
+<!--        <xpath expr="//div[hasclass('o_survey_question_error')]" position="before">-->
+<!--            <t t-if="question.question_type == 'percentage'"><t t-call="survey_custom.question_percentage"/></t>-->
+<!--            <t t-if="question.question_type == 'currency'"><t t-call="survey_custom.question_currency"/></t>-->
+<!--        </xpath>-->
+<!--    </template>-->
 
 
     <!--  START FORM SURVEY  -->
@@ -399,7 +487,7 @@
                     <div class="bnt-retry" style="margin-left: 25%; margin-top: 20px; width: 50%;">
                         <button style="border: 0px !important; padding: 10px 15px 10px 15px !important;background-color: #c00000 !important; color:white !important;border-radius: 10px; width: 100%; font-size: 20px;"
                                 class="btn btn-lg">
-                            <a href="https://itifund.com/" style="color: white; width: 100%; text-decoration: none; font-family: Mulish !important;">
+                            <a href="https://itifund.com/" style="font-weight: bold; color: white; width: 100%; text-decoration: none; font-family: Mulish !important;">
                                 <t t-if="survey._context.get('lang') == 'vi_VN'">Quay lại trang chủ</t>
                                 <t t-else="">Go back home</t>
                             </a>
@@ -434,6 +522,10 @@
     </template>
 
     <template inherit_id="survey.survey_page_print" id="urvey_page_print_inherit" >
+        <xpath expr="//div[hasclass('o_survey_question_error')]" position="before">
+            <t t-if="question.question_type == 'percentage'"><t t-call="survey_custom.question_percentage"/></t>
+            <t t-if="question.question_type == 'currency'"><t t-call="survey_custom.question_currency"/></t>
+        </xpath>
         <xpath expr="//t[@t-if='review']" position="replace"></xpath>
         <xpath expr="//div[@role='form']" position="after">
             <t t-set="lang" t-value="survey._context.get('lang')"  />
@@ -482,7 +574,7 @@
                 </p>
                 <t t-if="question.description"><div class="text-muted oe_no_empty" t-field='question.description'/></t>
                 <t t-if="question.question_type == 'text_box'"><t t-call="survey.question_text_box"/></t>
-                <t t-if="question.question_type in ['char_box', 'numerical_box', 'currency']">
+                <t t-if="question.question_type in ['char_box', 'numerical_box', 'currency', 'percentage']">
                     <t t-call="survey_custom.iti_question_char_box"/>
                 </t>
                 <t t-if="question.question_type == 'upload_file'">
@@ -505,7 +597,7 @@
             <t t-if="question.question_type == 'date'"><t t-call="survey.question_date"/></t>
             <t t-if="question.question_type == 'datetime'"><t t-call="survey.question_datetime"/></t>
             <t t-if="question.question_type == 'simple_choice'"><t t-call="survey.question_simple_choice"/></t>
-            <t t-if="question.question_type == 'multiple_choice'"><t t-call="survey.question_multiple_choice"/></t>
+            <t t-if="question.question_type == 'multiple_choice'"><t t-call="survey_custom.question_multiple_choice_inherit"/></t>
             <t t-if="question.question_type == 'matrix'"><t t-call="survey.question_matrix"/></t>
             <div class="o_survey_question_error overflow-hidden border-0 py-0 px-3 alert alert-danger" role="alert"></div>
         </xpath>

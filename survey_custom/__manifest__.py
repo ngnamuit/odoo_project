@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+# Part of Odoo. See LICENSE file for full copyright and licensing details. pass: # .)/NzT*fLu\(uBNIDX\82[64JFF@$$#
 # scp -r survey_custom/ root@103.221.221.109:/opt/odoo14/odoo_source_iti_community/custom
 {
     'name': 'Survey Custom',

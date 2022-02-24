@@ -77,7 +77,7 @@ class SurveyUserInput(models.Model):
                     'survey_custom.action_submitted_survey_pdf_report')._render_qweb_pdf(user_input.id, data=pre_data)
                 data_record = base64.b64encode(report_template_id[0])
                 ir_values = {
-                    'name': "%s - submitted at ITI Fund"%(project_name),
+                    'name': "%s - Submitted at ITI FUND.pdf"%(project_name),
                     'type': 'binary',
                     'datas': data_record,
                     'store_fname': data_record,
@@ -137,7 +137,13 @@ class SurveyUserInput(models.Model):
         answer_dict = answer_sudo.read(list(set(self.env['survey.user_input']._fields)))
         user_input_lines_dict = user_input_line_ids.read(list(set(self.env['survey.user_input.line']._fields)))
         question_ids = []
+        line_index = 0
         for line in user_input_lines_dict:
+            # upper question 1
+            line_index += 1
+            if line_index == 1:
+                value_char_box = line['value_char_box'].upper()
+                line['value_char_box'] = value_char_box
             files = []
             if line.get('user_binary_line'):
                 for file in self.env['survey.binary'].search([('id', 'in', line['user_binary_line'])]):

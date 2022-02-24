@@ -30,9 +30,9 @@ class SurveyUserInput(models.Model):
             vals.update({'user_binary_line': user_binary_lines})
             if old_answers:
                 old_answers.unlink()
-            old_answers.create(vals)
-        else:
-            vals.update({'answer_type': None, 'skipped': True})
+        old_answers.create(vals)
+        # else:
+        #     vals.update({'answer_type': None, 'skipped': True})
 
         return old_answers
 

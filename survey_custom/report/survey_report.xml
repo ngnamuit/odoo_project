@@ -19,24 +19,27 @@
         <div style="border: 1px solid grey">
             <t t-call="web.html_container" style="border: 1px solid grey">
                 <t t-call="web.internal_layout">
-                    <div class="header" style="width: 100%; margin:0px !important; padding:0px !important;">
+                    <div class="header" style="height: 100px !important; width: 100%; margin:0px !important; padding:0px !important;">
                         <div>
                             <img t-attf-src="data:image/png;base64, #{survey[0]['pdf_header']}"
                                  style="margin-left:-15px !important; margin-right:-50px !important;width: 103%;"/>
                         </div>
                     </div>
-                    <div class="page" style="padding-top: -20px !important; font-family: 'Times New Roman', Times, serif !important;
+                    <div class="page" style="margin-top: -5px !important; font-family: Mulish !important;
                                     width: 100%;  padding-left:20px; padding-right: 20px;">
                         <div class="row mt64 mb32">
                             <div class="col-md-12">
-                                <p class="text-center" style="font-size: 80px !important; font-weight: bold; text-align: center;">
+                                <p class="text-center" style="padding:0px !important; margin: 0px !important;
+                                                  font-size: 30px !important; font-weight: bold; text-align: center;">
                                     <t t-esc="project_name"/>
+
                                 </p>
-                                <div class="q_and_a" style="margin-top: 0px; margin-left: 20px; margin-right: 20px;
+                                <div class="q_and_a" style="margin-top: 5px !important; margin-left: 20px; margin-right: 20px;
                                                         padding-left: 20px; border-left: 2.5px solid red;
-                                                        font-size: 28px !important; margin-bottom: 250xp !important;">
+                                                        font-size: 17px !important;">
                                     <t t-set="index" t-value="0"/>
                                     <t t-set="header_index" t-value="0"/>
+
                                     <t t-foreach="question_and_page_ids" t-as="question">
                                         <t t-set="index" t-value="index+1"/>
                                         <t t-set="answer_lines" t-value="[]"/>
@@ -46,12 +49,15 @@
                                                 <t t-if="header_index == 2">
                                                     <div style="margin-top:225px"></div>
                                                 </t>
-                                                <t t-if="header_index == 4">
-                                                    <div style="margin-top:265px"></div>
+                                                <t t-if="header_index == 3">
+                                                    <div style="margin-top:45px"></div>
                                                 </t>
-                                                <p style="margin-left: -20px !important; padding: 17px 20px 17px 20px !important;
-                                            margin-top: 35px; font-size: 28px; line-height: 38px; color: white !important;
-                                            background-color: #e6586c; max-width: 650px;">
+                                                <t t-if="header_index == 4">
+                                                    <div style="margin-top:270px"></div>
+                                                </t>
+                                                <p style="margin-left: -20px !important; padding: 7px 10px 7px 10px !important;
+                                            margin-top: 0px !important; font-size: 17px; line-height: 20px; color: white !important;
+                                            background-color: #e6586c; max-width: 350px;">
                                                     <strong> <t t-esc="question[&quot;title&quot;]"/> </strong>
                                                 </p>
                                             </div>
@@ -64,8 +70,9 @@
                                         <t t-if="answer_lines">
                                             <div class="js_question-wrapper" t-att-id="question['id']">
                                                 <t t-if="index &lt; 7">
-                                                    <p style="margin:5px !important">
-                                                        <span t-esc="question[&quot;title&quot;]"/>
+                                                    <p style="padding:0px !important; margin: 2px !important;">
+                                                        <span t-esc="question[&quot;title&quot;]"
+                                                              style="width: 260px !important; display: inline-block"/><span>: </span>
 
                                                         <t t-if="question['question_type'] == 'text_box'">
                                                             <span>
@@ -74,42 +81,43 @@
                                                         </t>
                                                         <t t-if="question['question_type'] in ['char_box', 'numerical_box', 'currency']">
                                                             <span style="color: red; font-weight: bold !important;">
-                                                                <!--                                                                <t t-esc="answer_lines" />-->
                                                                 <t t-if="answer_lines" t-esc="answer_lines[0]['value_char_box'] or ''"/>
                                                             </span>
                                                         </t>
                                                     </p>
                                                 </t>
                                                 <t t-else="">
-                                                    <t>
-                                                        <p t-att-style="'margin:5px !important; padding-left:25px;' if question['question_type'] == 'upload_file' else 'margin:5px !important;'">
-                                                            <span t-esc="question[&quot;title&quot;]"/>
-
+                                                    <t t-if="question['question_type'] != 'upload_file'">
+                                                        <p style="padding:0px !important; margin: 2px !important;">
+                                                            <span t-esc="question[&quot;title&quot;]"/><span>: </span>
                                                         </p>
                                                     </t>
                                                     <t t-if="question['question_type'] == 'text_box'">
-                                                        <textarea style="margin-left: 25px !important; display: inline !important; color: red; font-weight: bold !important; " class="form-control o_survey_question_text_box bg-transparent text-dark rounded-0 p-0" rows="3" t-att-name="question['id']" t-att-data-question-type="question['question_type']">
+                                                        <textarea style="margin-left: 20px !important; display: inline !important; color: red; font-weight: bold !important; " class="form-control o_survey_question_text_box bg-transparent text-dark rounded-0 p-0" rows="3" t-att-name="question['id']" t-att-data-question-type="question['question_type']">
                                                             <t t-if="answer_lines" t-esc="answer_lines[0]['value_text_box'] or ''"/>
                                                         </textarea>
                                                     </t>
                                                     <t t-if="question['question_type'] in ['char_box', 'numerical_box', 'currency', 'percentage']">
-                                                        <input style="margin-left: 20px !important; display: inline !important; border: 0px !important; font-size: inherit; color: red; font-weight: bold !important;" t-att-type="'email' if question['validation_email'] else 'text'" class="form-control o_survey_question_text_box bg-transparent rounded-0 p-0" t-att-name="question['id']" t-att-value="answer_lines[0]['value_char_box'] if answer_lines else ''" t-att-data-question-type="question['question_type']" t-att-data-validation-length-min="question['validation_length_min'] if question['validation_required'] else False" t-att-data-validation-length-max="question['validation_length_max'] if question['validation_required'] else False"/>
+                                                        <input style="margin-left: 25px !important; display: inline !important; border: 0px !important; font-size: inherit; color: red; font-weight: bold !important;" t-att-type="'email' if question['validation_email'] else 'text'" class="form-control o_survey_question_text_box bg-transparent rounded-0 p-0" t-att-name="question['id']" t-att-value="answer_lines[0]['value_char_box'] if answer_lines else ''" t-att-data-question-type="question['question_type']" t-att-data-validation-length-min="question['validation_length_min'] if question['validation_required'] else False" t-att-data-validation-length-max="question['validation_length_max'] if question['validation_required'] else False"/>
                                                     </t>
 
                                                     <t t-if="question['question_type'] == 'upload_file'">
-                                                        <t t-if="answer_lines and answer_lines[0]['user_binary_line']">
-                                                            <t t-foreach="answer_lines[0]['user_binary_line']" t-as="file">
-                                                                <t t-if="file and file['binary_data']">
-                                                                    <!--                                                            <img t-attf-src="data:image/png;base64, #{file['']}" style="max-width: 50% !important;" />-->
-                                                                    <div style="padding-left:25px;">
-                                                                        <a t-attf-href="/web/binary/download/#{file['id']}" aria-label="Download" title="Download">
-                                                                            <i class="fa fa-download"/>
-                                                                            <span><t t-esc="file['binary_filename']"/></span>
-                                                                        </a>
-                                                                    </div>
+                                                        <p t-att-style="'margin:2px !important; padding-left:25px;' if index == 8 else 'margin:5px !important;'">
+                                                            <span t-esc="question[&quot;title&quot;]"/><span>: </span>
+                                                            <t t-if="answer_lines and answer_lines[0]['user_binary_line']">
+                                                                <t t-foreach="answer_lines[0]['user_binary_line']" t-as="file">
+                                                                    <t t-if="file and file['binary_data']">
+                                                                        <!--                                                            <img t-attf-src="data:image/png;base64, #{file['']}" style="max-width: 50% !important;" />-->
+                                                                        <span style="padding-left:25px;">
+                                                                            <a t-attf-href="/web/binary/download/#{file['id']}" aria-label="Download" title="Download">
+                                                                                <i class="fa fa-download"/>
+                                                                                <span><t t-esc="file['binary_filename']"/></span>
+                                                                            </a>
+                                                                        </span>
+                                                                    </t>
                                                                 </t>
                                                             </t>
-                                                        </t>
+                                                        </p>
                                                     </t>
 
                                                     <t t-if="question['question_type'] == 'simple_choice'">
@@ -127,47 +135,61 @@
                                                             <t t-set="item_idx" t-value="0"/>
                                                             <div class="d-flex flex-wrap col-lg-12">
                                                                 <t t-set="has_correct_answer" t-value="scoring_display_correction and any(label['is_correct'] for label in question['suggested_answer_ids'])"/>
-                                                                <t t-foreach="question[&quot;suggested_answer_ids&quot;]" t-as="label">
-                                                                    <t t-set="item_idx" t-value="label_index"/>
-                                                                    <t t-set="answer_selected" t-value="answer_line and answer_line.get('suggested_answer_id') and answer_line['suggested_answer_id'][0] == label['id'] or ''"/>
-                                                                    <t t-set="is_correct" t-value="label['answer_score'] &gt; 0.0"/>
-                                                                    <t t-set="answer_class" t-if="not has_correct_answer" t-value="''"/>
-                                                                    <t t-set="answer_class" t-elif="is_correct" t-value="'bg-success'"/>
-                                                                    <t t-set="answer_class" t-elif="not is_correct" t-value="'bg-danger'"/>
+                                                                <div>
+                                                                    <t t-foreach="question[&quot;suggested_answer_ids&quot;]" t-as="label">
+                                                                        <t t-set="item_idx" t-value="label_index"/>
+                                                                        <t t-set="answer_selected" t-value="answer_line and answer_line.get('suggested_answer_id') and answer_line['suggested_answer_id'][0] == label['id'] or ''"/>
+                                                                        <t t-set="is_correct" t-value="label['answer_score'] &gt; 0.0"/>
+                                                                        <t t-set="answer_class" t-if="not has_correct_answer" t-value="''"/>
+                                                                        <t t-set="answer_class" t-elif="is_correct" t-value="'bg-success'"/>
+                                                                        <t t-set="answer_class" t-elif="not is_correct" t-value="'bg-danger'"/>
 
-                                                                    <label t-att-class="'o_survey_choice_btn rounded col-md-12 %s %s' % (answer_class, 'o_survey_selected' if answer_selected else '')">
-                                                                        <input type="checkbox" t-att-value="label[&quot;id&quot;]" class="o_survey_form_choice_item invisible position-absolute" t-att-name="question['id']" t-att-checked="answer_selected and 'checked' or ''" t-att-data-selection-key="letters[item_idx] if useKeySelection else ''"/>
-                                                                        <t t-if="answer_selected">
-                                                                            <i class="fa fa-check-circle float-left mt-1 position-relative" style="color: red; font-weight: bold !important;"/>
-                                                                        </t>
-                                                                        <t t-else="">
-                                                                            <i class="fa fa-circle-thin float-left mt-1 position-relative"/>
-                                                                        </t>
-                                                                        <span class="ml-2" t-esc="label[&quot;value&quot;]" t-att-style="'color: red; font-weight: bold !important;' if answer_selected else ''"/>
-                                                                    </label>
-                                                                </t>
-                                                            </div>
-                                                            <div t-if="question[&quot;comments_allowed&quot;] and question[&quot;comment_count_as_answer&quot;]" class="js_ck_comments col-lg-12">
-                                                                <div class="d-flex flex-wrap" style="margin:0px !important">
-                                                                    <label t-att-class="'o_survey_choice_btn rounded %s' % ('o_survey_selected' if comment_line else '')">
-                                                                        <t t-set="item_idx" t-value="item_idx + 1"/>
-                                                                        <t t-call="survey.survey_selection_key">
-                                                                            <t t-set="selection_key_class" t-value="'position-relative float-left d-flex'"/>
-                                                                        </t>
-                                                                        <input type="checkbox" class="o_survey_form_choice_item o_survey_js_form_other_comment invisible position-absolute" value="-1" t-att-name="question['id']" t-att-checked="comment_line and 'checked' or None" t-att-data-selection-key="letters[item_idx] if useKeySelection else ''"/>
-                                                                        <span class="ml-2" t-esc="question['comments_message']"/>
-                                                                        <i class="fa fa-check-square float-right mt-1 position-relative"/>
-                                                                        <i class="fa fa-square-o float-right mt-1 position-relative"/>
-                                                                    </label>
+                                                                        <label style="margin: 2px !important; padding:0px !important" t-att-class="'o_survey_choice_btn rounded col-md-12 %s %s' %
+                                                                    (answer_class, 'o_survey_selected' if answer_selected else '')">
+                                                                            <input type="checkbox" t-att-value="label[&quot;id&quot;]" class="o_survey_form_choice_item invisible position-absolute"
+                                                                                   t-att-name="question['id']" t-att-checked="answer_selected and 'checked' or ''"
+                                                                                   t-att-data-selection-key="letters[item_idx] if useKeySelection else ''"/>
+                                                                            <t t-if="answer_selected">
+                                                                                <i class="fa fa-check-circle float-left mt-1 position-relative"
+                                                                                   style="color: red; font-weight: bold !important;"/>
+                                                                            </t>
+                                                                            <t t-else="">
+                                                                                <i class="fa fa-circle-thin float-left mt-1 position-relative"/>
+                                                                            </t>
+                                                                            <span class="ml-2" t-esc="label[&quot;value&quot;]" t-att-style="'color: red; font-weight: bold !important;' if answer_selected else ''"/>
+                                                                        </label>
+                                                                    </t>
+                                                                    <t t-if="question and question.get('comments_allowed') and question.get('comment_count_as_answer')">
+                                                                        <label style="margin: 2px !important; padding:0px !important; min-width: 100%;" class="o_survey_choice_btn rounded col-md-12">
+                                                                            <t t-set="item_idx" t-value="item_idx + 1"/>
+                                                                            <t t-call="survey.survey_selection_key">
+                                                                                <t t-set="selection_key_class" t-value="'position-relative float-left d-flex'"/>
+                                                                            </t>
+                                                                            <!--<input type="radio" class="o_survey_form_choice_item o_survey_js_form_other_comment invisible position-absolute" value="-1"-->
+                                                                            <!--       t-att-checked="comment_line and 'checked' or None"-->
+                                                                            <!--       t-att-data-selection-key="letters[item_idx] if useKeySelection else ''"/>-->
+                                                                            <span class="ml-2" t-esc="question['comments_message']"
+                                                                                  t-att-style="'color: red; font-weight: bold !important;' if comment_line and comment_line.get('value_char_box') else ''"/>
+                                                                            <span t-att-style="'color: red; font-weight: bold !important;' if comment_line and comment_line.get('value_char_box') else ''">: </span>
+                                                                            <span t-att-style="'color: red; font-weight: bold !important;' if comment_line and comment_line.get('value_char_box') else ''"
+                                                                                  t-esc="comment_line['value_char_box'] if comment_line else ''"/>
+                                                                            <t t-if="comment_line and comment_line.get('value_char_box')">
+                                                                                <i class="fa fa-check-square float-left mt-1 position-relative" style="color: red;"/>
+                                                                            </t>
+                                                                            <t t-else="">
+                                                                                <i class="fa fa-square-o float-left mt-1 position-relative"/>
+                                                                            </t>
+                                                                        </label>
+                                                                    </t>
+                                                                    <div t-if="question['comments_allowed'] and not question['comment_count_as_answer']"
+                                                                         class="col-lg-12 o_survey_comment_container mx-1 mt-3 py-0 pl-3 pr-4">
+                                                                        <textarea style="border: 0px !important"
+                                                                                  type="text"
+                                                                                  class="form-control o_survey_comment o_survey_question_text_box bg-transparent text-dark rounded-0 p-0">
+                                                                            <t t-esc="comment_line['value_char_box'] if comment_line else ''"/>
+                                                                        </textarea>
+                                                                    </div>
                                                                 </div>
-                                                                <div t-attf-class="o_survey_comment_container #{'d-none' if not comment_line else ''}">
-                                                                    <textarea type="text" class="form-control o_survey_question_text_box bg-transparent text-dark rounded-0 p-0" t-att-disabled="None if comment_line else 'disabled'"><t t-esc="comment_line['value_char_box'] if comment_line else ''"/></textarea>
-                                                                </div>
-                                                            </div>
-                                                            <div t-if="question[&quot;comments_allowed&quot;] and not question[&quot;comment_count_as_answer&quot;]" class="col-lg-12 o_survey_comment_container mx-1 mt-3 py-0 pl-3 pr-4">
-                                                                <textarea type="text" class="form-control o_survey_comment o_survey_question_text_box bg-transparent text-dark rounded-0 p-0" t-att-placeholder="question.comments_message if not survey_form_readonly else ''">
-                                                                    <t t-esc="comment_line.value_char_box if comment_line else ''"/>
-                                                                </textarea>
                                                             </div>
                                                         </div>
                                                     </t>
@@ -203,20 +225,60 @@
                                                                     <t t-set="answer_class" t-elif="is_correct" t-value="'bg-success'"/>
                                                                     <t t-set="answer_class" t-elif="not is_correct" t-value="'bg-danger'"/>
 
-                                                                    <label style="min-width: 100%;" t-att-class="'o_survey_choice_btn rounded %s %s' % (answer_class, 'o_survey_selected' if answer_line else '')">
+                                                                    <label style="width: 100%; margin-left: -5px !important; padding:0px !important; margin: 2px !important;"
+                                                                           t-att-class="'o_survey_choice_btn col-md-12 rounded %s %s' %
+                                                                (answer_class, 'o_survey_selected' if answer_line else '')">
                                                                         <t t-call="survey.survey_selection_key">
                                                                             <t t-set="selection_key_class" t-value="'position-relative float-left d-flex'"/>
                                                                         </t>
-                                                                        <input type="checkbox" t-att-value="label[&quot;id&quot;]" class="o_survey_form_choice_item invisible position-absolute" t-att-name="question['id']" t-att-checked="'checked' if answer_line else None" t-att-data-selection-key="letters[item_idx] if useKeySelection else ''"/>
-                                                                        <t t-if="answer_selected">
-                                                                            <i class="fa fa-check-circle float-left mt-1 position-relative" style="color: red; font-weight: bold !important;"/>
+                                                                        <!--<input type="checkbox" t-att-value="label[&quot;id&quot;]"-->
+                                                                        <!--       class="o_survey_form_choice_item invisible position-absolute"-->
+                                                                        <!--       t-att-name="question['id']"-->
+                                                                        <!--       t-att-checked="'checked' if answer_line else None"-->
+                                                                        <!--       t-att-data-selection-key="letters[item_idx] if useKeySelection else ''"/>-->
+                                                                        <t t-if="not answer_selected">
+                                                                            <i class="fa fa-square-o float-left mt-1 position-relative" />
                                                                         </t>
                                                                         <t t-else="">
-                                                                            <i class="fa fa-circle-thin float-left mt-1 position-relative"/>
+                                                                            <i class="fa fa-check-square-o float-left mt-1 position-relative"
+                                                                               style="display: block !important; color: red; font-weight: bold !important;"/>
                                                                         </t>
+                                                                        <!--<t t-call="survey.question_suggested_value_image"/>-->
                                                                         <span class="ml-2" t-esc="label[&quot;value&quot;]" t-att-style="'color: red; font-weight: bold !important;' if answer_selected else ''"/>
                                                                     </label>
                                                                 </t>
+
+                                                                <t t-if="question and question.get('comments_allowed') and question.get('comment_count_as_answer')">
+                                                                    <label style="padding:0px !important; margin: 2px !important; min-width: 100%;"
+                                                                           class="o_survey_choice_btn rounded col-lg-12">
+                                                                        <t t-set="item_idx" t-value="item_idx + 1"/>
+                                                                        <t t-call="survey.survey_selection_key">
+                                                                            <t t-set="selection_key_class" t-value="'position-relative float-left d-flex'"/>
+                                                                        </t>
+                                                                        <input type="radio" class="o_survey_form_choice_item o_survey_js_form_other_comment invisible position-absolute" value="-1"
+                                                                               t-att-checked="comment_line and 'checked' or None"
+                                                                               t-att-data-selection-key="letters[item_idx] if useKeySelection else ''"/>
+                                                                        <span class="ml-2"   t-esc="question['comments_message']"
+                                                                              t-att-style="'color: red; font-weight: bold !important; margin-top: -10px !important;' if comment_line and comment_line.get('value_char_box') else 'margin-top: -10px !important;'"/>
+                                                                        <span t-att-style="'color: red; font-weight: bold !important; margin-top: -10px !important;' if comment_line and comment_line.get('value_char_box') else 'margin-top: -10px !important;'">: </span>
+                                                                        <span t-att-style="'color: red; font-weight: bold !important; margin-top: -10px !important;' if comment_line and comment_line.get('value_char_box') else 'margin-top: -10px !important;'"
+                                                                              t-esc="comment_line['value_char_box'] if comment_line else ''"/>
+                                                                        <t t-if="comment_line and comment_line.get('value_char_box')">
+                                                                            <i class="fa fa-check-square float-left mt-1 position-relative" style="color: red;"/>
+                                                                        </t>
+                                                                        <t t-else="">
+                                                                            <i class="fa fa-square-o float-left mt-1 position-relative"/>
+                                                                        </t>
+                                                                    </label>
+                                                                </t>
+                                                                <div t-if="question['comments_allowed'] and not question['comment_count_as_answer']"
+                                                                     class="col-lg-12 o_survey_comment_container mx-1 mt-3 py-0 pl-3 pr-4">
+                                                                    <textarea style="border: 0px !important"
+                                                                              type="text"
+                                                                              class="form-control o_survey_comment o_survey_question_text_box bg-transparent text-dark rounded-0 p-0">
+                                                                        <t t-esc="comment_line['value_char_box'] if comment_line else ''"/>
+                                                                    </textarea>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </t>
@@ -228,8 +290,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="footer o_standard_footer" style="width: 100%; margin-bottom:-300px !important">
-                        <div class="text-center" style="width: 100%; padding-top:20px !important;">
+                    <div class="footer o_standard_footer" style="margin-top:0x !important; width: 100%; margin-bottom:-300px !important">
+                        <div class="text-center" style="width: 100%; padding-top:0px !important;">
                             <img t-attf-src="data:image/png;base64, #{survey[0]['pdf_footer']}"
                                  style="margin-left:-25px !important; margin-right:-25px !important;width: 103%; margin-bottom:-172px !important;"/>
                         </div>
@@ -238,13 +300,4 @@
             </t>
         </div>
     </template>
-
-<!--    <template id="assets_backend_tabla_tickets" name="my_module assets" inherit_id="web.assets_common">-->
-<!--        <xpath expr="." position="inside">-->
-<!--            <link rel="stylesheet" href="/survey_custom/static/src/css/survey_result.css"/>-->
-<!--            <link href="/survey/static/src/css/survey_print.css" rel="stylesheet" type="text/css"/>-->
-<!--            <link href="/survey/static/src/css/survey_result.css" rel="stylesheet" type="text/css"></link>-->
-<!--            <link rel="stylesheet" type="text/scss" href="/survey/static/src/scss/survey_form.scss"/>-->
-<!--        </xpath>-->
-<!--    </template>-->
 </odoo>

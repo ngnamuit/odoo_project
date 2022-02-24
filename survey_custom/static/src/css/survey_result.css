@@ -701,8 +701,12 @@ Add a counter to the multi-steps indicator
 .o_survey_print label{
     font-size: 14px !important;
 }
+.o_survey_print .o_survey_selected .fa-square-o {
+    display: none !important;
+}
 .o_survey_print .o_page_header h1{
-    font-size: 24px !important;
+    font-size: 16px !important;
+    font-family: Mulish !important;
     font-weight: bold;
 }
 .o_page_header{
@@ -717,4 +721,11 @@ label.o_survey_selected span {
 }
 .o_survey_print .o_survey_choice_btn i.fa-square-o, .o_survey_print .o_survey_choice_btn i.fa-circle-thin {
     display: block !important;
+}
+.fa-square:before {
+    content: "\f1db";
+}
+
+.o_survey_print .o_survey_selected i.fa-square-o {
+    display: none !important;
 }
