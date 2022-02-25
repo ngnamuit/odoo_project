@@ -109,7 +109,7 @@ class SaleCustomerWizard(models.TransientModel):
                          ELSE mo_ori.amount_total - mo_ori.amount_residual 
                       END AS amount_paid_vnd,
                     CASE WHEN move_type = 'out_refund' THEN (-1) * mo_ori.amount_residual 
-                         ELSE mo_ori.amount_residual
+                         ELSE mo_ori.amount_total
                       END AS amount_remain_vnd
                 FROM account_move mo_ori
                 LEFT JOIN account_journal aj ON mo_ori.journal_id = aj.id
