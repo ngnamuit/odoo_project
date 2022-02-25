@@ -39,7 +39,7 @@ class SaleCustomerWizard(models.TransientModel):
                         CASE WHEN move_type = 'out_refund' THEN (-1) * aml.discount
                              ELSE aml.discount
                           END as product_discount,
-                        CASE WHEN move_type = 'out_refund' THEN (-1) * aml.price_unit 
+                        CASE WHEN move_type = 'out_refund' THEN aml.price_unit 
                              ELSE aml.price_unit 
                           END as product_price_unit,
                         CASE WHEN move_type = 'out_refund' THEN (-1) *  aml.price_subtotal
