@@ -65,7 +65,8 @@ class SaleCustomerWizard(models.TransientModel):
                         ac.amount as amount_paid_vnd,
                         A.amount_vnd - ac.amount as amount_remain_vnd,
                         am.date AS payment_date,
-                        '' as product_name,
+                        CASE WHEN ac.notes is null then am.ref 
+                             ELSE ac.notes END as product_name,
                         0 as product_qty,
                         0 as product_discount,
                         0 as product_price_unit,

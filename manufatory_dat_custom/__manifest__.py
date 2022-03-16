@@ -26,6 +26,7 @@
         'report/report_template.xml',
         'report/sale_report.xml',
         'report/invoice_report.xml',
+        'views/account_payment_views.xml',
     ],
     'installable': True,
     'application': True,

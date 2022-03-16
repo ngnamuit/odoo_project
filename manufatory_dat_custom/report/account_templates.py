@@ -14,10 +14,10 @@ class ReportSaleAccountMove(models.AbstractModel):
             inv_id_str = data['records'][2]['id']
             inv_id = inv_id_str
             if '_' in inv_id_str:
-                inv_id = inv_id_str.split('_')[0]
+                inv_id = inv_id_str.split('_')[-1]
             inv = self.env['account.move'].sudo().browse(int(inv_id))
             if not inv.partner_id:
-                inv_id = inv_id_str.split('_')[1]
+                inv_id = inv_id_str.split('_')[0]
                 inv = self.env['account.move'].sudo().browse(int(inv_id))
         res = {
             'doc_ids' : docids,
