@@ -46,6 +46,8 @@ class SurveyUserInput(models.Model):
         return res
 
     def send_submitted_survey_email(self):
+        context = self._context or {}
+        lang = context.get('lang')
         self = self.with_user(SUPERUSER_ID)
         for user_input in self:
             if user_input.survey_id and user_input.state in ['review', 'done']:
@@ -92,9 +94,10 @@ class SurveyUserInput(models.Model):
                 ctx = {
                     'project_name': project_name,
                     'full_name': full_name,
-                    'email': email
+                    'email': email,
+                    'lang': lang
                 }
-                template.sudo().with_context(ctx).send_mail(survey_id, force_send=True)
+                template.with_context(ctx).send_mail(survey_id, force_send=True)
         return True
 
     def action_report_pdf(self):

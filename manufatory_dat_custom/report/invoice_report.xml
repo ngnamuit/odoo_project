@@ -4,7 +4,9 @@
         <xpath expr="//t/t[@t-set='address']"  position="replace" >
             <t t-set="partner" t-value="o.partner_id" />
             <div style="text-align: center">
-                <h2>CÔNG NỢ KHÁCH HÀNG (<span t-field="o.name"/>)</h2>
+                <p style="font-weight: bold">
+                    <span style="font-size: 32px !important">PHIẾU TÍNH TIỀN </span><span> (<span t-field="o.name"/>) </span></p>
+                <br/>
             </div>
             <table style="width: 95%;">
                 <tr width="100%">
