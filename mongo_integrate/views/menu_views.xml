@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_change_event_log_view" model="ir.actions.act_window">
+        <field name="name">Event</field>
+        <field name="res_model">change.event.log</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_model_mapping_view" model="ir.actions.act_window">
+        <field name="name">Model Mapping</field>
+        <field name="res_model">model.mapping</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!--    MENU    -->
+    <menuitem id="event_logs_menu_root" name="Event Logs" sequence="1"  groups="base.group_user"/>
+    <menuitem id="event_logs_menu_child" parent="mongo_integrate.event_logs_menu_root" name="Main" sequence="1" action="mongo_integrate.action_change_event_log_view"/>
+    <menuitem id="model_mapping_menu" parent="mongo_integrate.event_logs_menu_root" name="Model Mapping" sequence="2" action="mongo_integrate.action_model_mapping_view"/>
+
+</odoo>
